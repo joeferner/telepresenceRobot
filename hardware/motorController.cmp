@@ -1,0 +1,220 @@
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Wed 05 Jun 2013 05:16:29 PM EDT
+
+BeginCmp
+TimeStamp = /51AEBD37;
+Reference = C1;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC2CE;
+Reference = C2;
+ValeurCmp = 100uF;
+IdModule  = CAP-CAN-5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC2D9;
+Reference = C3;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC2F0;
+Reference = C4;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC2F6;
+Reference = C5;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC2FC;
+Reference = C6;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEBD2A;
+Reference = C7;
+ValeurCmp = 33nF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AECA68;
+Reference = C8;
+ValeurCmp = 0.47uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AED823;
+Reference = D1;
+ValeurCmp = FWD;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AED830;
+Reference = D2;
+ValeurCmp = REV;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDAA6;
+Reference = D3;
+ValeurCmp = PWR;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEB3F5;
+Reference = J1;
+ValeurCmp = CONN_14X1;
+IdModule  = PIN_ARRAY_14X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDD9E;
+Reference = M1;
+ValeurCmp = Mounting Hole;
+IdModule  = MOUNTING_HOLE_0.125in;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDDB0;
+Reference = M2;
+ValeurCmp = Mounting Hole;
+IdModule  = MOUNTING_HOLE_0.125in;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDDB6;
+Reference = M3;
+ValeurCmp = Mounting Hole;
+IdModule  = MOUNTING_HOLE_0.125in;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDDBC;
+Reference = M4;
+ValeurCmp = Mounting Hole;
+IdModule  = MOUNTING_HOLE_0.125in;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEB760;
+Reference = P1;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEB75A;
+Reference = P2;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEB754;
+Reference = P3;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEB747;
+Reference = P4;
+ValeurCmp = CONN_1;
+IdModule  = 1pin;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AE89C4;
+Reference = Q1;
+ValeurCmp = MOSFET-N;
+IdModule  = SOT23;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AE89DB;
+Reference = R1;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AE8A09;
+Reference = R2;
+ValeurCmp = 10k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AE8A03;
+Reference = R3;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEC7B8;
+Reference = R4;
+ValeurCmp = 100k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AECA5C;
+Reference = R5;
+ValeurCmp = 220R;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AED840;
+Reference = R6;
+ValeurCmp = 4.7K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AECA78;
+Reference = R7;
+ValeurCmp = 1K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEDAAC;
+Reference = R8;
+ValeurCmp = 4.7K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEAA3C;
+Reference = U1;
+ValeurCmp = 7408;
+IdModule  = SOIC14_3.9mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /51AEBB3F;
+Reference = U2;
+ValeurCmp = MC33926;
+IdModule  = QFN-PWR-8X8;
+EndCmp
+
+EndListe

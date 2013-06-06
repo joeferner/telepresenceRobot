@@ -1,0 +1,5 @@
+*-cache.lib
+*.bak
+*.bck
+*.lib~
+*-bak
