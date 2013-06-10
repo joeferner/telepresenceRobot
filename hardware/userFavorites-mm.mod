@@ -1,4 +1,4 @@
-PCBNEW-LibModule-V1  Tue 04 Jun 2013 11:49:41 PM EDT
+PCBNEW-LibModule-V1  Sun 09 Jun 2013 12:53:03 PM EDT
 # encoding utf-8
 Units mm
 $INDEX
@@ -67,7 +67,7 @@ Po -7.874 0
 $EndPAD
 $EndMODULE BATTERY-COIN
 $MODULE CAP-CAN-5mm
-Po 0 0 0 15 50CE713E 00000000 ~~
+Po 0 0 0 15 51B4B2EB 00000000 ~~
 Li CAP-CAN-5mm
 Sc 0
 AR 
@@ -82,18 +82,18 @@ DS 2.66 -2.64 2.66 1.17 0.15 21
 DS -2.64 -2.64 -2.64 1.17 0.15 21
 DS -2.64 -2.64 2.66 -2.64 0.15 21
 $PAD
-Sh "1" R 0.65 2.2 0 0 0
+Sh "1" R 1.6 2.9 0 0 0
 Dr 0 0 0
 At SMD N 00888000
 Ne 0 ""
-Po 0.01 1.85
+Po 0 2.1
 $EndPAD
 $PAD
-Sh "2" R 0.65 2.2 0 0 0
+Sh "2" R 1.6 2.9 0 0 0
 Dr 0 0 0
 At SMD N 00888000
 Ne 0 ""
-Po 0.01 -1.85
+Po 0 -2.1
 $EndPAD
 $EndMODULE CAP-CAN-5mm
 $MODULE D5
