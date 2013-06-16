@@ -4,3 +4,4 @@
 *.lib~
 *-bak
 build/
+*-swp

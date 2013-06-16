@@ -9,14 +9,31 @@ FIND_PACKAGE(CMSIS REQUIRED)
 STM32_SET_PARAMS("128K" "20K" "0x20005000")
 SET(CMAKE_EXE_LINKER_FLAGS "-T${CMAKE_CURRENT_BINARY_DIR}/stm32_flash.ld ${CMAKE_EXE_LINKER_FLAGS}")
 
+IF(NOT STM32_USB_FS_DEVICE_LIB_DIR)
+    SET(STM32_USB_FS_DEVICE_LIB_DIR "/opt/STM32_USB-FS-Device_Lib_V4.0.0")
+    MESSAGE(STATUS "No STM32_USB_FS_DEVICE_LIB_DIR specified, using default: " ${STM32_USB_FS_DEVICE_LIB_DIR})
+ENDIF()
+
 INCLUDE_DIRECTORIES(
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/inc/
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMSIS_INCLUDE_DIR}
     ${StdPeriphLib_INCLUDE_DIR}
 )
 
 SET(PROJECT_SOURCES
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_core.c
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_init.c
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_int.c
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_mem.c
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_regs.c
+    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_sil.c
     main.c
+    hw_config.c
+    platform_config.c
+    usb_prop.c
+    usb_desc.c
+    usb_pwr.c
 )
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}.elf ${PROJECT_SOURCES} ${CMSIS_STARTUP_SOURCE})
