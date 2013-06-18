@@ -28,11 +28,15 @@ SET(PROJECT_SOURCES
     ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_mem.c
     ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_regs.c
     ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_sil.c
-    main.c
     hw_config.c
+    main.c
     platform_config.c
-    usb_prop.c
+    stm32_it.c
+    system_stm32f10x.c
     usb_desc.c
+    usb_endp.c
+    usb_istr.c
+    usb_prop.c
     usb_pwr.c
 )
 
