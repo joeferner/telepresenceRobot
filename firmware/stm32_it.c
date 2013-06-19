@@ -64,8 +64,13 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
+  volatile uint32_t index = 0; 
   while (1)
   {
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_SetBits(GPIOA, GPIO_Pin_6);
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_ResetBits(GPIOA, GPIO_Pin_6);
   }
 }
 
@@ -79,8 +84,13 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* Go to infinite loop when Memory Manage exception occurs */
+  volatile uint32_t index = 0; 
   while (1)
   {
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_SetBits(GPIOA, GPIO_Pin_6);
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_ResetBits(GPIOA, GPIO_Pin_6);
   }
 }
 
@@ -94,8 +104,13 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
   /* Go to infinite loop when Bus Fault exception occurs */
+  volatile uint32_t index = 0; 
   while (1)
   {
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_SetBits(GPIOA, GPIO_Pin_6);
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_ResetBits(GPIOA, GPIO_Pin_6);
   }
 }
 
@@ -109,8 +124,13 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
   /* Go to infinite loop when Usage Fault exception occurs */
+  volatile uint32_t index = 0; 
   while (1)
   {
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_SetBits(GPIOA, GPIO_Pin_6);
+    for(index = (34000 * 100); index != 0; index--) {}
+    GPIO_ResetBits(GPIOA, GPIO_Pin_6);
   }
 }
 

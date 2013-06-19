@@ -40,6 +40,8 @@ void Set_System(void) {
   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
+  
+  GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
 }
 
 /**
@@ -100,10 +102,13 @@ void USB_Interrupts_Config(void) {
  * Software Connection/Disconnection of USB Cable
  */
 void USB_Cable_Config(FunctionalState NewState) {
+  volatile uint32_t index = 0; 
+  //for(index = (34000 * 1000); index != 0; index--) {}
+
   if (NewState != DISABLE) {
-    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
+    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - ON
   } else {
-    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
+    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
   }
 }
 
