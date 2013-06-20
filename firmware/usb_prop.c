@@ -121,6 +121,7 @@ ONE_DESCRIPTOR String_Descriptor[5] =
 *******************************************************************************/
 void Virtual_Com_Port_init(void)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_init");
 
   /* Update the serial number string descriptor with the data from the unique
   ID*/
@@ -146,6 +147,8 @@ void Virtual_Com_Port_init(void)
 *******************************************************************************/
 void Virtual_Com_Port_Reset(void)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_Reset");
+
   /* Set Virtual_Com_Port DEVICE as not configured */
   pInformation->Current_Configuration = 0;
 
@@ -200,6 +203,8 @@ void Virtual_Com_Port_Reset(void)
 *******************************************************************************/
 void Virtual_Com_Port_SetConfiguration(void)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_SetConfiguration");
+
   DEVICE_INFO *pInfo = &Device_Info;
 
   if (pInfo->Current_Configuration != 0)
@@ -218,6 +223,8 @@ void Virtual_Com_Port_SetConfiguration(void)
 *******************************************************************************/
 void Virtual_Com_Port_SetDeviceAddress (void)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_SetDeviceAddress");
+
   bDeviceState = ADDRESSED;
 }
 
@@ -230,6 +237,8 @@ void Virtual_Com_Port_SetDeviceAddress (void)
 *******************************************************************************/
 void Virtual_Com_Port_Status_In(void)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_Status_In");
+
   if (Request == SET_LINE_CODING)
   {
     Request = 0;
@@ -243,8 +252,9 @@ void Virtual_Com_Port_Status_In(void)
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-void Virtual_Com_Port_Status_Out(void)
-{}
+void Virtual_Com_Port_Status_Out(void) {
+  debug_write_line("BEGIN Virtual_Com_Port_Status_Out");
+}
 
 /*******************************************************************************
 * Function Name  : Virtual_Com_Port_Data_Setup
@@ -256,6 +266,8 @@ void Virtual_Com_Port_Status_Out(void)
 RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 {
   uint8_t    *(*CopyRoutine)(uint16_t);
+
+  debug_write_line("BEGIN Virtual_Com_Port_Data_Setup");
 
   CopyRoutine = NULL;
 
@@ -295,6 +307,7 @@ RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 *******************************************************************************/
 RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_NoData_Setup");
 
   if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
   {
@@ -320,6 +333,8 @@ RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetDeviceDescriptor(uint16_t Length)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_GetDeviceDescriptor");
+
   return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
@@ -332,6 +347,8 @@ uint8_t *Virtual_Com_Port_GetDeviceDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetConfigDescriptor(uint16_t Length)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_GetConfigDescriptor");
+
   return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
@@ -344,6 +361,8 @@ uint8_t *Virtual_Com_Port_GetConfigDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetStringDescriptor(uint16_t Length)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_GetStringDescriptor");
+
   uint8_t wValue0 = pInformation->USBwValue0;
   if (wValue0 > 4)
   {
@@ -366,6 +385,8 @@ uint8_t *Virtual_Com_Port_GetStringDescriptor(uint16_t Length)
 *******************************************************************************/
 RESULT Virtual_Com_Port_Get_Interface_Setting(uint8_t Interface, uint8_t AlternateSetting)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_Get_Interface_Setting");
+
   if (AlternateSetting > 0)
   {
     return USB_UNSUPPORT;
@@ -386,6 +407,8 @@ RESULT Virtual_Com_Port_Get_Interface_Setting(uint8_t Interface, uint8_t Alterna
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_GetLineCoding");
+
   if (Length == 0)
   {
     pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
@@ -403,6 +426,8 @@ uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length)
 {
+  debug_write_line("BEGIN Virtual_Com_Port_SetLineCoding");
+
   if (Length == 0)
   {
     pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);

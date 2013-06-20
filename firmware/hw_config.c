@@ -22,6 +22,8 @@ extern LINE_CODING linecoding;
  * Configures Main system clocks & power
  */
 void Set_System(void) {
+  debug_write_line("BEGIN Set_System");
+
   GPIO_InitTypeDef GPIO_InitStructure;
   EXTI_InitTypeDef EXTI_InitStructure;
 
@@ -48,6 +50,8 @@ void Set_System(void) {
  * Configures USB Clock input (48MHz)
  */
 void Set_USBClock(void) {
+  debug_write_line("BEGIN Set_USBClock");
+
   /* Enable USB clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
 }
@@ -82,6 +86,8 @@ void Leave_LowPowerMode(void) {
  */
 void USB_Interrupts_Config(void) {
   NVIC_InitTypeDef NVIC_InitStructure;
+
+  debug_write_line("BEGIN USB_Interrupts_Config");
 
   /* 2 bit for pre-emption priority, 2 bits for subpriority */
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);

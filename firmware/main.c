@@ -14,6 +14,7 @@ int main(void) {
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
   usart_config();
+  debug_write_line("BEGIN Init");
   
   GPIO_InitTypeDef GPIO_Config;
   GPIO_Config.GPIO_Pin =  GPIO_Pin_6;
@@ -26,7 +27,11 @@ int main(void) {
   Set_System();
   Set_USBClock();
   USB_Interrupts_Config();
+
+  debug_write_line("BEGIN USB_Init");
   USB_Init();  
+
+  debug_write_line("END Init");
   
   for (;;);
   return 0;
@@ -86,7 +91,10 @@ void usart_config() {
 void debug_write_line(const char* str) {
   const char *p = str;
   while(*p) {
-    USART_SendData(USART1, *p);  
+    USART_SendData(USART1, *p);
+    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+    p++;
   }
   USART_SendData(USART1, '\n');  
+  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 }
