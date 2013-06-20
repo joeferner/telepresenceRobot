@@ -19,5 +19,6 @@ void USB_Interrupts_Config(void);
 void USB_Cable_Config (FunctionalState NewState);
 void Handle_USBAsynchXfer (void);
 void Get_SerialNum(void);
+void debug_write_line(const char* str);
 
 #endif  /*__HW_CONFIG_H*/
