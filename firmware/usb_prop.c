@@ -133,9 +133,12 @@ void Virtual_Com_Port_init(void)
   PowerOn();
 
   /* Perform basic device initialization operations */
+  debug_write_line("BEGIN USB_SIL_Init");
   USB_SIL_Init();
 
   bDeviceState = UNCONNECTED;
+  
+  debug_write_line("END Virtual_Com_Port_init");
 }
 
 /*******************************************************************************
@@ -147,8 +150,6 @@ void Virtual_Com_Port_init(void)
 *******************************************************************************/
 void Virtual_Com_Port_Reset(void)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_Reset");
-
   /* Set Virtual_Com_Port DEVICE as not configured */
   pInformation->Current_Configuration = 0;
 
@@ -237,7 +238,9 @@ void Virtual_Com_Port_SetDeviceAddress (void)
 *******************************************************************************/
 void Virtual_Com_Port_Status_In(void)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_Status_In");
+  debug_write("BEGIN Virtual_Com_Port_Status_In: ");
+  debug_write_u8(Request, 16);
+  debug_write_line("");
 
   if (Request == SET_LINE_CODING)
   {

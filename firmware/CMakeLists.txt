@@ -38,6 +38,7 @@ SET(PROJECT_SOURCES
     usb_istr.c
     usb_prop.c
     usb_pwr.c
+    ring_buffer.c
 )
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}.elf ${PROJECT_SOURCES} ${CMSIS_STARTUP_SOURCE})

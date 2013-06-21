@@ -43,7 +43,7 @@ void Set_System(void) {
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
   
-  GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
+  USB_Cable_Config(DISABLE);
 }
 
 /**
@@ -89,9 +89,6 @@ void USB_Interrupts_Config(void) {
 
   debug_write_line("BEGIN USB_Interrupts_Config");
 
-  /* 2 bit for pre-emption priority, 2 bits for subpriority */
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-
   NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -108,12 +105,11 @@ void USB_Interrupts_Config(void) {
  * Software Connection/Disconnection of USB Cable
  */
 void USB_Cable_Config(FunctionalState NewState) {
-  volatile uint32_t index = 0; 
-  //for(index = (34000 * 1000); index != 0; index--) {}
-
   if (NewState != DISABLE) {
+    debug_write_line("USB+");
     GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - ON
   } else {
+    debug_write_line("USB-");
     GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
   }
 }
@@ -167,6 +163,7 @@ void Handle_USBAsynchXfer(void) {
  */
 void Get_SerialNum(void) {
   uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
+  debug_write_line("BEGIN Get_SerialNum");
 
   Device_Serial0 = *(uint32_t*) ID1;
   Device_Serial1 = *(uint32_t*) ID2;

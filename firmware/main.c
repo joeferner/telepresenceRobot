@@ -1,4 +1,6 @@
 #include "hw_config.h"
+#include "ring_buffer.h"
+#include <stm32f10x_misc.h>
 #include <stm32f10x.h>
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
@@ -6,9 +8,18 @@
 #include <stm32f10x_tim.h>
 #include <string.h>
 
+uint8_t g_usart1_tx_buffer_storage[100];
+ring_buffer g_usart1_tx_buffer;
+
 void usart_config();
 
 int main(void) {
+  ring_buffer_init(&g_usart1_tx_buffer, g_usart1_tx_buffer_storage, 100);
+
+  // Configure the NVIC Preemption Priority Bits
+  // 2 bit for pre-emption priority, 2 bits for subpriority
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  
   // Turn on LED (GPIOA6)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
@@ -32,15 +43,17 @@ int main(void) {
   USB_Init();  
 
   debug_write_line("END Init");
-  
+    
   for (;;);
   return 0;
 }
 
-void assert_failed(uint8_t* file, uint32_t line)
-{
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+void assert_failed(uint8_t* file, uint32_t line) {
+  debug_write("Wrong parameters value: file ");
+  debug_write((const char*)file);
+  debug_write(" on line ");
+  debug_write_u32(line, 10);
+  debug_write_line("");
 
   /* Infinite loop */
   volatile uint32_t index = 0; 
@@ -56,8 +69,16 @@ void assert_failed(uint8_t* file, uint32_t line)
 void usart_config() {
   USART_InitTypeDef usartInitStructure;
   GPIO_InitTypeDef gpioInitStructure;
+  NVIC_InitTypeDef nvicInitStructure;
 
-  usartInitStructure.USART_BaudRate = 9600;
+  /* Enable the USART1 Interrupt */
+  nvicInitStructure.NVIC_IRQChannel = USART1_IRQn;
+  nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+  nvicInitStructure.NVIC_IRQChannelSubPriority = 3;
+  nvicInitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&nvicInitStructure);
+
+  usartInitStructure.USART_BaudRate = 19200;
   usartInitStructure.USART_WordLength = USART_WordLength_8b;
   usartInitStructure.USART_Parity = USART_Parity_No;
   usartInitStructure.USART_StopBits = USART_StopBits_1;
@@ -84,17 +105,59 @@ void usart_config() {
   /* Enable USART */
   USART_Cmd(USART1, ENABLE);
 
-  /* Enable the USART Receive interrupt */
+  /* Enable the USART interrupts */
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+}
+
+void USART1_IRQHandler(void) {
+  if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
+    USART_ReceiveData(USART1); // TODO do something with this data
+  }
+  
+  if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {
+    if(g_usart1_tx_buffer.available > 0) {
+      USART_SendData(USART1, ring_buffer_read(&g_usart1_tx_buffer));
+    }
+    if(g_usart1_tx_buffer.available == 0) {
+      USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+    }
+  }
 }
 
 void debug_write_line(const char* str) {
+  debug_write(str);
+  debug_write_ch('\n');
+}
+
+void debug_write(const char* str) {
   const char *p = str;
   while(*p) {
-    USART_SendData(USART1, *p);
-    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+    debug_write_ch(*p);
     p++;
   }
-  USART_SendData(USART1, '\n');  
-  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
 }
+
+void debug_write_ch(char ch) {
+  ring_buffer_write(&g_usart1_tx_buffer, ch);
+  USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+}
+
+#define TO_HEX(i) ( (((i) & 0xf) <= 9) ? ('0' + ((i) & 0xf)) : ('A' - 10 + ((i) & 0xf)) )
+
+void debug_write_u8(uint32_t val, int base) {
+  char str[4];
+  if(base == 16) {
+    str[0] = TO_HEX(val >> 4);   
+    str[1] = TO_HEX(val >> 0);   
+    str[2] = '\0';
+    debug_write(str);
+  } else {
+    debug_write_line("NOT IMPLEMENTED");    
+  }
+}
+
+void debug_write_u32(uint32_t val, int base) {
+  debug_write_line("NOT IMPLEMENTED");
+}
+

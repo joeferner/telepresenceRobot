@@ -3,6 +3,7 @@
 
 #include "platform_config.h"
 #include "usb_type.h"
+#include <stdio.h>
 
 #define MASS_MEMORY_START     0x04002000
 #define BULK_MAX_PACKET_SIZE  0x00000040
@@ -19,6 +20,11 @@ void USB_Interrupts_Config(void);
 void USB_Cable_Config (FunctionalState NewState);
 void Handle_USBAsynchXfer (void);
 void Get_SerialNum(void);
+
+void debug_write(const char* str);
+void debug_write_ch(char ch);
+void debug_write_u8(uint32_t val, int base);
+void debug_write_u32(uint32_t val, int base);
 void debug_write_line(const char* str);
 
 #endif  /*__HW_CONFIG_H*/
