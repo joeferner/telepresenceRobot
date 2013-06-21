@@ -130,6 +130,12 @@ void debug_write_line(const char* str) {
   debug_write_ch('\n');
 }
 
+void debug_write_bytes(uint8_t *data, uint16_t len) {
+  for(uint16_t i=0; i<len; i++) {
+    debug_write_ch((char)data[i]);
+  }
+}
+
 void debug_write(const char* str) {
   const char *p = str;
   while(*p) {

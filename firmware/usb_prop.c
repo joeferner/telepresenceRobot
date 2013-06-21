@@ -238,7 +238,7 @@ void Virtual_Com_Port_SetDeviceAddress (void)
 *******************************************************************************/
 void Virtual_Com_Port_Status_In(void)
 {
-  debug_write("BEGIN Virtual_Com_Port_Status_In: ");
+  debug_write("+statIn:");
   debug_write_u8(Request, 16);
   debug_write_line("");
 
@@ -270,7 +270,7 @@ RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 {
   uint8_t    *(*CopyRoutine)(uint16_t);
 
-  debug_write_line("BEGIN Virtual_Com_Port_Data_Setup");
+  debug_write_line("+datasetup");
 
   CopyRoutine = NULL;
 
@@ -310,16 +310,16 @@ RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 *******************************************************************************/
 RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_NoData_Setup");
+  debug_write("+nodata:");
+  debug_write_u8(Type_Recipient, 16);
+  debug_write_ch(' ');
+  debug_write_u8(RequestNo, 16);
+  debug_write_line("");
 
-  if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-  {
-    if (RequestNo == SET_COMM_FEATURE)
-    {
+  if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) {
+    if (RequestNo == SET_COMM_FEATURE) {
       return USB_SUCCESS;
-    }
-    else if (RequestNo == SET_CONTROL_LINE_STATE)
-    {
+    } else if (RequestNo == SET_CONTROL_LINE_STATE) {
       return USB_SUCCESS;
     }
   }
@@ -336,7 +336,7 @@ RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetDeviceDescriptor(uint16_t Length)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_GetDeviceDescriptor");
+  debug_write_line("+GetDevDesc");
 
   return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
@@ -410,7 +410,7 @@ RESULT Virtual_Com_Port_Get_Interface_Setting(uint8_t Interface, uint8_t Alterna
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_GetLineCoding");
+  debug_write_line("+GetLineCoding");
 
   if (Length == 0)
   {
@@ -429,7 +429,7 @@ uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length)
 {
-  debug_write_line("BEGIN Virtual_Com_Port_SetLineCoding");
+  debug_write_line("+SetLineCoding");
 
   if (Length == 0)
   {
