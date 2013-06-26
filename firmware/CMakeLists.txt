@@ -3,42 +3,64 @@ PROJECT(stm32-ft312d-test)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 ENABLE_LANGUAGE(ASM)
 
-FIND_PACKAGE(StdPeriphLib REQUIRED)
-FIND_PACKAGE(CMSIS REQUIRED)
-
-STM32_SET_PARAMS("128K" "20K" "0x20005000")
-SET(CMAKE_EXE_LINKER_FLAGS "-T${CMAKE_CURRENT_BINARY_DIR}/stm32_flash.ld ${CMAKE_EXE_LINKER_FLAGS}")
-
 IF(NOT STM32_USB_FS_DEVICE_LIB_DIR)
-    SET(STM32_USB_FS_DEVICE_LIB_DIR "/opt/STM32_USB-FS-Device_Lib_V4.0.0")
-    MESSAGE(STATUS "No STM32_USB_FS_DEVICE_LIB_DIR specified, using default: " ${STM32_USB_FS_DEVICE_LIB_DIR})
+  SET(STM32_USB_FS_DEVICE_LIB_DIR "/opt/STM32_USB-FS-Device_Lib_V4.0.0")
+  MESSAGE(STATUS "No STM32_USB_FS_DEVICE_LIB_DIR specified, using default: " ${STM32_USB_FS_DEVICE_LIB_DIR})
 ENDIF()
 
+SET(CMSIS_FIND_LIBS "cmsis_ld")
+SET(CMSIS_STARTUP_SOURCE "${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/CMSIS/Device/ST/STM32F10x/Source/Templates/gcc_ride7/startup_stm32f10x_ld.s")
+SET(STM32_CHIP_DEF "STM32F10X_LD")
+SET(STACK_ADDRESS "0x20005000")
+SET(FLASH_SIZE "128K")
+SET(RAM_SIZE "20K")
+SET(MIN_STACK_SIZE "0x200")
+SET(MIN_HEAP_SIZE "0")
+SET(EXT_RAM_SIZE "0K")
+SET(FLASH_ORIGIN "0x08000000")
+SET(RAM_ORIGIN "0x20000000")
+SET(EXT_RAM_ORIGIN "0x60000000")
+
+CONFIGURE_FILE(stm32_flash.ld.in ${CMAKE_CURRENT_BINARY_DIR}/stm32_flash.ld)
+
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -D${STM32_CHIP_DEF}")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -D${STM32_CHIP_DEF}")
+SET(CMAKE_EXE_LINKER_FLAGS "-T${CMAKE_CURRENT_BINARY_DIR}/stm32_flash.ld ${CMAKE_EXE_LINKER_FLAGS}")
+
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_STDPERIPH_DRIVER")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_STDPERIPH_DRIVER")
+
 INCLUDE_DIRECTORIES(
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/inc/
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMSIS_INCLUDE_DIR}
-    ${StdPeriphLib_INCLUDE_DIR}
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/CMSIS/Device/ST/STM32F10x/Include/
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/CMSIS/Include/
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/inc/
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/inc/
+  ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 SET(PROJECT_SOURCES
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_core.c
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_init.c
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_int.c
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_mem.c
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_regs.c
-    ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_sil.c
-    hw_config.c
-    main.c
-    platform_config.c
-    stm32_it.c
-    system_stm32f10x.c
-    usb_desc.c
-    usb_endp.c
-    usb_istr.c
-    usb_prop.c
-    usb_pwr.c
-    ring_buffer.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_exti.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32F10x_StdPeriph_Driver/src/misc.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_core.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_init.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_int.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_mem.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_regs.c
+  ${STM32_USB_FS_DEVICE_LIB_DIR}/Libraries/STM32_USB-FS-Device_Driver/src/usb_sil.c
+  hw_config.c
+  main.c
+  platform_config.c
+  stm32_it.c
+  system_stm32f10x.c
+  usb_desc.c
+  usb_endp.c
+  usb_istr.c
+  usb_prop.c
+  usb_pwr.c
+  ring_buffer.c
 )
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}.elf ${PROJECT_SOURCES} ${CMSIS_STARTUP_SOURCE})

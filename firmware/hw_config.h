@@ -13,13 +13,14 @@
 #define USART_RX_DATA_SIZE   2048
 
 void Set_System(void);
-void Set_USBClock(void);
 void Enter_LowPowerMode(void);
 void Leave_LowPowerMode(void);
-void USB_Interrupts_Config(void);
 void USB_Cable_Config (FunctionalState NewState);
 void Handle_USBAsynchXfer (void);
 void Get_SerialNum(void);
+
+void delay_ms(uint32_t ms);
+void delay_us(uint32_t us);
 
 void debug_write(const char* str);
 void debug_write_ch(char ch);

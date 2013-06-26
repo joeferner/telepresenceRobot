@@ -1,5 +1,5 @@
 #include <stm32f10x_exti.h>
-#include <stm32f10x_misc.h>
+#include <misc.h>
 #include "stm32_it.h"
 #include "usb_lib.h"
 #include "usb_prop.h"
@@ -22,38 +22,42 @@ extern LINE_CODING linecoding;
  * Configures Main system clocks & power
  */
 void Set_System(void) {
-  debug_write_line("BEGIN Set_System");
-
-  GPIO_InitTypeDef GPIO_InitStructure;
-  EXTI_InitTypeDef EXTI_InitStructure;
+  GPIO_InitTypeDef gpioInitStructure;
+  EXTI_InitTypeDef extiInitStructure;
+  NVIC_InitTypeDef nvicInitStructure;
 
   /* Enable the USB disconnect GPIO clock */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIO_DISCONNECT, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_AHBPeriph_GPIO_DISCONNECT, ENABLE);
 
   /* USB_DISCONNECT used as USB pull-up */
-  GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-  GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure);
+  gpioInitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
+  gpioInitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  gpioInitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_Init(USB_DISCONNECT, &gpioInitStructure);
 
   /* Configure the EXTI line 18 connected internally to the USB IP */
   EXTI_ClearITPendingBit(EXTI_Line18);
-  EXTI_InitStructure.EXTI_Line = EXTI_Line18;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
+  extiInitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+  extiInitStructure.EXTI_Line = EXTI_Line18;
+  extiInitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+  extiInitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init(&extiInitStructure);
   
   USB_Cable_Config(DISABLE);
-}
-
-/**
- * Configures USB Clock input (48MHz)
- */
-void Set_USBClock(void) {
-  debug_write_line("BEGIN Set_USBClock");
 
   /* Enable USB clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
+  
+  nvicInitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
+  nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+  nvicInitStructure.NVIC_IRQChannelSubPriority = 0;
+  nvicInitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&nvicInitStructure);
+  
+  /* Enable the USB Wake-up interrupt */
+  nvicInitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
+  nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_Init(&nvicInitStructure);
 }
 
 /**
@@ -82,34 +86,12 @@ void Leave_LowPowerMode(void) {
 }
 
 /**
- * Configures the USB interrupts
- */
-void USB_Interrupts_Config(void) {
-  NVIC_InitTypeDef NVIC_InitStructure;
-
-  debug_write_line("BEGIN USB_Interrupts_Config");
-
-  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-  
-    /* Enable the USB Wake-up interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_Init(&NVIC_InitStructure);
-}
-
-/**
  * Software Connection/Disconnection of USB Cable
  */
 void USB_Cable_Config(FunctionalState NewState) {
   if (NewState != DISABLE) {
-    debug_write_line("USB+");
     GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - ON
   } else {
-    debug_write_line("USB-");
     GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
   }
 }
@@ -163,7 +145,6 @@ void Handle_USBAsynchXfer(void) {
  */
 void Get_SerialNum(void) {
   uint32_t Device_Serial0, Device_Serial1, Device_Serial2;
-  debug_write_line("BEGIN Get_SerialNum");
 
   Device_Serial0 = *(uint32_t*) ID1;
   Device_Serial1 = *(uint32_t*) ID2;

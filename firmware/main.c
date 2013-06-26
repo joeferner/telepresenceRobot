@@ -1,6 +1,6 @@
 #include "hw_config.h"
 #include "ring_buffer.h"
-#include <stm32f10x_misc.h>
+#include <misc.h>
 #include <stm32f10x.h>
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
@@ -12,6 +12,7 @@ uint8_t g_usart1_tx_buffer_storage[100];
 ring_buffer g_usart1_tx_buffer;
 
 void usart_config();
+void status_led_config();
 
 int main(void) {
   ring_buffer_init(&g_usart1_tx_buffer, g_usart1_tx_buffer_storage, 100);
@@ -25,23 +26,12 @@ int main(void) {
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
   usart_config();
+  debug_write_line("****************************************");
   debug_write_line("BEGIN Init");
-  
-  GPIO_InitTypeDef GPIO_Config;
-  GPIO_Config.GPIO_Pin =  GPIO_Pin_6;
-  GPIO_Config.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_Config.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_Config);
-
-  GPIO_ResetBits(GPIOA, GPIO_Pin_6);
-
+  status_led_config();
   Set_System();
-  Set_USBClock();
-  USB_Interrupts_Config();
-
-  debug_write_line("BEGIN USB_Init");
+  delay_ms(100);
   USB_Init();  
-
   debug_write_line("END Init");
     
   for (;;);
@@ -66,6 +56,16 @@ void assert_failed(uint8_t* file, uint32_t line) {
   }
 }
 
+void status_led_config() {
+  GPIO_InitTypeDef GPIO_Config;
+  GPIO_Config.GPIO_Pin =  GPIO_Pin_6;
+  GPIO_Config.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Config.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_Config);
+
+  GPIO_ResetBits(GPIOA, GPIO_Pin_6);  
+}
+
 void usart_config() {
   USART_InitTypeDef usartInitStructure;
   GPIO_InitTypeDef gpioInitStructure;
@@ -78,7 +78,7 @@ void usart_config() {
   nvicInitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&nvicInitStructure);
 
-  usartInitStructure.USART_BaudRate = 19200;
+  usartInitStructure.USART_BaudRate = 9600;
   usartInitStructure.USART_WordLength = USART_WordLength_8b;
   usartInitStructure.USART_Parity = USART_Parity_No;
   usartInitStructure.USART_StopBits = USART_StopBits_1;
@@ -115,14 +115,17 @@ void USART1_IRQHandler(void) {
     USART_ReceiveData(USART1); // TODO do something with this data
   }
   
-  if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {
-    if(g_usart1_tx_buffer.available > 0) {
-      USART_SendData(USART1, ring_buffer_read(&g_usart1_tx_buffer));
-    }
-    if(g_usart1_tx_buffer.available == 0) {
-      USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
-    }
-  }
+//  if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {
+//    if(g_usart1_tx_buffer.available > 0) {
+//      uint8_t v = ring_buffer_read(&g_usart1_tx_buffer);
+//      USART_SendData(USART1, v);
+//    }
+//    if(g_usart1_tx_buffer.available == 0) {
+//      USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+//    }
+//  }
+  
+//  USART_ClearITPendingBit(USART1, (USART_FLAG_CTS | USART_FLAG_LBD | USART_FLAG_TC | USART_FLAG_RXNE));
 }
 
 void debug_write_line(const char* str) {
@@ -146,7 +149,9 @@ void debug_write(const char* str) {
 
 void debug_write_ch(char ch) {
   ring_buffer_write(&g_usart1_tx_buffer, ch);
-  USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+  USART_SendData(USART1, ring_buffer_read(&g_usart1_tx_buffer));
+  while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+  //USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 }
 
 #define TO_HEX(i) ( (((i) & 0xf) <= 9) ? ('0' + ((i) & 0xf)) : ('A' - 10 + ((i) & 0xf)) )
@@ -167,3 +172,14 @@ void debug_write_u32(uint32_t val, int base) {
   debug_write_line("NOT IMPLEMENTED");
 }
 
+void delay_ms(uint32_t ms) {
+  volatile uint32_t i;
+  for(i = ms; i != 0; i--) {
+    delay_us(1000);
+  }
+}
+
+void delay_us(uint32_t us) {
+  volatile uint32_t i;
+  for(i = (5 * us); i != 0; i--) {}
+}

@@ -63,7 +63,6 @@ __IO uint32_t remotewakeupon=0;
 *******************************************************************************/
 RESULT PowerOn(void) {
   uint16_t wRegVal;
-  debug_write_line("+PowerOn");
 
   /*** cable plugged-in ? ***/
   USB_Cable_Config(ENABLE);
@@ -81,7 +80,6 @@ RESULT PowerOn(void) {
   wInterrupt_Mask = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM;
   _SetCNTR(wInterrupt_Mask);
   
-  debug_write_line("-PowerOn");
   return USB_SUCCESS;
 }
 
