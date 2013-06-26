@@ -4,6 +4,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
+#include "delay.h"
 
 uint8_t Request = 0;
 

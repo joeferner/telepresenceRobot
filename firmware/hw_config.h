@@ -19,14 +19,4 @@ void USB_Cable_Config (FunctionalState NewState);
 void Handle_USBAsynchXfer (void);
 void Get_SerialNum(void);
 
-void delay_ms(uint32_t ms);
-void delay_us(uint32_t us);
-
-void debug_write(const char* str);
-void debug_write_ch(char ch);
-void debug_write_u8(uint32_t val, int base);
-void debug_write_u32(uint32_t val, int base);
-void debug_write_line(const char* str);
-void debug_write_bytes(uint8_t *data, uint16_t len);
-
 #endif  /*__HW_CONFIG_H*/

@@ -19,48 +19,6 @@ static void IntToUnicode(uint32_t value, uint8_t *pbuf, uint8_t len);
 extern LINE_CODING linecoding;
 
 /**
- * Configures Main system clocks & power
- */
-void Set_System(void) {
-  GPIO_InitTypeDef gpioInitStructure;
-  EXTI_InitTypeDef extiInitStructure;
-  NVIC_InitTypeDef nvicInitStructure;
-
-  /* Enable the USB disconnect GPIO clock */
-  RCC_APB2PeriphClockCmd(RCC_AHBPeriph_GPIO_DISCONNECT, ENABLE);
-
-  /* USB_DISCONNECT used as USB pull-up */
-  gpioInitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-  gpioInitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  gpioInitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-  GPIO_Init(USB_DISCONNECT, &gpioInitStructure);
-
-  /* Configure the EXTI line 18 connected internally to the USB IP */
-  EXTI_ClearITPendingBit(EXTI_Line18);
-  extiInitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  extiInitStructure.EXTI_Line = EXTI_Line18;
-  extiInitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
-  extiInitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&extiInitStructure);
-  
-  USB_Cable_Config(DISABLE);
-
-  /* Enable USB clock */
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
-  
-  nvicInitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-  nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-  nvicInitStructure.NVIC_IRQChannelSubPriority = 0;
-  nvicInitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&nvicInitStructure);
-  
-  /* Enable the USB Wake-up interrupt */
-  nvicInitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
-  nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_Init(&nvicInitStructure);
-}
-
-/**
  * Power-off system clocks and power while entering suspend mode
  */
 void Enter_LowPowerMode(void) {

@@ -33,6 +33,7 @@
 #include "hw_config.h"
 #include "usb_istr.h"
 #include "usb_pwr.h"
+#include "debug.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -62,9 +63,7 @@ void EP1_IN_Callback (void)
 {
   uint16_t USB_Tx_ptr;
   uint16_t USB_Tx_length;
-  
-  debug_write_line("+ep1in");
-  
+    
   if (USB_Tx_State == 1)
   {
     if (USART_Rx_length == 0) 

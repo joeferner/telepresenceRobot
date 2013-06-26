@@ -12,8 +12,12 @@
 #define         ID2          (0x1FFFF7EC)
 #define         ID3          (0x1FFFF7F0)
 
-#define USB_DISCONNECT                      GPIOB  
-#define USB_DISCONNECT_PIN                  GPIO_Pin_9
-#define RCC_AHBPeriph_GPIO_DISCONNECT       RCC_APB2Periph_GPIOB
+#define USB_DISCONNECT         GPIOB  
+#define USB_DISCONNECT_PIN     GPIO_Pin_9
+#define USB_DISCONNECT_RCC     RCC_APB2Periph_GPIOB
+
+#define STATUS_LED             GPIOA
+#define STATUS_LED_PIN         GPIO_Pin_6
+#define STATUS_LED_RCC         RCC_APB2Periph_GPIOA
 
 #endif /* __PLATFORM_CONFIG_H */

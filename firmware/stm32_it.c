@@ -32,6 +32,7 @@
 #include "stm32_it.h"
 #include "usb_lib.h"
 #include "usb_istr.h"
+#include "debug.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
