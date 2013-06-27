@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
   private Button left;
   private Button right;
   private Button connect;
-  private RobotLink robotLink = new RobotLink();
+  private RobotLink robotLink;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     left = (Button) findViewById(R.id.left);
     right = (Button) findViewById(R.id.right);
 
+    robotLink = new RobotLink(this);
     log.setMovementMethod(new ScrollingMovementMethod());
 
     robotLink.setEventHandler(new RobotLinkEventHandler() {
@@ -67,6 +68,18 @@ public class MainActivity extends Activity {
   private void onMovementDown(MovementDirection movementDirection) {
     log("Sending " + movementDirection);
     robotLink.setSpeed(movementDirection, 1.0);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    robotLink.resume();
+  }
+
+  @Override
+  protected void onDestroy() {
+    robotLink.destroy();
+    super.onDestroy();
   }
 
   private class MovementOnTouchListener implements View.OnTouchListener {
