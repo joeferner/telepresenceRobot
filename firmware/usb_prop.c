@@ -75,7 +75,7 @@ void Virtual_Com_Port_init() {
   /* Perform basic device initialization operations */
   USB_SIL_Init();
 
-  bDeviceState = UNCONNECTED;
+  g_usb_deviceState = UNCONNECTED;
 }
 
 void Virtual_Com_Port_Reset() {
@@ -121,19 +121,19 @@ void Virtual_Com_Port_Reset() {
   /* Set this device to response on default address */
   SetDeviceAddress(0);
   
-  bDeviceState = ATTACHED;
+  g_usb_deviceState = ATTACHED;
 }
 
 void Virtual_Com_Port_SetConfiguration() {
   DEVICE_INFO *pInfo = &Device_Info;
 
   if (pInfo->Current_Configuration != 0)   {
-    bDeviceState = CONFIGURED;
+    g_usb_deviceState = CONFIGURED;
   }
 }
 
 void Virtual_Com_Port_SetDeviceAddress() {
-  bDeviceState = ADDRESSED;
+  g_usb_deviceState = ADDRESSED;
 }
 
 void Virtual_Com_Port_Status_In() {

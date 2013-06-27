@@ -73,10 +73,12 @@ typedef enum _DEVICE_STATE {
   CONFIGURED
 } DEVICE_STATE;
 
-extern __IO uint32_t bDeviceState; /* USB device status */
-extern __IO bool fSuspendEnabled;  /* true when suspend is possible */
+extern __IO uint32_t g_usb_deviceState; /* USB device status */
+extern __IO bool g_usb_suspendEnabled;  /* true when suspend is possible */
 
 void usb_config();
+extern void usb_on_rx(uint8_t* data, uint16_t len);
+void usb_write(const uint8_t* data, uint16_t len);
 
 void USB_Istr(void);
 

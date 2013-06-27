@@ -8,8 +8,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-__IO uint32_t bDeviceState = UNCONNECTED; /* USB device status */
-__IO bool fSuspendEnabled = TRUE;  /* true when suspend is possible */
+__IO uint32_t g_usb_deviceState = UNCONNECTED; /* USB device status */
+__IO bool g_usb_suspendEnabled = TRUE;  /* true when suspend is possible */
 __IO uint32_t EP[8];
 
 struct {
