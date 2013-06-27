@@ -47,7 +47,7 @@ void process_input(uint8_t* data, uint16_t len) {
   char line[100];
   
   ring_buffer_write(&input_ring_buffer, data, len);
-  if(ring_buffer_readline(&input_ring_buffer, line, 100) > 0) {
+  while(ring_buffer_readline(&input_ring_buffer, line, 100) > 0) {
     process_input_line(line);
   }
   

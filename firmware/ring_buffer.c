@@ -23,8 +23,10 @@ uint8_t ring_buffer_read_byte(ring_buffer* ring) {
 }
 
 void ring_buffer_read(ring_buffer* ring, uint8_t* buffer, uint16_t size) {
+  uint16_t i;
+  
   // TODO can be optimized
-  for(uint16_t i = 0; i < size; i++) {
+  for(i = 0; i < size; i++) {
     buffer[i] = ring_buffer_read_byte(ring);
   }
 }
@@ -42,23 +44,27 @@ void ring_buffer_write_byte(ring_buffer* ring, uint8_t b) {
 }
 
 void ring_buffer_write(ring_buffer* ring, const uint8_t* buffer, uint16_t size) {
+  uint16_t i;
+  
   // TODO can be optimized
-  for(uint16_t i = 0; i < size; i++) {
+  for(i = 0; i < size; i++) {
     ring_buffer_write_byte(ring, buffer[i]);
   }
 }
 
 uint16_t ring_buffer_readline(ring_buffer* ring, char* buffer, uint16_t size) {
   uint8_t b;
-  for(uint16_t i = 0; i < min(ring->available, size - 1); i++) {
+  uint16_t i;
+  for(i = 0; i < min(ring->available, size - 1); i++) {
     b = ring_buffer_peekn(ring, i);
     if(b == '\n') {
       i++;
       ring_buffer_read(ring, (uint8_t*)buffer, i);
-      buffer[i + 1] = '\0';
+      buffer[i] = '\0';
       return i;
     }
   }
+  buffer[0] = '\0';
   return 0;
 }
 

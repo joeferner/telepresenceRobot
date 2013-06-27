@@ -4,6 +4,7 @@
 #include "platform_config.h"
 #include "ring_buffer.h"
 #include "util.h"
+#include "delay.h"
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_exti.h>
 
@@ -60,6 +61,7 @@ void usb_config(void) {
   
   debug_write_line("USB_Init");
   USB_Init();
+  delay_ms(100); // TODO remove?
 }
 
 /* !!! Interrupt handler - Don't change this function name !!! */
