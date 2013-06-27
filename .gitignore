@@ -6,3 +6,5 @@
 build/
 *-swp
 nbproject/
+.idea/
+
