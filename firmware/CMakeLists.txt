@@ -59,7 +59,6 @@ SET(PROJECT_SOURCES
   system_stm32f10x.c
   usb.c
   usb_desc.c
-  usb_endp.c
   usb_istr.c
   usb_prop.c
   usb_pwr.c

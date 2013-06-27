@@ -50,6 +50,7 @@ void debug_config() {
   USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
 }
 
+/* !!! Interrupt handler - Don't change this function name !!! */
 void USART1_IRQHandler(void) {
   if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
     USART_ReceiveData(USART1); // TODO do something with this data

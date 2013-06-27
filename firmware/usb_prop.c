@@ -1,8 +1,4 @@
-#include "usb_lib.h"
-#include "usb_conf.h"
-#include "usb_prop.h"
-#include "usb_desc.h"
-#include "usb_pwr.h"
+#include "usb.h"
 #include "hw_config.h"
 #include "delay.h"
 
