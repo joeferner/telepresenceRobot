@@ -1,6 +1,5 @@
 #include <stm32f10x_exti.h>
 #include <misc.h>
-#include "stm32_it.h"
 #include "usb_lib.h"
 #include "usb_prop.h"
 #include "usb_desc.h"

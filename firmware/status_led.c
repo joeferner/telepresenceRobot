@@ -2,6 +2,7 @@
 #include "status_led.h"
 #include "platform_config.h"
 #include "debug.h"
+#include "delay.h"
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
 
@@ -26,4 +27,13 @@ void status_led_on() {
 
 void status_led_off() {
   GPIO_ResetBits(STATUS_LED, STATUS_LED_PIN);  
+}
+
+void status_led_infinite_loop() {
+  while (1) {
+    delay_ms(100);
+    status_led_on();
+    delay_ms(100);
+    status_led_off();
+  }  
 }

@@ -8,6 +8,7 @@ extern "C" {
 void status_led_config();
 void status_led_on();
 void status_led_off();
+void status_led_infinite_loop();
 
 #ifdef	__cplusplus
 }

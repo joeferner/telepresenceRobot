@@ -54,8 +54,7 @@ SET(PROJECT_SOURCES
   delay.c
   hw_config.c
   main.c
-  platform_config.c
-  stm32_it.c
+  interrupts.c
   status_led.c
   system_stm32f10x.c
   usb.c

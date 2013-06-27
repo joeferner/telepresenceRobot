@@ -2,6 +2,7 @@
 #include "usb.h"
 #include "debug.h"
 #include "platform_config.h"
+#include "usb_istr.h"
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_exti.h>
 
@@ -51,3 +52,12 @@ void usb_config(void) {
   USB_Init();
 }
 
+// !!! Interrupt handler - Don't change this function name !!! 
+void USB_LP_CAN1_RX0_IRQHandler(void) {
+  USB_Istr();
+}
+
+// !!! Interrupt handler - Don't change this function name !!! 
+void USBWakeUp_IRQHandler(void) {
+  EXTI_ClearITPendingBit(EXTI_Line18);
+}

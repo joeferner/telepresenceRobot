@@ -1,6 +1,8 @@
 #ifndef __STM32F10x_CONF_H
 #define __STM32F10x_CONF_H
 
+#include "debug.h"
+
 #define assert_param(expr) ((expr) ? (void)0 : assert_failed((uint8_t *)__FILE__, __LINE__))
 
 /* Uncomment/Comment the line below to enable/disable peripheral header file inclusion */
