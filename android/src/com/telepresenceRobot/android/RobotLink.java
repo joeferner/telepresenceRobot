@@ -60,20 +60,22 @@ public class RobotLink {
     this.uartInterface.resumeAccessory();
   }
 
-  public void setSpeed(MovementDirection movementDirection, double speed) {
-    if (speed > 1.0) {
-      speed = 1.0;
-    }
-    if (speed < -1.0) {
-      speed = -1.0;
-    }
-    byte val = (byte) ((speed + 1.0) * 100.0);
-    enqueueSetCommand(movementDirection.toString().toLowerCase(), val);
-    this.uartInterface.sendData(1, new byte[1]);
+  public void setSpeed(double speedLeft, double speedRight) {
+    speedLeft = clamp(speedLeft, -1.0, 1.0);
+    byte speedLeftByte = (byte) (speedLeft * 128);
+
+    speedRight = clamp(speedRight, -1.0, 1.0);
+    byte speedRightByte = (byte) (speedRight * 128);
+
+    enqueueSetCommand(RobotRegister.SPEED, byteToHex(speedLeftByte) + byteToHex(speedRightByte));
   }
 
-  private void enqueueSetCommand(String var, byte val) {
-    enqueueCommand("set " + var + "=" + byteToHex(val));
+  private double clamp(double val, double min, double max) {
+    return Math.max(Math.min(val, max), min);
+  }
+
+  private void enqueueSetCommand(RobotRegister robotRegister, String val) {
+    enqueueCommand("set " + robotRegister.toString().toLowerCase() + "=" + val);
   }
 
   private void enqueueCommand(String cmd) {
@@ -108,5 +110,9 @@ public class RobotLink {
     hexChars[0] = hexArray[(b >> 4) & 0x0f];
     hexChars[1] = hexArray[(b >> 0) & 0x0f];
     return new String(hexChars);
+  }
+
+  private enum RobotRegister {
+    SPEED
   }
 }

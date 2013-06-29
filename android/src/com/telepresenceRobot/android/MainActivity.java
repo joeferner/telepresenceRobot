@@ -61,15 +61,6 @@ public class MainActivity extends Activity {
     log.scrollTo(0, scrollAmount);
   }
 
-  private void onMovementUp(MovementDirection movementDirection) {
-
-  }
-
-  private void onMovementDown(MovementDirection movementDirection) {
-    log("Sending " + movementDirection);
-    robotLink.setSpeed(movementDirection, 1.0);
-  }
-
   @Override
   protected void onResume() {
     super.onResume();
@@ -93,14 +84,35 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+      double speedLeft = 0.0;
+      double speedRight = 0.0;
       switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-          mainActivity.onMovementDown(movementDirection);
+          switch (movementDirection) {
+            case FORWARD:
+              speedLeft = speedRight = 1.0;
+              break;
+            case BACK:
+              speedLeft = speedRight = -1.0;
+              break;
+            case LEFT:
+              speedLeft = -1.0;
+              speedRight = 1.0;
+              break;
+            case RIGHT:
+              speedLeft = 1.0;
+              speedRight = -1.0;
+              break;
+          }
           break;
         case MotionEvent.ACTION_UP:
-          mainActivity.onMovementUp(movementDirection);
+          speedLeft = speedRight = 0.0;
           break;
+        default:
+          return true;
       }
+      log("Setting speed " + speedLeft + ", " + speedRight);
+      robotLink.setSpeed(speedLeft, speedRight);
       return true;
     }
   }

@@ -13,6 +13,8 @@ extern "C" {
 #define max(a,b) ( ((a) > (b)) ? (a) : (b) )
 
 int starts_with(const char* str, const char* strTest); 
+uint8_t parse_hex_nibble(char ch);
+uint8_t parse_hex_byte(const char* str);
 
 #ifdef	__cplusplus
 }

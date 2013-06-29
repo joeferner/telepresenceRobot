@@ -7,13 +7,21 @@
 #include <misc.h>
 #include <string.h>
 
+typedef struct {
+  int8_t speedLeft;
+  int8_t speedRight;
+} RobotRegisters;
+
 #define INPUT_BUFFER_SIZE 100
 uint8_t input_buffer[INPUT_BUFFER_SIZE];
 ring_buffer input_ring_buffer;
+RobotRegisters robot_registers;
 
 void process_input(uint8_t* data, uint16_t len);
 void process_input_line(char* line);
 void process_response_write(const char* str);
+int8_t parse_speed(const char* str);
+void set_speed(int8_t speedLeft, int8_t speedRight);
 
 int main(void) {
   // Configure the NVIC Preemption Priority Bits
@@ -65,15 +73,13 @@ void process_input_line(char* line) {
   if (starts_with(line, "set ")) {
     char* p = line + strlen("set ");
     char* eq = strchr(line, '=');
-    if(eq) {
+    if (eq) {
+      char* val = eq + 1;
       *eq = '\0';
-      if(!strcmp(p, "forward")) {
-        process_response_write("+OK\n");
-      } else if(!strcmp(p, "back")) {
-        process_response_write("+OK\n");
-      } else if(!strcmp(p, "left")) {
-        process_response_write("+OK\n");
-      } else if(!strcmp(p, "right")) {
+      if (!strcmp(p, "speed")) {
+        int8_t speedLeft = parse_speed(val);
+        int8_t speedRight = parse_speed(val + 2);
+        set_speed(speedLeft, speedRight);
         process_response_write("+OK\n");
       } else {
         process_response_write("-Invalid set variable '");
@@ -87,4 +93,18 @@ void process_input_line(char* line) {
     process_response_write("-Invalid command: ");
     process_response_write(line); // new line is already part of line
   }
+}
+
+void set_speed(int8_t speedLeft, int8_t speedRight) {
+  robot_registers.speedLeft = speedLeft;
+  robot_registers.speedRight = speedRight;
+}
+
+/**
+ * Speed is encoded using a single byte.
+ * @param str String containing a hex byte string
+ * @return the speed from -128 to 128
+ */
+int8_t parse_speed(const char* str) {
+  return parse_hex_byte(str);
 }
