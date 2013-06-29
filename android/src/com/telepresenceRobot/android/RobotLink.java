@@ -68,12 +68,12 @@ public class RobotLink {
       speed = -1.0;
     }
     byte val = (byte) ((speed + 1.0) * 100.0);
-    enqueueSetCommand(movementDirection.toString(), val);
+    enqueueSetCommand(movementDirection.toString().toLowerCase(), val);
     this.uartInterface.sendData(1, new byte[1]);
   }
 
   private void enqueueSetCommand(String var, byte val) {
-    enqueueCommand("+S" + var + "=" + byteToHex(val));
+    enqueueCommand("set " + var + "=" + byteToHex(val));
   }
 
   private void enqueueCommand(String cmd) {

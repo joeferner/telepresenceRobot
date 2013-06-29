@@ -12,6 +12,7 @@ extern "C" {
 #define min(a,b) ( ((a) < (b)) ? (a) : (b) )
 #define max(a,b) ( ((a) > (b)) ? (a) : (b) )
 
+int starts_with(const char* str, const char* strTest); 
 
 #ifdef	__cplusplus
 }
