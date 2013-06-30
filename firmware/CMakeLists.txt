@@ -63,6 +63,7 @@ SET(PROJECT_SOURCES
   usb_prop.c
   usb_pwr.c
   ring_buffer.c
+  time.c
   util.c
 )
 

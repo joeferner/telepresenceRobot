@@ -4,6 +4,8 @@
 #include "status_led.h"
 #include "usb.h"
 #include "ring_buffer.h"
+#include "util.h"
+#include "time.h"
 #include <misc.h>
 #include <string.h>
 
@@ -19,7 +21,6 @@ RobotRegisters robot_registers;
 
 void process_input(uint8_t* data, uint16_t len);
 void process_input_line(char* line);
-void process_response_write(const char* str);
 int8_t parse_speed(const char* str);
 void set_speed(int8_t speedLeft, int8_t speedRight);
 
@@ -32,11 +33,12 @@ int main(void) {
 
   debug_config();
   delay_ms(100);
-  debug_write_line("****************************************");
-  debug_write_line("BEGIN Init");
+  print("?****************************************\n");
+  print("?BEGIN Init\n");
   status_led_config();
+  time_config();
   usb_config();
-  debug_write_line("END Init");
+  print("?END Init\n");
 
   while (1) {
 
@@ -63,12 +65,6 @@ void process_input(uint8_t* data, uint16_t len) {
 
 }
 
-void process_response_write(const char* str) {
-  int len = strlen(len);
-  debug_write_bytes((const uint8_t*) str, len);
-  usb_write((const uint8_t*) str, len);
-}
-
 void process_input_line(char* line) {
   if (starts_with(line, "set ")) {
     char* p = line + strlen("set ");
@@ -80,18 +76,18 @@ void process_input_line(char* line) {
         int8_t speedLeft = parse_speed(val);
         int8_t speedRight = parse_speed(val + 2);
         set_speed(speedLeft, speedRight);
-        process_response_write("+OK\n");
+        print("+OK\n");
       } else {
-        process_response_write("-Invalid set variable '");
-        process_response_write(p);
-        process_response_write("'\n");
+        print("-Invalid set variable '");
+        print(p);
+        print("'\n");
       }
     } else {
-      process_response_write("-Invalid set, no '='\n");
+      print("-Invalid set, no '='\n");
     }
   } else {
-    process_response_write("-Invalid command: ");
-    process_response_write(line); // new line is already part of line
+    print("-Invalid command: ");
+    print(line); // new line is already part of line
   }
 }
 
@@ -107,4 +103,20 @@ void set_speed(int8_t speedLeft, int8_t speedRight) {
  */
 int8_t parse_speed(const char* str) {
   return parse_hex_byte(str);
+}
+
+void assert_failed(uint8_t* file, uint32_t line) {
+  print("!assert_failed: file ");
+  print((const char*) file);
+  print(" on line ");
+  print_u32(line, 10);
+  print("\n");
+
+  /* Infinite loop */
+  while (1) {
+    delay_ms(100);
+    status_led_on();
+    delay_ms(100);
+    status_led_off();
+  }
 }

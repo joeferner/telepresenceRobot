@@ -20,7 +20,7 @@ void usb_config(void) {
   EXTI_InitTypeDef extiInitStructure;
   NVIC_InitTypeDef nvicInitStructure;
 
-  debug_write_line("usb_config");
+  print("usb_config\n");
 
   ring_buffer_init(&usb_tx_ring_buffer, usb_tx_buffer, USB_TX_BUFFER_SIZE);
   
@@ -59,7 +59,7 @@ void usb_config(void) {
   nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_Init(&nvicInitStructure);
   
-  debug_write_line("USB_Init");
+  print("USB_Init\n");
   USB_Init();
   delay_ms(100); // TODO remove?
 }

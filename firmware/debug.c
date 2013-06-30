@@ -3,9 +3,16 @@
 #include "debug.h"
 #include "delay.h"
 #include "status_led.h"
+#include "util.h"
 #include <stm32f10x_usart.h>
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_gpio.h>
+
+void debug_write(const char* str);
+void debug_write_ch(char ch);
+void debug_write_u8(uint32_t val, int base);
+void debug_write_u32(uint32_t val, int base);
+void debug_write_line(const char* str);
 
 void debug_config() {
   USART_InitTypeDef usartInitStructure;
@@ -60,22 +67,6 @@ void USART1_IRQHandler(void) {
   }
 }
 
-void assert_failed(uint8_t* file, uint32_t line) {
-  debug_write("assert_failed: file ");
-  debug_write((const char*) file);
-  debug_write(" on line ");
-  debug_write_u32(line, 10);
-  debug_write_line("");
-
-  /* Infinite loop */
-  while (1) {
-    delay_ms(100);
-    status_led_on();
-    delay_ms(100);
-    status_led_off();
-  }
-}
-
 void debug_write_line(const char* str) {
   debug_write(str);
   debug_write_ch('\n');
@@ -110,11 +101,11 @@ void debug_write_u8(uint32_t val, int base) {
     str[2] = '\0';
     debug_write(str);
   } else {
-    debug_write_line("NOT IMPLEMENTED");
+    print("!NOT IMPLEMENTED\n");
   }
 }
 
 void debug_write_u32(uint32_t val, int base) {
-  debug_write_line("NOT IMPLEMENTED");
+  print("!NOT IMPLEMENTED\n");
 }
 
