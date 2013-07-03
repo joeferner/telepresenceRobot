@@ -38,6 +38,11 @@ public class MainActivity extends Activity {
       public void onConnectionStatusChanged(ConnectionStatus connectionStatus) {
         log("Robot Link connection status changed: " + connectionStatus);
       }
+
+      @Override
+      public void onData(byte[] buffer, int start, int length) {
+        log("Read: " + new String(buffer, start, length));
+      }
     });
 
     forward.setOnTouchListener(new MovementOnTouchListener(this, MovementDirection.FORWARD));
@@ -56,9 +61,14 @@ public class MainActivity extends Activity {
   private void log(String line) {
     logBuffer.append(line);
     logBuffer.append("\n");
-    log.setText(logBuffer.toString());
-    int scrollAmount = log.getLayout().getLineTop(log.getLineCount()) - log.getHeight();
-    log.scrollTo(0, scrollAmount);
+    this.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        log.setText(logBuffer.toString());
+        int scrollAmount = log.getLayout().getLineTop(log.getLineCount()) - log.getHeight();
+        log.scrollTo(0, scrollAmount);
+      }
+    });
   }
 
   @Override

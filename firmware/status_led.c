@@ -3,6 +3,7 @@
 #include "platform_config.h"
 #include "debug.h"
 #include "delay.h"
+#include "util.h"
 #include <stm32f10x_gpio.h>
 #include <stm32f10x_rcc.h>
 

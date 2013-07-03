@@ -9,8 +9,8 @@ import java.util.Queue;
 public class RobotLink {
   private static final int BAUD = 9600;
   private static final byte DATA_BITS = 8;
-  private static final byte STOP_BITS = 0;
-  private static final byte PARITY = 1;
+  private static final byte STOP_BITS = 1;
+  private static final byte PARITY = 0;
   private static final byte FLOW_CONTROL = 0;
   private final Thread communicationsThread;
   private FT31xUARTInterface uartInterface;
@@ -37,6 +37,11 @@ public class RobotLink {
           if (readStatus == 0x00) {
             int actualNumberOfBytesRead = actualNumberOfBytesReadArray[0];
             if (actualNumberOfBytesRead > 0) {
+              try {
+                eventHandler.onData(readBuffer, 0, actualNumberOfBytesRead);
+              } catch (Exception ex) {
+                Log.e("RobotLink", "Calling eventHandler.onData", ex);
+              }
               Log.d("RobotLink", "bytes read " + actualNumberOfBytesRead + " " + new String(readBuffer, 0, actualNumberOfBytesRead));
             }
           } else if (readStatus == 0x01) {
@@ -62,10 +67,10 @@ public class RobotLink {
 
   public void setSpeed(double speedLeft, double speedRight) {
     speedLeft = clamp(speedLeft, -1.0, 1.0);
-    byte speedLeftByte = (byte) (speedLeft * 128);
+    byte speedLeftByte = (byte) (speedLeft * (255 / 2));
 
     speedRight = clamp(speedRight, -1.0, 1.0);
-    byte speedRightByte = (byte) (speedRight * 128);
+    byte speedRightByte = (byte) (speedRight * (255 / 2));
 
     enqueueSetCommand(RobotRegister.SPEED, byteToHex(speedLeftByte) + byteToHex(speedRightByte));
   }
@@ -86,7 +91,12 @@ public class RobotLink {
 
   public void connect() {
     uartInterface.setConfig(BAUD, DATA_BITS, STOP_BITS, PARITY, FLOW_CONTROL);
-    enqueueCommand("+CONNECT");
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      Log.e("RobotLink", "Could not sleep", e);
+    }
+    enqueueCommand("connect");
     eventHandler.onConnectionStatusChanged(ConnectionStatus.CONNECTED);
   }
 

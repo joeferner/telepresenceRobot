@@ -21,6 +21,7 @@ import java.io.IOException;
 public class FT31xUARTInterface extends Activity {
 
   private static final String ACTION_USB_PERMISSION = "com.UARTTest.USB_PERMISSION";
+  private static final String LOG_TAG = "FT31xUARTInterface";
   public UsbManager usbmanager;
   public UsbAccessory usbaccessory;
   public PendingIntent mPermissionIntent;
@@ -28,7 +29,7 @@ public class FT31xUARTInterface extends Activity {
   public FileInputStream inputstream = null;
   public FileOutputStream outputstream = null;
   public boolean mPermissionRequestPending = false;
-  public read_thread readThread;
+  public ReadThread readThread;
 
   private byte[] usbdata;
   private byte[] writeusbdata;
@@ -41,7 +42,7 @@ public class FT31xUARTInterface extends Activity {
   final int maxnumbytes = 65536;
 
   public boolean datareceived = false;
-  public boolean READ_ENABLE = false;
+  public boolean readEnable = false;
   public boolean accessory_attached = false;
 
   public Context global_context;
@@ -107,11 +108,11 @@ public class FT31xUARTInterface extends Activity {
   /*write data*/
   public byte sendData(int numBytes, byte[] buffer) {
     status = 0x00; /*success by default*/
-		/*
-		 * if num bytes are more than maximum limit
+    /*
+     * if num bytes are more than maximum limit
 		 */
     if (numBytes < 1) {
-			/*return the status with the error in the command*/
+      /*return the status with the error in the command*/
       return status;
     }
 	 		
@@ -176,7 +177,7 @@ public class FT31xUARTInterface extends Activity {
         outputstream.write(writeusbdata, 0, numBytes);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      Log.e(LOG_TAG, "Could not write packet", e);
     }
   }
 
@@ -239,7 +240,7 @@ public class FT31xUARTInterface extends Activity {
   public void destroyAccessory(boolean bConfiged) {
 
     if (true == bConfiged) {
-      READ_ENABLE = false;  // set false condition for handler_thread to exit waiting data loop
+      readEnable = false;  // set false condition for handler_thread to exit waiting data loop
       writeusbdata[0] = 0;  // send dummy data for instream.read going
       sendPacket(1);
     } else {
@@ -249,7 +250,7 @@ public class FT31xUARTInterface extends Activity {
       } catch (Exception e) {
       }
 
-      READ_ENABLE = false;  // set false condition for handler_thread to exit waiting data loop
+      readEnable = false;  // set false condition for handler_thread to exit waiting data loop
       writeusbdata[0] = 0;  // send dummy data for instream.read going
       sendPacket(1);
       if (true == accessory_attached) {
@@ -282,9 +283,9 @@ public class FT31xUARTInterface extends Activity {
         return;
       }
 
-      if (READ_ENABLE == false) {
-        READ_ENABLE = true;
-        readThread = new read_thread(inputstream);
+      if (readEnable == false) {
+        readEnable = true;
+        readThread = new ReadThread(inputstream);
         readThread.start();
       }
     }
@@ -369,21 +370,21 @@ public class FT31xUARTInterface extends Activity {
   };
 
   /*usb input data handler*/
-  private class read_thread extends Thread {
+  private class ReadThread extends Thread {
     FileInputStream instream;
 
-    read_thread(FileInputStream stream) {
+    ReadThread(FileInputStream stream) {
       instream = stream;
       this.setPriority(Thread.MAX_PRIORITY);
     }
 
     public void run() {
-      while (READ_ENABLE == true) {
+      while (readEnable == true) {
         while (totalBytes > (maxnumbytes - 1024)) {
           try {
             Thread.sleep(50);
           } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Could not sleep", e);
           }
         }
 
@@ -406,7 +407,7 @@ public class FT31xUARTInterface extends Activity {
             }
           }
         } catch (IOException e) {
-          e.printStackTrace();
+          Log.e(LOG_TAG, "Could not read", e);
         }
       }
     }

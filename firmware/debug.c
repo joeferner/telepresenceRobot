@@ -10,8 +10,6 @@
 
 void debug_write(const char* str);
 void debug_write_ch(char ch);
-void debug_write_u8(uint32_t val, int base);
-void debug_write_u32(uint32_t val, int base);
 void debug_write_line(const char* str);
 
 void debug_config() {
@@ -91,21 +89,4 @@ void debug_write_ch(char ch) {
   while (USART_GetFlagStatus(DEBUG_USART, USART_FLAG_TXE) == RESET);
 }
 
-#define TO_HEX(i) ( (((i) & 0xf) <= 9) ? ('0' + ((i) & 0xf)) : ('A' - 10 + ((i) & 0xf)) )
-
-void debug_write_u8(uint32_t val, int base) {
-  char str[4];
-  if (base == 16) {
-    str[0] = TO_HEX(val >> 4);
-    str[1] = TO_HEX(val >> 0);
-    str[2] = '\0';
-    debug_write(str);
-  } else {
-    print("!NOT IMPLEMENTED\n");
-  }
-}
-
-void debug_write_u32(uint32_t val, int base) {
-  print("!NOT IMPLEMENTED\n");
-}
 

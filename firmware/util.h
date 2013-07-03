@@ -19,6 +19,7 @@ uint8_t parse_hex_nibble(char ch);
 uint8_t parse_hex_byte(const char* str);
 
 void print(const char* str);
+void print_u8(uint8_t val, uint8_t base);
 void print_u32(uint32_t val, uint8_t base);
 
 #ifdef	__cplusplus

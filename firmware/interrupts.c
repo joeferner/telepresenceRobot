@@ -1,6 +1,7 @@
 
 #include "debug.h"
 #include "status_led.h"
+#include "util.h" 
 
 void NMI_Handler(void) {
 }

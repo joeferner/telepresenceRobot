@@ -21,6 +21,8 @@ RobotRegisters robot_registers;
 
 void process_input(uint8_t* data, uint16_t len);
 void process_input_line(char* line);
+void process_set_command(char* line);
+void process_connect_command(char* line);
 int8_t parse_speed(const char* str);
 void set_speed(int8_t speedLeft, int8_t speedRight);
 
@@ -66,28 +68,45 @@ void process_input(uint8_t* data, uint16_t len) {
 }
 
 void process_input_line(char* line) {
-  if (starts_with(line, "set ")) {
-    char* p = line + strlen("set ");
-    char* eq = strchr(line, '=');
-    if (eq) {
-      char* val = eq + 1;
-      *eq = '\0';
-      if (!strcmp(p, "speed")) {
-        int8_t speedLeft = parse_speed(val);
-        int8_t speedRight = parse_speed(val + 2);
-        set_speed(speedLeft, speedRight);
-        print("+OK\n");
-      } else {
-        print("-Invalid set variable '");
-        print(p);
-        print("'\n");
-      }
-    } else {
-      print("-Invalid set, no '='\n");
-    }
+  print("?");
+  print(line);
+
+  if (starts_with(line, "connect")) {
+    process_connect_command(line);
+  } else if (starts_with(line, "set ")) {
+    process_set_command(line);
   } else {
     print("-Invalid command: ");
     print(line); // new line is already part of line
+  }
+}
+
+void process_connect_command(char* line) {
+  print("+OK\n");
+}
+
+void process_set_command(char* line) {
+  char* p = line + strlen("set ");
+  char* eq = strchr(line, '=');
+  if (eq) {
+    char* val = eq + 1;
+    *eq = '\0';
+    if (!strcmp(p, "speed")) {
+      int8_t speedLeft = parse_speed(val);
+      int8_t speedRight = parse_speed(val + 2);
+      set_speed(speedLeft, speedRight);
+      print("+OK ");
+      print_u8(speedLeft, 16);
+      print(" ");
+      print_u8(speedRight, 16);
+      print("\n");
+    } else {
+      print("-Invalid set variable '");
+      print(p);
+      print("'\n");
+    }
+  } else {
+    print("-Invalid set, no '='\n");
   }
 }
 
