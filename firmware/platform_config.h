@@ -23,26 +23,26 @@
 #define MOTOR_PWM_TIMER_RCC    RCC_APB1Periph_TIM2
 
 #define MOTOR_EN               GPIOA
-#define MOTOR_EN_PIN           GPIO_Pin_0           
+#define MOTOR_EN_PIN           GPIO_Pin_0
 #define MOTOR_EN_RCC           RCC_APB2Periph_GPIOA
 
-#define MOTOR_LEFT_DIR         GPIOB
-#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_12
-#define MOTOR_LEFT_DIR_RCC     RCC_APB2Periph_GPIOB
+#define MOTOR_LEFT_DIR         GPIOA
+#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_1
+#define MOTOR_LEFT_DIR_RCC     RCC_APB2Periph_GPIOA
 
 // TIM2_CH3
-#define MOTOR_LEFT_PWM         GPIOB
-#define MOTOR_LEFT_PWM_PIN     GPIO_Pin_10
-#define MOTOR_LEFT_PWM_RCC     RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO
+#define MOTOR_LEFT_PWM         GPIOA
+#define MOTOR_LEFT_PWM_PIN     GPIO_Pin_2
+#define MOTOR_LEFT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
-#define MOTOR_RIGHT_DIR        GPIOB
-#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_13
-#define MOTOR_RIGHT_DIR_RCC    RCC_APB2Periph_GPIOB
+#define MOTOR_RIGHT_DIR        GPIOA
+#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_4
+#define MOTOR_RIGHT_DIR_RCC    RCC_APB2Periph_GPIOA
 
 // TIM2_CH4
-#define MOTOR_RIGHT_PWM        GPIOB
-#define MOTOR_RIGHT_PWM_PIN    GPIO_Pin_11
-#define MOTOR_RIGHT_PWM_RCC    RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO
+#define MOTOR_RIGHT_PWM        GPIOA
+#define MOTOR_RIGHT_PWM_PIN    GPIO_Pin_3
+#define MOTOR_RIGHT_PWM_RCC    RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define DEBUG_USART            USART1
 #define DEBUG_USART_BAUD       9600

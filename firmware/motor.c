@@ -4,6 +4,13 @@
 #include "util.h"
 #include <stm32f10x_tim.h>
 
+#define PWM_PERIOD 128
+
+int8_t lastSpeedLeft = 0xff;
+int8_t lastSpeedRight = 0xff;
+
+uint32_t speed_to_pwm_compare(int8_t speed);
+
 void motor_config() {
   GPIO_InitTypeDef GPIO_Config;
   uint16_t prescalerValue = 0;
@@ -70,26 +77,29 @@ void motor_config() {
   prescalerValue = (uint16_t) (SystemCoreClock / 24000000) - 1;
 
   // Time base configuration
-  TIM_TimeBaseStructure.TIM_Period = 665;
+  TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
+  TIM_TimeBaseStructure.TIM_Period = PWM_PERIOD;
   TIM_TimeBaseStructure.TIM_Prescaler = prescalerValue;
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
   TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
+  TIM_OCStructInit(&TIM_OCInitStructure);
   TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
 
   // PWM1 Mode configuration: Channel3
-  TIM_OCInitStructure.TIM_Pulse = 333;
+  TIM_OCInitStructure.TIM_Pulse = 0;
   TIM_OC3Init(TIM2, &TIM_OCInitStructure);
   TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
   // PWM1 Mode configuration: Channel4
-  TIM_OCInitStructure.TIM_Pulse = 249;
+  TIM_OCInitStructure.TIM_Pulse = 0;
   TIM_OC4Init(TIM2, &TIM_OCInitStructure);
   TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
+  TIM_SelectOnePulseMode(TIM2, TIM_OPMode_Repetitive);
   TIM_ARRPreloadConfig(TIM2, ENABLE);
   TIM_Cmd(TIM2, ENABLE);
 }
@@ -105,15 +115,28 @@ void motor_enable(int enable) {
 }
 
 void motor_set_speed(int8_t speedLeft, int8_t speedRight) {
-  if (speedLeft > 0) {
-    GPIO_SetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
-  } else {
-    GPIO_ResetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
+  if (speedLeft != lastSpeedLeft) {
+    if (speedLeft > 0) {
+      GPIO_SetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
+    } else {
+      GPIO_ResetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
+    }
+    TIM_SetCompare3(TIM2, speed_to_pwm_compare(speedLeft));
+    lastSpeedLeft = speedLeft;
   }
 
-  if (speedRight > 0) {
-    GPIO_SetBits(MOTOR_RIGHT_DIR, MOTOR_RIGHT_DIR_PIN);
-  } else {
-    GPIO_ResetBits(MOTOR_RIGHT_DIR, MOTOR_RIGHT_DIR_PIN);
+  if (speedRight != lastSpeedRight) {
+    if (speedRight > 0) {
+      GPIO_SetBits(MOTOR_RIGHT_DIR, MOTOR_RIGHT_DIR_PIN);
+    } else {
+      GPIO_ResetBits(MOTOR_RIGHT_DIR, MOTOR_RIGHT_DIR_PIN);
+    }
+    TIM_SetCompare4(TIM2, speed_to_pwm_compare(speedRight));
+    lastSpeedRight = speedRight;
   }
+}
+
+uint32_t speed_to_pwm_compare(int8_t speed) {
+  uint32_t absSpeed = abs(speed);
+  return absSpeed * (PWM_PERIOD / 128);
 }

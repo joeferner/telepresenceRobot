@@ -10,7 +10,8 @@ extern "C" {
 
 #define FALSE 0
 #define TRUE  1
-  
+
+#define abs(a) ( ((a) < 0) ? -(a) : (a) )  
 #define min(a,b) ( ((a) < (b)) ? (a) : (b) )
 #define max(a,b) ( ((a) > (b)) ? (a) : (b) )
 
