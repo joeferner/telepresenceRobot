@@ -40,7 +40,7 @@ void print(const char* str) {
 #define TO_HEX(i) ( (((i) & 0xf) <= 9) ? ('0' + ((i) & 0xf)) : ('A' - 10 + ((i) & 0xf)) )
 
 void print_u32(uint32_t val, uint8_t base) {
-  print("!NOT IMPLEMENTED");
+  print_error("NOT IMPLEMENTED");
 }
 
 void print_u8(uint8_t val, uint8_t base) {
@@ -51,7 +51,7 @@ void print_u8(uint8_t val, uint8_t base) {
     str[2] = '\0';
     print(str);
   } else {
-    print("!NOT IMPLEMENTED");
+    print_error("NOT IMPLEMENTED");
   }
 }
 

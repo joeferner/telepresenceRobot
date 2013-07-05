@@ -10,7 +10,7 @@
 void status_led_config() {
   GPIO_InitTypeDef GPIO_Config;
 
-  print("status_led_config\n");
+  print_info("status_led_config\n");
 
   RCC_APB2PeriphClockCmd(STATUS_LED_RCC, ENABLE);
 

@@ -6,6 +6,7 @@
 #include "ring_buffer.h"
 #include "util.h"
 #include "time.h"
+#include "motor.h"
 #include <misc.h>
 #include <string.h>
 
@@ -43,14 +44,16 @@ int main(void) {
 
   debug_config();
   delay_ms(100);
-  print("?****************************************\n");
-  print("?BEGIN Init\n");
+  print_info("****************************************\n");
+  print_info("BEGIN Init\n");
   init_robot_registers();
   status_led_config();
+  motor_config();
   time_config();
   usb_config();
-  print("?END Init\n");
+  print_info("END Init\n");
 
+  motor_enable(TRUE);
   while (1) {
     loop();
   }
@@ -84,6 +87,8 @@ void update_speed() {
     robot_registers.speedRight -= min(10, robot_registers.speedRight - robot_registers.targetSpeedRight);
   }
 
+  motor_set_speed(robot_registers.speedLeft, robot_registers.speedRight);
+  
   last_update_speed = time_ms();
 }
 
@@ -114,7 +119,7 @@ void process_input(uint8_t* data, uint16_t len) {
 }
 
 void process_input_line(char* line) {
-  print("?");
+  print_info("");
   print(line);
   print("\n");
 
@@ -125,14 +130,14 @@ void process_input_line(char* line) {
   } else if (starts_with(line, "get ")) {
     process_get_command(line);
   } else {
-    print("-Invalid command: ");
+    print_fail("Invalid command: ");
     print(line);
     print("\n");
   }
 }
 
 void process_connect_command(char* line) {
-  print("+OK\n");
+  print_success("OK\n");
 }
 
 void process_set_command(char* line) {
@@ -145,34 +150,34 @@ void process_set_command(char* line) {
       int8_t speedLeft = parse_speed(val);
       int8_t speedRight = parse_speed(val + 2);
       set_speed(speedLeft, speedRight);
-      print("+OK ");
+      print_success("OK ");
       print_u8(speedLeft, 16);
       print_u8(speedRight, 16);
       print("\n");
     } else {
-      print("-Invalid set variable '");
+      print_fail("Invalid set variable '");
       print(p);
       print("'\n");
     }
   } else {
-    print("-Invalid set, no '='\n");
+    print_fail("Invalid set, no '='\n");
   }
 }
 
 void process_get_command(char* line) {
   char* p = line + strlen("get ");
   if (!strcmp(p, "speed")) {
-    print("+OK ");
+    print_success("OK ");
     print_u8(robot_registers.speedLeft, 16);
     print_u8(robot_registers.speedRight, 16);
     print("\n");
   } else if (!strcmp(p, "target_speed")) {
-    print("+OK ");
+    print_success("OK ");
     print_u8(robot_registers.targetSpeedLeft, 16);
     print_u8(robot_registers.targetSpeedRight, 16);
     print("\n");
   } else {
-    print("-Invalid get variable '");
+    print_fail("Invalid get variable '");
     print(p);
     print("'\n");
   }
@@ -194,7 +199,7 @@ int8_t parse_speed(const char* str) {
 }
 
 void assert_failed(uint8_t* file, uint32_t line) {
-  print("!assert_failed: file ");
+  print_error("assert_failed: file ");
   print((const char*) file);
   print(" on line ");
   print_u32(line, 10);
