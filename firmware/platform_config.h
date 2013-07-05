@@ -12,18 +12,18 @@
 #define ID2                    (0x1FFFF7EC)
 #define ID3                    (0x1FFFF7F0)
 
-#define USB_DISCONNECT         GPIOB  
-#define USB_DISCONNECT_PIN     GPIO_Pin_9
-#define USB_DISCONNECT_RCC     RCC_APB2Periph_GPIOB
+#define USB_DISCONNECT         GPIOA
+#define USB_DISCONNECT_PIN     GPIO_Pin_8
+#define USB_DISCONNECT_RCC     RCC_APB2Periph_GPIOA
 
 #define STATUS_LED             GPIOA
-#define STATUS_LED_PIN         GPIO_Pin_6
+#define STATUS_LED_PIN         GPIO_Pin_14
 #define STATUS_LED_RCC         RCC_APB2Periph_GPIOA
 
 #define MOTOR_PWM_TIMER_RCC    RCC_APB1Periph_TIM2
 
 #define MOTOR_EN               GPIOA
-#define MOTOR_EN_PIN           GPIO_Pin_0
+#define MOTOR_EN_PIN           GPIO_Pin_13
 #define MOTOR_EN_RCC           RCC_APB2Periph_GPIOA
 
 #define MOTOR_LEFT_DIR         GPIOA
@@ -36,7 +36,7 @@
 #define MOTOR_LEFT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define MOTOR_RIGHT_DIR        GPIOA
-#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_4
+#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_0
 #define MOTOR_RIGHT_DIR_RCC    RCC_APB2Periph_GPIOA
 
 // TIM2_CH4

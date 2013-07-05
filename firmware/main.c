@@ -24,6 +24,7 @@ ring_buffer input_ring_buffer;
 RobotRegisters robot_registers;
 uint32_t last_update_speed = 0;
 
+void disable_jtag();
 void loop();
 void init_robot_registers();
 void process_input(uint8_t* data, uint16_t len);
@@ -43,15 +44,17 @@ int main(void) {
   ring_buffer_init(&input_ring_buffer, input_buffer, INPUT_BUFFER_SIZE);
 
   debug_config();
-  delay_ms(100);
+  delay_ms(1000); // !!!! IMPORTANT: Keep this line in here. If we have a JTAG issue we need this time to get in before JTAG is disabled.
   print_info("****************************************\n");
   print_info("BEGIN Init\n");
+  disable_jtag();
   init_robot_registers();
   status_led_config();
   motor_config();
   time_config();
   usb_config();
   print_info("END Init\n");
+  status_led_on();
 
   motor_enable(TRUE);
   while (1) {
@@ -61,19 +64,19 @@ int main(void) {
 }
 
 void loop() {
-  update_speed();  
+  update_speed();
 }
 
 void update_speed() {
   if ((time_ms() - last_update_speed) < 100) {
     return;
   }
-  
+
   // this timeout is for safety. If we haven't received a speed update in over x seconds we should stop the robot
-  if((time_ms() - robot_registers.targetSpeedLastUpdated) > 10000) {
+  if ((time_ms() - robot_registers.targetSpeedLastUpdated) > 10000) {
     set_speed(0, 0);
   }
-  
+
   // provide for acceleration and deceleration
   if (robot_registers.targetSpeedLeft > robot_registers.speedLeft) {
     robot_registers.speedLeft += min(10, robot_registers.targetSpeedLeft - robot_registers.speedLeft);
@@ -88,8 +91,12 @@ void update_speed() {
   }
 
   motor_set_speed(robot_registers.speedLeft, robot_registers.speedRight);
-  
+
   last_update_speed = time_ms();
+}
+
+void disable_jtag() {
+  GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
 }
 
 void init_robot_registers() {
