@@ -161,6 +161,13 @@ void process_set_command(char* line) {
       print_u8(speedLeft, 16);
       print_u8(speedRight, 16);
       print("\n");
+    } else if (!strcmp(p, "status_led")) {
+      if (*val == '0') {
+        status_led_off();
+      } else {
+        status_led_on();
+      }
+      print_success("OK\n");
     } else {
       print_fail("Invalid set variable '");
       print(p);
