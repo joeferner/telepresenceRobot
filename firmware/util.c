@@ -54,3 +54,21 @@ void print_u8(uint8_t val, uint8_t base) {
     print("!NOT IMPLEMENTED");
   }
 }
+
+int is_whitespace(char ch) {
+  switch(ch) {
+    case '\n':
+    case '\r':
+    case '\t':
+    case ' ':
+      return TRUE;
+  }
+  return FALSE;
+}
+
+void trim_right(char* str) {
+  char *p = str + strlen(str) - 1;
+  while(is_whitespace(*p)) {
+    *p-- = '\0';
+  }
+}

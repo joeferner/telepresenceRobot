@@ -3,8 +3,11 @@
 #include <stm32f10x.h>
 #include <core_cm3.h>
 
+volatile uint32_t counter_ms = 0;
+
 /* !!! Interrupt handler - Don't change this function name !!! */
 void SysTick_Handler(void) {
+  counter_ms++;
 }
 
 void time_config() {
@@ -39,4 +42,8 @@ void time_config() {
     /* Capture error */
     while (1);
   }
+}
+
+volatile uint32_t time_ms() {
+  return counter_ms;
 }

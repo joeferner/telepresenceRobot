@@ -10,21 +10,29 @@
 #include <string.h>
 
 typedef struct {
-  int8_t speedLeft;
-  int8_t speedRight;
+  volatile int8_t speedLeft;
+  volatile int8_t speedRight;
+  volatile int8_t targetSpeedLeft;
+  volatile int8_t targetSpeedRight;
+  volatile uint32_t targetSpeedLastUpdated;
 } RobotRegisters;
 
 #define INPUT_BUFFER_SIZE 100
 uint8_t input_buffer[INPUT_BUFFER_SIZE];
 ring_buffer input_ring_buffer;
 RobotRegisters robot_registers;
+uint32_t last_update_speed = 0;
 
+void loop();
+void init_robot_registers();
 void process_input(uint8_t* data, uint16_t len);
 void process_input_line(char* line);
 void process_set_command(char* line);
+void process_get_command(char* line);
 void process_connect_command(char* line);
 int8_t parse_speed(const char* str);
 void set_speed(int8_t speedLeft, int8_t speedRight);
+void update_speed();
 
 int main(void) {
   // Configure the NVIC Preemption Priority Bits
@@ -37,15 +45,53 @@ int main(void) {
   delay_ms(100);
   print("?****************************************\n");
   print("?BEGIN Init\n");
+  init_robot_registers();
   status_led_config();
   time_config();
   usb_config();
   print("?END Init\n");
 
   while (1) {
-
+    loop();
   }
   return 0;
+}
+
+void loop() {
+  update_speed();  
+}
+
+void update_speed() {
+  if ((time_ms() - last_update_speed) < 100) {
+    return;
+  }
+  
+  // this timeout is for safety. If we haven't received a speed update in over x seconds we should stop the robot
+  if((time_ms() - robot_registers.targetSpeedLastUpdated) > 10000) {
+    set_speed(0, 0);
+  }
+  
+  // provide for acceleration and deceleration
+  if (robot_registers.targetSpeedLeft > robot_registers.speedLeft) {
+    robot_registers.speedLeft += min(10, robot_registers.targetSpeedLeft - robot_registers.speedLeft);
+  } else if (robot_registers.targetSpeedLeft < robot_registers.speedLeft) {
+    robot_registers.speedLeft -= min(10, robot_registers.speedLeft - robot_registers.targetSpeedLeft);
+  }
+
+  if (robot_registers.targetSpeedRight > robot_registers.speedRight) {
+    robot_registers.speedRight += min(10, robot_registers.targetSpeedRight - robot_registers.speedRight);
+  } else if (robot_registers.targetSpeedRight < robot_registers.speedRight) {
+    robot_registers.speedRight -= min(10, robot_registers.speedRight - robot_registers.targetSpeedRight);
+  }
+
+  last_update_speed = time_ms();
+}
+
+void init_robot_registers() {
+  robot_registers.speedLeft = 0;
+  robot_registers.speedRight = 0;
+  robot_registers.targetSpeedLeft = 0;
+  robot_registers.targetSpeedRight = 0;
 }
 
 void debug_on_rx(uint8_t* data, uint16_t len) {
@@ -62,22 +108,26 @@ void process_input(uint8_t* data, uint16_t len) {
 
   ring_buffer_write(&input_ring_buffer, data, len);
   while (ring_buffer_readline(&input_ring_buffer, line, MAX_LINE_LENGTH) > 0) {
+    trim_right(line);
     process_input_line(line);
   }
-
 }
 
 void process_input_line(char* line) {
   print("?");
   print(line);
+  print("\n");
 
   if (starts_with(line, "connect")) {
     process_connect_command(line);
   } else if (starts_with(line, "set ")) {
     process_set_command(line);
+  } else if (starts_with(line, "get ")) {
+    process_get_command(line);
   } else {
     print("-Invalid command: ");
-    print(line); // new line is already part of line
+    print(line);
+    print("\n");
   }
 }
 
@@ -97,7 +147,6 @@ void process_set_command(char* line) {
       set_speed(speedLeft, speedRight);
       print("+OK ");
       print_u8(speedLeft, 16);
-      print(" ");
       print_u8(speedRight, 16);
       print("\n");
     } else {
@@ -110,9 +159,29 @@ void process_set_command(char* line) {
   }
 }
 
-void set_speed(int8_t speedLeft, int8_t speedRight) {
-  robot_registers.speedLeft = speedLeft;
-  robot_registers.speedRight = speedRight;
+void process_get_command(char* line) {
+  char* p = line + strlen("get ");
+  if (!strcmp(p, "speed")) {
+    print("+OK ");
+    print_u8(robot_registers.speedLeft, 16);
+    print_u8(robot_registers.speedRight, 16);
+    print("\n");
+  } else if (!strcmp(p, "target_speed")) {
+    print("+OK ");
+    print_u8(robot_registers.targetSpeedLeft, 16);
+    print_u8(robot_registers.targetSpeedRight, 16);
+    print("\n");
+  } else {
+    print("-Invalid get variable '");
+    print(p);
+    print("'\n");
+  }
+}
+
+void set_speed(int8_t targetSpeedLeft, int8_t targetSpeedRight) {
+  robot_registers.targetSpeedLeft = targetSpeedLeft;
+  robot_registers.targetSpeedRight = targetSpeedRight;
+  robot_registers.targetSpeedLastUpdated = time_ms();
 }
 
 /**
