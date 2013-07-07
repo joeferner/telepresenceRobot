@@ -48,6 +48,9 @@ function start(options) {
     case 'server/created':
       console.log('Server created. Name: ' + message.options.name);
       break;
+    case 'server/send':
+      console.log('recv: ' + message.options.command);
+      break;
     case 'error':
       console.error('Error:', message.options.message);
       break;

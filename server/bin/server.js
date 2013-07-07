@@ -82,23 +82,19 @@ function start(options) {
   require('../lib/routes')(app);
 
   var server = http.createServer(app);
-  var io = socketio.listen(server);
-  io.sockets.on('connection', function(socket) {
+  app.sockets = {};
+  app.io = socketio.listen(server);
+  app.io.sockets.on('connection', function(socket) {
+    app.sockets[socket.id] = socket;
     console.log('socket.io connection:', socket.id);
     socket.on('message', function(msg) {
       app.fireSocketioMessage(msg.command, socket, msg);
     });
     socket.on('disconnect', function() {
+      delete app.sockets[socket.id];
       console.log('socket.io disconnect');
     })
   });
 
   server.listen(options.port);
 }
-
-//io.sockets.on('connection', function(socket) {
-//  socket.emit('news', { hello: 'world' });
-//  socket.on('my other event', function(data) {
-//    console.log(data);
-//  });
-//});
