@@ -1,0 +1,44 @@
+<input type="checkbox" id="status-led-toggle"> Status LED
+
+<script>
+  var socket;
+
+  $(function() {
+    socket = socketioConnect();
+    $('#status-led-toggle').change(onStatusLedToggle);
+  });
+
+  function socketioConnect() {
+    var url = document.location.href;
+    var slash = url.indexOf('/', 'http://zzz'.length);
+    url = url.substr(0, slash);
+
+    var socket = io.connect(url);
+    socket.on('connect', onSocketioConnect.bind(null, socket));
+    socket.on('disconnect', onSocketioDisconnect.bind(null, socket));
+    socket.on('message', onSocketioMessage.bind(null, socket));
+    return socket;
+  }
+
+  function onSocketioConnect(socket) {
+    console.log('connect', socket.id);
+  }
+
+  function onSocketioDisconnect(socket) {
+    console.log('disconnect');
+  }
+
+  function onSocketioMessage(socket, msg) {
+    console.log(msg);
+  }
+
+  function onStatusLedToggle() {
+    var state = $('#status-led-toggle').is(':checked');
+    socket.emit('message', {
+      command: 'send',
+      options: {
+        command: 'set status_led=' + (state ? '1' : '0')
+      }
+    });
+  }
+</script>

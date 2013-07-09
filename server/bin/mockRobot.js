@@ -34,7 +34,7 @@ function start(options) {
   socket.on('connect', function() {
     console.log("socket connected");
     socket.emit('message', {
-      command: "server/create",
+      command: "createServer",
       options: {
         name: options.name
       }
@@ -45,11 +45,8 @@ function start(options) {
   });
   socket.on('message', function(message) {
     switch (message.command) {
-    case 'server/created':
-      console.log('Server created. Name: ' + message.options.name);
-      break;
-    case 'server/send':
-      console.log('recv: ' + message.options.command);
+    case 'command':
+      console.log('command recv: ' + message.options.command);
       break;
     case 'error':
       console.error('Error:', message.options.message);
