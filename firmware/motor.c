@@ -4,7 +4,7 @@
 #include "util.h"
 #include <stm32f10x_tim.h>
 
-#define PWM_PERIOD 128
+#define PWM_PERIOD 0x2000
 
 int8_t lastSpeedLeft = 0xff;
 int8_t lastSpeedRight = 0xff;
