@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Wed 05 Jun 2013 05:16:29 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 01 Aug 2013 10:10:10 PM EDT
 
 BeginCmp
 TimeStamp = /51AEBD37;
@@ -10,42 +10,42 @@ EndCmp
 BeginCmp
 TimeStamp = /51AEC2CE;
 Reference = C2;
-ValeurCmp = 100uF;
-IdModule  = CAP-CAN-5mm;
+ValeurCmp = 100uF 35V;
+IdModule  = CAP-CAN-6.30mm;
 EndCmp
 
 BeginCmp
 TimeStamp = /51AEC2D9;
 Reference = C3;
-ValeurCmp = 0.1uF;
+ValeurCmp = 0.1uF 35V;
 IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /51AEC2F0;
 Reference = C4;
-ValeurCmp = 0.1uF;
+ValeurCmp = 0.1uF 35V;
 IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /51AEC2F6;
 Reference = C5;
-ValeurCmp = 0.1uF;
+ValeurCmp = 0.1uF 35V;
 IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /51AEC2FC;
 Reference = C6;
-ValeurCmp = 0.1uF;
+ValeurCmp = 0.1uF 35V;
 IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /51AEBD2A;
 Reference = C7;
-ValeurCmp = 33nF;
+ValeurCmp = 33nF 28V;
 IdModule  = SM0805;
 EndCmp
 
@@ -150,7 +150,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51AE89DB;
 Reference = R1;
-ValeurCmp = 100k;
+ValeurCmp = 10k;
 IdModule  = SM0805;
 EndCmp
 
@@ -171,7 +171,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51AEC7B8;
 Reference = R4;
-ValeurCmp = 100k;
+ValeurCmp = 10k;
 IdModule  = SM0805;
 EndCmp
 
@@ -200,6 +200,27 @@ BeginCmp
 TimeStamp = /51AEDAAC;
 Reference = R8;
 ValeurCmp = 4.7K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51FB16F7;
+Reference = R9;
+ValeurCmp = 10k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51FB1847;
+Reference = R10;
+ValeurCmp = 10k;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /51FB15AD;
+Reference = R11;
+ValeurCmp = 10k;
 IdModule  = SM0805;
 EndCmp
 
