@@ -10,12 +10,8 @@
   "author": "Joe Ferner <joe@fernsroth.com>",
   "license": "MIT",
   "dependencies": {
-    "async": "~0.2.9",
-    "socket.io": "~0.9.16",
-    "express": "~3.3.3",
-    "optimist": "~0.6.0",
-    "ejs": "~0.8.4",
-    "express-partials": "~0.1.1",
-    "socket.io-client": "~0.9.16"
+    "node-static": "~0.7.0",
+    "websocket": "~1.0.8",
+    "optimist": "~0.6.0"
   }
 }
