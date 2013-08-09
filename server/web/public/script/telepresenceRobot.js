@@ -151,6 +151,11 @@ $(function() {
       y: center - joystickStick.attr("cy")
     };
     var power = Math.sqrt(pos.x * pos.x + pos.y * pos.y) / joystickLimitRadius;
+
+    // 0 radians = forward
+    // pi radians = back
+    // negative angle is anything left of center
+    // positive angle is anything right of center
     var angle = Math.atan2(pos.x, pos.y);
     subSocket.push(JSON.stringify({
       type: 'setSpeedPolar',
