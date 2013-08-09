@@ -133,6 +133,7 @@ $(function() {
       clearInterval(joystickResetPositionTimer);
       joystickResetPositionTimer = null;
       fireJoystickEvent();
+      setTimeout(fireJoystickEvent, 100);
       return;
     }
 

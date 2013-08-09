@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import org.atmosphere.wasync.*;
 import org.json.JSONException;
@@ -26,6 +27,8 @@ public class MainActivity extends Activity {
     private Button connect;
     private RobotLink robotLink;
     private long serverId = new Date().getTime();
+    private Socket socket;
+    private EditText address;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class MainActivity extends Activity {
         back = (Button) findViewById(R.id.back);
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
+        address = (EditText) findViewById(R.id.address);
 
         robotLink = new RobotLink(this);
         log.setMovementMethod(new ScrollingMovementMethod());
@@ -66,6 +70,11 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 log("Connecting...");
                 robotLink.connect();
+                try {
+                    connectToServer();
+                } catch (IOException e) {
+                    Log.e("telepresenceRobot", "Could not connect to server", e);
+                }
             }
         });
 
@@ -77,11 +86,15 @@ public class MainActivity extends Activity {
     }
 
     private void connectToServer() throws IOException {
+        if (socket != null) {
+            socket.close();
+            socket = null;
+        }
         Client client = ClientFactory.getDefault().newClient();
 
         RequestBuilder request = client.newRequestBuilder()
                 .method(Request.METHOD.GET)
-                .uri("http://192.168.0.160:9999")
+                .uri("http://" + address.getText() + ":9999")
                 .encoder(new Encoder<JSONObject, String>() {
                     @Override
                     public String encode(JSONObject data) {
@@ -104,7 +117,7 @@ public class MainActivity extends Activity {
                 })
                 .transport(Request.TRANSPORT.WEBSOCKET);
 
-        final org.atmosphere.wasync.Socket socket = client.create();
+        socket = client.create();
         socket
                 .on("message", new Function<JSONObject>() {
                     @Override
@@ -140,7 +153,10 @@ public class MainActivity extends Activity {
                                     leftSpeed = -1.0;
                                     rightSpeed = (1.0 - ((Math.abs(angleRad) - (Math.PI / 2.0)) / (Math.PI / 2.0) * 2.0));
                                 }
-                                robotLink.setSpeed(leftSpeed * power, rightSpeed * power);
+                                leftSpeed = leftSpeed * power;
+                                rightSpeed = rightSpeed * power;
+                                log("Setting speed " + leftSpeed + ", " + rightSpeed);
+                                robotLink.setSpeed(leftSpeed, rightSpeed);
                             } else {
                                 Log.e("telepresenceRobot", "Invalid packet type: " + type);
                             }
@@ -153,6 +169,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void on(Throwable t) {
                         Log.e("telepresenceRobot", "Error", t);
+                        tryReconnect();
                     }
                 })
                 .on(Event.OPEN, new Function<String>() {
@@ -171,7 +188,21 @@ public class MainActivity extends Activity {
                         }
                     }
                 })
+                .on(Event.CLOSE, new Function<String>() {
+                    @Override
+                    public void on(String o) {
+                        tryReconnect();
+                    }
+                })
                 .open(request.build());
+    }
+
+    private void tryReconnect() {
+        try {
+            connectToServer();
+        } catch (IOException e) {
+            Log.e("telepresenceRobot", "Error", e);
+        }
     }
 
     private void log(String line) {

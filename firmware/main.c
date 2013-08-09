@@ -52,7 +52,7 @@ int main(void) {
   status_led_config();
   motor_config();
   time_config();
-  usb_config();
+  //usb_config();
   print_info("END Init\n");
   status_led_on();
 
