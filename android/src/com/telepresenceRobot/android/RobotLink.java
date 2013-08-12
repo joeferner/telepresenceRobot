@@ -15,7 +15,7 @@ public class RobotLink {
     private final Thread communicationsThread;
     private FT31xUARTInterface uartInterface;
     private RobotLinkEventHandler eventHandler;
-    private final Queue<String> commandQueue = new LinkedList<>();
+    private final Queue<String> commandQueue = new LinkedList<String>();
 
     public RobotLink(Context context) {
         uartInterface = new FT31xUARTInterface(context, null);
