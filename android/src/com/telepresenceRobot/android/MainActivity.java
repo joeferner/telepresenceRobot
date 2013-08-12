@@ -130,33 +130,9 @@ public class MainActivity extends Activity {
                                 Log.i("telepresenceRobot", "setting status led " + newState);
                                 robotLink.setStatusLed(newState);
                             } else if (type.equals("setSpeedPolar")) {
-                                double angleRad = t.getDouble("angle");
-                                while (angleRad < Math.PI) {
-                                    angleRad += 2 * Math.PI;
-                                }
-                                while (angleRad > Math.PI) {
-                                    angleRad -= 2 * Math.PI;
-                                }
-                                double power = t.getDouble("power");
-                                double leftSpeed;
-                                double rightSpeed;
-                                if (angleRad >= 0 && angleRad < (Math.PI / 2.0)) {
-                                    leftSpeed = 1.0;
-                                    rightSpeed = (1.0 - (angleRad / (Math.PI / 2.0) * 2.0));
-                                } else if (angleRad > (Math.PI / 2)) {
-                                    rightSpeed = -1.0;
-                                    leftSpeed = (1.0 - ((angleRad - (Math.PI / 2.0)) / (Math.PI / 2.0) * 2.0));
-                                } else if (angleRad < 0 && angleRad > (-Math.PI / 2.0)) {
-                                    rightSpeed = 1.0;
-                                    leftSpeed = (1.0 - (Math.abs(angleRad) / (Math.PI / 2.0) * 2.0));
-                                } else { //if (angleRad < 0)
-                                    leftSpeed = -1.0;
-                                    rightSpeed = (1.0 - ((Math.abs(angleRad) - (Math.PI / 2.0)) / (Math.PI / 2.0) * 2.0));
-                                }
-                                leftSpeed = leftSpeed * power;
-                                rightSpeed = rightSpeed * power;
-                                log("Setting speed " + leftSpeed + ", " + rightSpeed);
-                                robotLink.setSpeed(leftSpeed, rightSpeed);
+                                Speed speed = new SpeedTryOne(t.getDouble("angle"), t.getDouble("power"));
+                                log("Setting speed " + speed.getLeftSpeed() + ", " + speed.getRightSpeed());
+                                robotLink.setSpeed(speed.getLeftSpeed(), speed.getRightSpeed());
                             } else {
                                 Log.e("telepresenceRobot", "Invalid packet type: " + type);
                             }
