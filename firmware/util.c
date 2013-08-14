@@ -2,6 +2,7 @@
 #include "util.h"
 #include "debug.h"
 #include <string.h>
+#include <math.h>
 
 extern void usb_write(const uint8_t* data, uint16_t len);
 
@@ -48,12 +49,26 @@ void print(const char* str) {
 #define TO_HEX(i) ( (((i) & 0xf) <= 9) ? ('0' + ((i) & 0xf)) : ('A' - 10 + ((i) & 0xf)) )
 
 void print_u32(uint32_t val, uint8_t base) {
-  print_error("NOT IMPLEMENTED");
+  char str[9];
+  if (base == 16) {
+    str[0] = TO_HEX(val >> 28);
+    str[1] = TO_HEX(val >> 24);
+    str[2] = TO_HEX(val >> 20);
+    str[3] = TO_HEX(val >> 16);
+    str[4] = TO_HEX(val >> 12);
+    str[5] = TO_HEX(val >> 8);
+    str[6] = TO_HEX(val >> 4);
+    str[7] = TO_HEX(val >> 0);
+    str[8] = '\0';
+    print(str);
+  } else {
+    print_error("NOT IMPLEMENTED");
+  }
 }
 
 void print_u8(uint8_t val, uint8_t base) {
   char str[4];
-  if(base == 16) {
+  if (base == 16) {
     str[0] = TO_HEX(val >> 4);
     str[1] = TO_HEX(val >> 0);
     str[2] = '\0';
@@ -64,7 +79,7 @@ void print_u8(uint8_t val, uint8_t base) {
 }
 
 int is_whitespace(char ch) {
-  switch(ch) {
+  switch (ch) {
     case '\n':
     case '\r':
     case '\t':
@@ -76,7 +91,7 @@ int is_whitespace(char ch) {
 
 void trim_right(char* str) {
   char *p = str + strlen(str) - 1;
-  while(is_whitespace(*p)) {
+  while (is_whitespace(*p)) {
     *p-- = '\0';
   }
 }
