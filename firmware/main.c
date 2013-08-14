@@ -52,10 +52,11 @@ int main(void) {
   status_led_config();
   motor_config();
   time_config();
-  //usb_config();
+  usb_config();
   print_info("END Init\n");
   status_led_on();
 
+  servo_tilt_set(0x80);
   motor_enable(TRUE);
   while (1) {
     loop();
@@ -161,6 +162,12 @@ void process_set_command(char* line) {
       print_u8(speedLeft, 16);
       print_u8(speedRight, 16);
       print("\n");
+    } else if (!strcmp(p, "tilt")) {
+      uint8_t tilt = parse_hex8(val);
+      servo_tilt_set(tilt);
+      print_success("OK ");
+      print_u8(tilt, 16);
+      print("\n");
     } else if (!strcmp(p, "status_led")) {
       if (*val == '0') {
         status_led_off();
@@ -209,7 +216,7 @@ void set_speed(int8_t targetSpeedLeft, int8_t targetSpeedRight) {
  * @return the speed from -128 to 128
  */
 int8_t parse_speed(const char* str) {
-  return parse_hex_byte(str);
+  return parse_hex8(str);
 }
 
 void assert_failed(uint8_t* file, uint32_t line) {

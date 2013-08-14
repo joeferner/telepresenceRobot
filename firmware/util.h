@@ -17,7 +17,8 @@ extern "C" {
 
 int starts_with(const char* str, const char* strTest); 
 uint8_t parse_hex_nibble(char ch);
-uint8_t parse_hex_byte(const char* str);
+uint8_t parse_hex8(const char* str);
+uint32_t parse_hex32(const char* str);
 
 #define print_info(str)    print("?" str)
 #define print_error(str)   print("!" str)

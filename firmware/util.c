@@ -25,10 +25,18 @@ uint8_t parse_hex_nibble(char ch) {
   return 0;
 }
 
-uint8_t parse_hex_byte(const char* str) {
+uint8_t parse_hex8(const char* str) {
   uint8_t highNibble = parse_hex_nibble(str[0]);
   uint8_t lowNibble = parse_hex_nibble(str[1]);
   return (highNibble << 4) | lowNibble;
+}
+
+uint32_t parse_hex32(const char* str) {
+  uint32_t b3 = parse_hex8(str);
+  uint32_t b2 = parse_hex8(str + 1);
+  uint32_t b1 = parse_hex8(str + 2);
+  uint32_t b0 = parse_hex8(str + 3);
+  return (b3 << 24) + (b2 << 16) + (b1 << 8) + (b0 << 0);
 }
 
 void print(const char* str) {

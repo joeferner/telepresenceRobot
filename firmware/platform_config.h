@@ -27,7 +27,7 @@
 #define MOTOR_EN_RCC           RCC_APB2Periph_GPIOA
 
 #define MOTOR_LEFT_DIR         GPIOA
-#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_1
+#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_15
 #define MOTOR_LEFT_DIR_RCC     RCC_APB2Periph_GPIOA
 
 // TIM2_CH3
@@ -36,13 +36,18 @@
 #define MOTOR_LEFT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define MOTOR_RIGHT_DIR        GPIOA
-#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_0
+#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_14
 #define MOTOR_RIGHT_DIR_RCC    RCC_APB2Periph_GPIOA
 
 // TIM2_CH4
 #define MOTOR_RIGHT_PWM        GPIOA
 #define MOTOR_RIGHT_PWM_PIN    GPIO_Pin_3
 #define MOTOR_RIGHT_PWM_RCC    RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
+
+// TIM2_CH2
+#define SERVO_TILT_PWM         GPIOA
+#define SERVO_TILT_PWM_PIN     GPIO_Pin_1
+#define SERVO_TILT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define DEBUG_USART            USART1
 #define DEBUG_USART_BAUD       9600

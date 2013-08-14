@@ -80,32 +80,32 @@ F 3 "" H 6200 3000 60  0000 C CNN
 	1    6200 3000
 	1    0    0    -1  
 $EndComp
-Text Label 850  6600 0    60   ~ 0
+Text Label 1150 6600 0    60   ~ 0
 MOTOR-EN
-Text Label 850  6700 0    60   ~ 0
+Text Label 1150 6700 0    60   ~ 0
 MOTOR-R-PWM
-Text Label 850  6800 0    60   ~ 0
+Text Label 1150 6800 0    60   ~ 0
 MOTOR-R-DIR
-Text Label 850  6900 0    60   ~ 0
+Text Label 1150 6900 0    60   ~ 0
 MOTOR-L-PWM
-Text Label 850  7000 0    60   ~ 0
+Text Label 1150 7000 0    60   ~ 0
 MOTOR-L-DIR
-Text Label 7700 2500 0    60   ~ 0
+Text Label 8900 2500 0    60   ~ 0
 MOTOR-EN
-Text Label 7700 1400 0    60   ~ 0
+Text Label 8900 2600 0    60   ~ 0
 MOTOR-R-DIR
 $Sheet
-S 1650 6500 950  700 
+S 1950 6500 950  700 
 U 52066E3D
 F0 "Motor Controllers" 50
 F1 "motorControllers.sch" 50
-F2 "EN" I L 1650 6600 60 
-F3 "MOTOR-R-PWM" I L 1650 6700 60 
-F4 "MOTOR-R-DIR" I L 1650 6800 60 
-F5 "MOTOR-L-PWM" I L 1650 6900 60 
-F6 "MOTOR-L-DIR" I L 1650 7000 60 
+F2 "EN" I L 1950 6600 60 
+F3 "MOTOR-R-PWM" I L 1950 6700 60 
+F4 "MOTOR-R-DIR" I L 1950 6800 60 
+F5 "MOTOR-L-PWM" I L 1950 6900 60 
+F6 "MOTOR-L-DIR" I L 1950 7000 60 
 $EndSheet
-Text Label 7700 1500 0    60   ~ 0
+Text Label 8900 2700 0    60   ~ 0
 MOTOR-L-DIR
 Text Label 7700 1600 0    60   ~ 0
 MOTOR-L-PWM
@@ -123,8 +123,6 @@ Text Label 7700 2300 0    60   ~ 0
 ANDROID-TX
 Text Label 7700 2400 0    60   ~ 0
 ANDROID-RX
-Text Label 7700 2600 0    60   ~ 0
-STATUS-LED
 Text Label 7700 2200 0    60   ~ 0
 USB-DISCONNECT
 $Comp
@@ -165,23 +163,23 @@ STATUS-LED
 $Comp
 L RSMALL R30
 U 1 1 5206F9DF
-P 8900 4900
-F 0 "R30" V 8845 4900 30  0000 C CNN
-F 1 "10K" V 8955 4900 30  0000 C CNN
-F 2 "" H 8900 4900 60  0000 C CNN
-F 3 "" H 8900 4900 60  0000 C CNN
-	1    8900 4900
+P 8500 4900
+F 0 "R30" V 8445 4900 30  0000 C CNN
+F 1 "10K" V 8555 4900 30  0000 C CNN
+F 2 "" H 8500 4900 60  0000 C CNN
+F 3 "" H 8500 4900 60  0000 C CNN
+	1    8500 4900
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR17
 U 1 1 5206FABA
-P 8900 5100
-F 0 "#PWR17" H 8900 5100 30  0001 C CNN
-F 1 "GND" H 8900 5030 30  0001 C CNN
-F 2 "" H 8900 5100 60  0000 C CNN
-F 3 "" H 8900 5100 60  0000 C CNN
-	1    8900 5100
+P 8500 5050
+F 0 "#PWR17" H 8500 5050 30  0001 C CNN
+F 1 "GND" H 8500 4980 30  0001 C CNN
+F 2 "" H 8500 5050 60  0000 C CNN
+F 3 "" H 8500 5050 60  0000 C CNN
+	1    8500 5050
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -565,22 +563,20 @@ Text Label 4450 3900 0    60   ~ 0
 nRST
 Text Label 9000 6200 0    60   ~ 0
 nRST
-Text Label 9000 6300 0    60   ~ 0
-AUX-PB4
-Text Label 7700 3300 0    60   ~ 0
+Text Label 8900 3300 0    60   ~ 0
 AUX-PB4
 Wire Wire Line
-	1650 6600 850  6600
+	900  6600 1950 6600
 Wire Wire Line
-	1650 6700 850  6700
+	1950 6700 1150 6700
 Wire Wire Line
-	1650 6800 850  6800
+	1950 6800 1150 6800
 Wire Wire Line
-	1650 6900 850  6900
+	1950 6900 1150 6900
 Wire Wire Line
-	1650 7000 850  7000
+	1950 7000 1150 7000
 Wire Wire Line
-	7650 2500 8400 2500
+	7650 2500 8600 2500
 Wire Wire Line
 	7650 1500 8400 1500
 Wire Wire Line
@@ -602,7 +598,7 @@ Wire Wire Line
 Wire Wire Line
 	7650 2400 8400 2400
 Wire Wire Line
-	7650 2600 8400 2600
+	7650 2600 8600 2600
 Wire Wire Line
 	7650 2200 8400 2200
 Wire Wire Line
@@ -614,21 +610,15 @@ Wire Wire Line
 Wire Wire Line
 	10150 6550 10150 6650
 Wire Wire Line
-	8900 5000 8900 5100
+	8500 5000 8500 5050
 Wire Wire Line
-	7650 3100 8900 3100
+	7650 3100 8500 3100
 Wire Wire Line
-	8900 3100 8900 4800
+	8500 3100 8500 4800
 Wire Wire Line
 	4850 4300 4750 4300
 Wire Wire Line
-	4750 4300 4750 4400
-Wire Wire Line
-	4750 4400 4750 4500
-Wire Wire Line
-	4750 4500 4750 4600
-Wire Wire Line
-	4750 4600 4750 5000
+	4750 4300 4750 5000
 Wire Wire Line
 	4850 4400 4750 4400
 Connection ~ 4750 4400
@@ -639,11 +629,7 @@ Wire Wire Line
 	4850 4600 4750 4600
 Connection ~ 4750 4600
 Wire Wire Line
-	3900 3900 4000 3900
-Wire Wire Line
-	4000 3900 4150 3900
-Wire Wire Line
-	4150 3900 4850 3900
+	3900 3900 4850 3900
 Wire Wire Line
 	4150 4300 4150 4350
 Wire Wire Line
@@ -657,16 +643,12 @@ Connection ~ 4150 3900
 Wire Wire Line
 	3400 3900 3300 3900
 Wire Wire Line
-	3300 3900 3300 4000
-Wire Wire Line
-	3300 4000 3300 4100
+	3300 3900 3300 4100
 Wire Wire Line
 	3400 4000 3300 4000
 Connection ~ 3300 4000
 Wire Wire Line
-	4250 2750 4400 2750
-Wire Wire Line
-	4400 2750 4850 2750
+	4250 2750 4850 2750
 Wire Wire Line
 	4400 2850 4400 2750
 Connection ~ 4400 2750
@@ -677,24 +659,14 @@ Wire Wire Line
 Wire Wire Line
 	3950 2750 3800 2750
 Wire Wire Line
-	3800 2650 3800 2750
-Wire Wire Line
-	3800 2750 3800 2850
+	3800 2650 3800 2850
 Wire Wire Line
 	4850 2650 3800 2650
 Connection ~ 3800 2750
 Wire Wire Line
 	4750 1800 4850 1800
 Wire Wire Line
-	4750 1200 4750 1400
-Wire Wire Line
-	4750 1400 4750 1500
-Wire Wire Line
-	4750 1500 4750 1600
-Wire Wire Line
-	4750 1600 4750 1700
-Wire Wire Line
-	4750 1700 4750 1800
+	4750 1200 4750 1800
 Wire Wire Line
 	4850 1700 4750 1700
 Connection ~ 4750 1700
@@ -705,17 +677,7 @@ Wire Wire Line
 	4850 1500 4750 1500
 Connection ~ 4750 1500
 Wire Wire Line
-	3500 1400 3700 1400
-Wire Wire Line
-	3700 1400 3900 1400
-Wire Wire Line
-	3900 1400 4100 1400
-Wire Wire Line
-	4100 1400 4300 1400
-Wire Wire Line
-	4300 1400 4750 1400
-Wire Wire Line
-	4750 1400 4850 1400
+	3500 1400 4850 1400
 Connection ~ 4750 1400
 Wire Wire Line
 	3500 1400 3500 1500
@@ -734,17 +696,9 @@ Connection ~ 4300 1400
 Wire Wire Line
 	4300 1750 4300 1700
 Wire Wire Line
-	3500 1750 3700 1750
+	3500 1750 4300 1750
 Wire Wire Line
-	3700 1750 3900 1750
-Wire Wire Line
-	3900 1750 4100 1750
-Wire Wire Line
-	4100 1750 4300 1750
-Wire Wire Line
-	3500 1700 3500 1750
-Wire Wire Line
-	3500 1750 3500 1800
+	3500 1700 3500 1800
 Connection ~ 3500 1750
 Wire Wire Line
 	3700 1700 3700 1750
@@ -760,15 +714,9 @@ Wire Wire Line
 Wire Wire Line
 	2900 3300 2900 3200
 Wire Wire Line
-	2550 3300 2650 3300
+	2550 3300 4850 3300
 Wire Wire Line
-	2650 3300 2900 3300
-Wire Wire Line
-	2900 3300 4850 3300
-Wire Wire Line
-	1650 2700 2550 2700
-Wire Wire Line
-	2550 2700 2700 2700
+	1650 2700 2700 2700
 Wire Wire Line
 	2550 2700 2550 2600
 Wire Wire Line
@@ -779,9 +727,7 @@ Connection ~ 2550 2700
 Wire Wire Line
 	1750 3500 1850 3500
 Wire Wire Line
-	1850 3500 1850 3600
-Wire Wire Line
-	1850 3600 1850 4100
+	1850 3500 1850 4100
 Wire Wire Line
 	1750 3600 1850 3600
 Connection ~ 1850 3600
@@ -790,9 +736,7 @@ Wire Wire Line
 Wire Wire Line
 	4750 3400 4750 3550
 Wire Wire Line
-	4750 3550 2900 3550
-Wire Wire Line
-	2900 3550 2550 3550
+	4750 3550 2550 3550
 Connection ~ 2900 3300
 Wire Wire Line
 	2350 3550 2100 3550
@@ -831,23 +775,17 @@ Wire Wire Line
 Wire Wire Line
 	8700 6300 9450 6300
 Wire Wire Line
-	7650 3300 8400 3300
+	7650 3300 8600 3300
 Text Label 6800 6000 0    60   ~ 0
-STATUS-LED
+JTCK
 Wire Wire Line
-	7650 3200 8400 3200
-Text Label 7700 3200 0    60   ~ 0
+	7650 3200 8600 3200
+Text Label 8900 3200 0    60   ~ 0
 AUX-PB3
-Text Label 6800 6100 0    60   ~ 0
-AUX-PB3
-Text Label 6800 6200 0    60   ~ 0
-MOTOR-EN
 Wire Wire Line
-	7650 2700 8400 2700
-Text Label 7700 2700 0    60   ~ 0
-AUX-PA15
+	7650 2700 8600 2700
 Text Label 6800 6400 0    60   ~ 0
-AUX-PA15
+JTDI
 Wire Wire Line
 	7500 6400 6800 6400
 Wire Wire Line
@@ -883,8 +821,6 @@ Wire Wire Line
 	7650 4300 8400 4300
 Wire Wire Line
 	7650 4400 8400 4400
-Wire Wire Line
-	7650 4600 8400 4600
 Text Label 7700 2900 0    60   ~ 0
 AUX-PB0
 Text Label 7700 3000 0    60   ~ 0
@@ -913,24 +849,10 @@ Text Label 7700 4300 0    60   ~ 0
 AUX-PB14
 Text Label 7700 4400 0    60   ~ 0
 AUX-PB15
-Text Label 7700 4600 0    60   ~ 0
-AUX-PC13
-Text Label 4150 2150 0    60   ~ 0
-AUX-PC14
-Text Label 4150 2250 0    60   ~ 0
-AUX-PC15
-Wire Wire Line
-	4850 2150 4150 2150
-Wire Wire Line
-	4850 2250 4150 2250
 Wire Wire Line
 	4850 4100 4450 4100
 Wire Wire Line
-	4450 4100 4450 4650
-Wire Wire Line
-	4450 4650 3850 4650
-Text Notes 7650 1150 0    60   ~ 0
-TODO: Move direction pins so\nthat we can use the ADCs 
+	4450 4100 4450 5000
 $Sheet
 S 5300 6500 900  700 
 U 5206ECE8
@@ -949,8 +871,6 @@ Wire Wire Line
 	5300 6600 4600 6600
 Wire Wire Line
 	5300 6700 4600 6700
-Text Notes 4650 6350 0    60   ~ 0
-TODO: Verify the direction of TX/RX
 NoConn ~ 5300 6800
 NoConn ~ 5300 6900
 $Comp
@@ -986,8 +906,6 @@ F 3 "" H 1600 5850 60  0000 C CNN
 	1    1600 5850
 	1    0    0    -1  
 $EndComp
-Text Notes 2750 4650 0    60   ~ 0
-TODO: How should this be connected
 $Comp
 L +24V #PWR1
 U 1 1 5206C492
@@ -1002,15 +920,11 @@ $EndComp
 Wire Wire Line
 	1600 5050 1600 5150
 Wire Wire Line
-	1600 5350 1600 5450
-Wire Wire Line
-	1600 5450 1600 5550
+	1600 5350 1600 5550
 Wire Wire Line
 	1600 5750 1600 5850
 Wire Wire Line
-	1600 5450 1800 5450
-Wire Wire Line
-	1800 5450 2500 5450
+	1600 5450 2500 5450
 Connection ~ 1600 5450
 Text Label 2000 5450 0    60   ~ 0
 VBAT-TEST
@@ -1065,29 +979,166 @@ F 3 "" H 5700 5850 60  0000 C CNN
 	1    5700 5850
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	5800 5750 5700 5750
-Wire Wire Line
-	5700 5750 5700 5850
 $Comp
 L +5V #PWR?
 U 1 1 5206EE56
-P 5700 5200
-F 0 "#PWR?" H 5700 5290 20  0001 C CNN
-F 1 "+5V" H 5700 5290 30  0000 C CNN
-F 2 "" H 5700 5200 60  0000 C CNN
-F 3 "" H 5700 5200 60  0000 C CNN
-	1    5700 5200
+P 5700 5450
+F 0 "#PWR?" H 5700 5540 20  0001 C CNN
+F 1 "+5V" H 5700 5540 30  0000 C CNN
+F 2 "" H 5700 5450 60  0000 C CNN
+F 3 "" H 5700 5450 60  0000 C CNN
+	1    5700 5450
 	1    0    0    -1  
 $EndComp
+Text Label 4850 5750 0    60   ~ 0
+SERVO-TILT-PWM
+Wire Wire Line
+	5800 5750 4850 5750
 Wire Wire Line
 	5800 5650 5700 5650
 Wire Wire Line
-	5700 5650 5700 5200
+	5700 5650 5700 5850
 Wire Wire Line
-	5800 5550 4850 5550
-Text Label 4850 5550 0    60   ~ 0
+	5800 5550 5700 5550
+Wire Wire Line
+	5700 5550 5700 5450
+$Comp
+L GND #PWR?
+U 1 1 520AD7E6
+P 4450 5000
+F 0 "#PWR?" H 4450 5000 30  0001 C CNN
+F 1 "GND" H 4450 4930 30  0001 C CNN
+F 2 "" H 4450 5000 60  0000 C CNN
+F 3 "" H 4450 5000 60  0000 C CNN
+	1    4450 5000
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_1 P?
+U 1 1 520AE088
+P 1900 5250
+F 0 "P?" H 1980 5250 40  0000 L CNN
+F 1 "VBAT-TEST" H 1900 5305 30  0000 C CNN
+F 2 "" H 1900 5250 60  0000 C CNN
+F 3 "" H 1900 5250 60  0000 C CNN
+	1    1900 5250
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	1900 5400 1900 5450
+Connection ~ 1900 5450
+NoConn ~ 4850 2150
+NoConn ~ 4850 2250
+NoConn ~ 7650 4600
+Text Notes 7650 1150 0    60   ~ 0
+TODO: Move direction pins so\nthat we can use the ADCs 
+$Comp
+L RSMALL R?
+U 1 1 520AF4EB
+P 900 6850
+F 0 "R?" V 845 6850 30  0000 C CNN
+F 1 "10K" V 955 6850 30  0000 C CNN
+F 2 "" H 900 6850 60  0000 C CNN
+F 3 "" H 900 6850 60  0000 C CNN
+	1    900  6850
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 520AF4F1
+P 900 7150
+F 0 "#PWR?" H 900 7150 30  0001 C CNN
+F 1 "GND" H 900 7080 30  0001 C CNN
+F 2 "" H 900 7150 60  0000 C CNN
+F 3 "" H 900 7150 60  0000 C CNN
+	1    900  7150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	900  6600 900  6750
+Wire Wire Line
+	900  6950 900  7150
+Text Label 7700 1500 0    60   ~ 0
 SERVO-TILT-PWM
-Text Notes 4150 5700 0    60   ~ 0
-TODO: Verify pin out with servo
+$Comp
+L RSMALL R?
+U 1 1 520B0A6B
+P 8700 2600
+F 0 "R?" V 8750 2650 30  0000 C CNN
+F 1 "1K" V 8750 2550 30  0000 C CNN
+F 2 "" H 8700 2600 60  0000 C CNN
+F 3 "" H 8700 2600 60  0000 C CNN
+	1    8700 2600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RSMALL R?
+U 1 1 520B0B43
+P 8700 2700
+F 0 "R?" V 8750 2750 30  0000 C CNN
+F 1 "1K" V 8750 2650 30  0000 C CNN
+F 2 "" H 8700 2700 60  0000 C CNN
+F 3 "" H 8700 2700 60  0000 C CNN
+	1    8700 2700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8800 2600 9550 2600
+Wire Wire Line
+	8800 2700 9550 2700
+Text Label 7700 2600 0    60   ~ 0
+JTCK
+Text Label 7700 2700 0    60   ~ 0
+JTDI
+$Comp
+L RSMALL R?
+U 1 1 520B156C
+P 8700 3200
+F 0 "R?" V 8750 3250 30  0000 C CNN
+F 1 "1K" V 8750 3150 30  0000 C CNN
+F 2 "" H 8700 3200 60  0000 C CNN
+F 3 "" H 8700 3200 60  0000 C CNN
+	1    8700 3200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L RSMALL R?
+U 1 1 520B1572
+P 8700 3300
+F 0 "R?" V 8750 3350 30  0000 C CNN
+F 1 "1K" V 8750 3250 30  0000 C CNN
+F 2 "" H 8700 3300 60  0000 C CNN
+F 3 "" H 8700 3300 60  0000 C CNN
+	1    8700 3300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8800 3200 9550 3200
+Wire Wire Line
+	8800 3300 9550 3300
+Text Label 7700 3200 0    60   ~ 0
+JTDO
+Text Label 7700 3300 0    60   ~ 0
+JNTRST
+Text Label 9000 6300 0    60   ~ 0
+JNTRST
+Text Label 6800 6100 0    60   ~ 0
+JTDO
+$Comp
+L RSMALL R?
+U 1 1 520B1A32
+P 8700 2500
+F 0 "R?" V 8750 2550 30  0000 C CNN
+F 1 "1K" V 8750 2450 30  0000 C CNN
+F 2 "" H 8700 2500 60  0000 C CNN
+F 3 "" H 8700 2500 60  0000 C CNN
+	1    8700 2500
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8800 2500 9550 2500
+Text Label 7700 2500 0    60   ~ 0
+JTMS
+Text Label 6800 6200 0    60   ~ 0
+JTMS
 $EndSCHEMATC
