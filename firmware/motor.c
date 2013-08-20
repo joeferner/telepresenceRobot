@@ -4,7 +4,7 @@
 #include "util.h"
 #include <stm32f10x_tim.h>
 
-#define PWM_PERIOD 128
+#define PWM_PERIOD 0x2000
 
 int8_t lastSpeedLeft = 0xff;
 int8_t lastSpeedRight = 0xff;
@@ -59,6 +59,13 @@ void motor_config() {
   GPIO_Config.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(MOTOR_RIGHT_PWM, &GPIO_Config);
 
+  // servo tile pwm direction
+  RCC_APB2PeriphClockCmd(SERVO_TILT_PWM_RCC, ENABLE);
+  GPIO_Config.GPIO_Pin = SERVO_TILT_PWM_PIN;
+  GPIO_Config.GPIO_Mode = GPIO_Mode_AF_PP;
+  GPIO_Config.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(SERVO_TILT_PWM, &GPIO_Config);
+
   /*
    * TIM2 Configuration: generate 2 PWM signals with 2 different duty cycles:
    * The TIM2CLK frequency is set to SystemCoreClock (Hz), to get TIM2 counter
@@ -74,7 +81,7 @@ void motor_config() {
    */
 
   // Compute the pre-scaler value
-  prescalerValue = (uint16_t) (SystemCoreClock / 24000000) - 1;
+  prescalerValue = (uint16_t) (SystemCoreClock / 3000000) - 1;
 
   // Time base configuration
   TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
@@ -89,15 +96,21 @@ void motor_config() {
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
 
-  // PWM1 Mode configuration: Channel3
+  // PWM1 Mode configuration: Channel3 (Motor Left)
   TIM_OCInitStructure.TIM_Pulse = 0;
   TIM_OC3Init(TIM2, &TIM_OCInitStructure);
   TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);
 
-  // PWM1 Mode configuration: Channel4
+  // PWM1 Mode configuration: Channel4 (Motor Right)
   TIM_OCInitStructure.TIM_Pulse = 0;
   TIM_OC4Init(TIM2, &TIM_OCInitStructure);
   TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
+
+  // PWM1 Mode configuration: Channel2 (Servo Tilt)
+  TIM_OCInitStructure.TIM_Pulse = 0;
+  TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+  TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
+  servo_tilt_set(0x80);
 
   TIM_SelectOnePulseMode(TIM2, TIM_OPMode_Repetitive);
   TIM_ARRPreloadConfig(TIM2, ENABLE);
@@ -134,6 +147,18 @@ void motor_set_speed(int8_t speedLeft, int8_t speedRight) {
     TIM_SetCompare4(TIM2, speed_to_pwm_compare(speedRight));
     lastSpeedRight = speedRight;
   }
+}
+
+void servo_tilt_set(uint8_t val) {
+  uint32_t t = val;
+  if (t < 1) {
+    t = 1;
+  }
+  t = t * (PWM_PERIOD / 256);
+  if (t > (PWM_PERIOD - 32)) {
+    t = PWM_PERIOD - 32;
+  }
+  TIM_SetCompare2(TIM2, t);
 }
 
 uint32_t speed_to_pwm_compare(int8_t speed) {

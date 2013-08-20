@@ -6,6 +6,7 @@
 #include <stm32f10x_exti.h>
 #include <stm32f10x_pwr.h>
 #include <stm32f10x_rcc.h>
+#include <stm32f10x_adc.h>
 #include <usb_lib.h>
 
 #define ID1                    (0x1FFFF7E8)
@@ -16,9 +17,10 @@
 #define USB_DISCONNECT_PIN     GPIO_Pin_8
 #define USB_DISCONNECT_RCC     RCC_APB2Periph_GPIOA
 
-#define STATUS_LED             GPIOA
-#define STATUS_LED_PIN         GPIO_Pin_14
-#define STATUS_LED_RCC         RCC_APB2Periph_GPIOA
+#define BATTERY_VOLTAGE        GPIOA
+#define BATTERY_VOLTAGE_PIN    GPIO_Pin_0
+#define BATTERY_VOLTAGE_RCC    RCC_APB2Periph_GPIOA
+#define BATTERY_VOLTAGE_ADC_CH ADC_Channel_0
 
 #define MOTOR_PWM_TIMER_RCC    RCC_APB1Periph_TIM2
 
@@ -27,7 +29,7 @@
 #define MOTOR_EN_RCC           RCC_APB2Periph_GPIOA
 
 #define MOTOR_LEFT_DIR         GPIOA
-#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_1
+#define MOTOR_LEFT_DIR_PIN     GPIO_Pin_15
 #define MOTOR_LEFT_DIR_RCC     RCC_APB2Periph_GPIOA
 
 // TIM2_CH3
@@ -36,13 +38,18 @@
 #define MOTOR_LEFT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define MOTOR_RIGHT_DIR        GPIOA
-#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_0
+#define MOTOR_RIGHT_DIR_PIN    GPIO_Pin_14
 #define MOTOR_RIGHT_DIR_RCC    RCC_APB2Periph_GPIOA
 
 // TIM2_CH4
 #define MOTOR_RIGHT_PWM        GPIOA
 #define MOTOR_RIGHT_PWM_PIN    GPIO_Pin_3
 #define MOTOR_RIGHT_PWM_RCC    RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
+
+// TIM2_CH2
+#define SERVO_TILT_PWM         GPIOA
+#define SERVO_TILT_PWM_PIN     GPIO_Pin_1
+#define SERVO_TILT_PWM_RCC     RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO
 
 #define DEBUG_USART            USART1
 #define DEBUG_USART_BAUD       9600

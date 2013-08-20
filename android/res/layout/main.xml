@@ -3,52 +3,58 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical"
-    >
-  <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
-               android:layout_width="fill_parent">
-    <TableRow>
-      <Button
-          android:layout_width="100dip"
-          android:layout_height="wrap_content"
-          android:text="Forward"
-          android:id="@+id/forward" android:layout_column="2"/>
-    </TableRow>
-    <TableRow>
-      <Button
-          android:layout_width="100dip"
-          android:layout_height="wrap_content"
-          android:text="Left"
-          android:id="@+id/left" android:layout_column="1"/>
-      <Button
-          android:layout_width="100dip"
-          android:layout_height="wrap_content"
-          android:text="Right"
-          android:id="@+id/right" android:layout_column="3"/>
-    </TableRow>
-    <TableRow>
-      <Button
-          android:layout_width="100dip"
-          android:layout_height="wrap_content"
-          android:text="Back"
-          android:id="@+id/back" android:layout_column="2"/>
-    </TableRow>
-  </TableLayout>
-  <TextView
-      android:layout_width="fill_parent"
-      android:layout_height="0dip"
-      android:text=""
-      android:id="@+id/log"
-      android:scrollbars="vertical"
-      android:layout_weight="1"/>
-  <LinearLayout android:layout_width="fill_parent"
+        >
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <EditText
+                android:inputType="text"
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="50dip"
+                android:text="192.168.13.152"/>
+        <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-      >
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:id="@+id/connect"/>
-  </LinearLayout>
+                android:text="Connect"
+                android:id="@+id/connect"/>
+    </LinearLayout>
+    <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
+                 android:layout_width="fill_parent">
+        <TableRow>
+            <Button
+                    android:layout_width="100dip"
+                    android:layout_height="wrap_content"
+                    android:text="Forward"
+                    android:id="@+id/forward" android:layout_column="2"/>
+        </TableRow>
+        <TableRow>
+            <Button
+                    android:layout_width="100dip"
+                    android:layout_height="wrap_content"
+                    android:text="Left"
+                    android:id="@+id/left" android:layout_column="1"/>
+            <Button
+                    android:layout_width="100dip"
+                    android:layout_height="wrap_content"
+                    android:text="Right"
+                    android:id="@+id/right" android:layout_column="3"/>
+        </TableRow>
+        <TableRow>
+            <Button
+                    android:layout_width="100dip"
+                    android:layout_height="wrap_content"
+                    android:text="Back"
+                    android:id="@+id/back" android:layout_column="2"/>
+        </TableRow>
+    </TableLayout>
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:text=""
+            android:id="@+id/log"
+            android:scrollbars="vertical"
+            android:layout_weight="1"/>
 </LinearLayout>
 

@@ -1,7 +1,7 @@
 
 #include "delay.h"
 #include "debug.h"
-#include "status_led.h"
+#include "battery_voltage.h"
 #include "usb.h"
 #include "ring_buffer.h"
 #include "util.h"
@@ -23,6 +23,7 @@ uint8_t input_buffer[INPUT_BUFFER_SIZE];
 ring_buffer input_ring_buffer;
 RobotRegisters robot_registers;
 uint32_t last_update_speed = 0;
+uint32_t last_update_battery_voltage = 0;
 
 void disable_jtag();
 void loop();
@@ -35,6 +36,7 @@ void process_connect_command(char* line);
 int8_t parse_speed(const char* str);
 void set_speed(int8_t speedLeft, int8_t speedRight);
 void update_speed();
+void update_battery_voltage();
 
 int main(void) {
   // Configure the NVIC Preemption Priority Bits
@@ -49,13 +51,13 @@ int main(void) {
   print_info("BEGIN Init\n");
   disable_jtag();
   init_robot_registers();
-  status_led_config();
   motor_config();
   time_config();
   usb_config();
+  battery_voltage_config();
   print_info("END Init\n");
-  status_led_on();
 
+  servo_tilt_set(0x00);
   motor_enable(TRUE);
   while (1) {
     loop();
@@ -65,6 +67,20 @@ int main(void) {
 
 void loop() {
   update_speed();
+  update_battery_voltage();
+}
+
+void update_battery_voltage() {
+  if ((time_ms() - last_update_battery_voltage) < 1000) {
+    return;
+  }
+
+  uint32_t v = battery_voltage_read();
+  print_info("batteryVoltage: ");
+  print_u32(v, 16);
+  print("\n");
+
+  last_update_battery_voltage = time_ms();
 }
 
 void update_speed() {
@@ -161,13 +177,12 @@ void process_set_command(char* line) {
       print_u8(speedLeft, 16);
       print_u8(speedRight, 16);
       print("\n");
-    } else if (!strcmp(p, "status_led")) {
-      if (*val == '0') {
-        status_led_off();
-      } else {
-        status_led_on();
-      }
-      print_success("OK\n");
+    } else if (!strcmp(p, "tilt")) {
+      uint8_t tilt = parse_hex8(val);
+      servo_tilt_set(tilt);
+      print_success("OK ");
+      print_u8(tilt, 16);
+      print("\n");
     } else {
       print_fail("Invalid set variable '");
       print(p);
@@ -209,7 +224,7 @@ void set_speed(int8_t targetSpeedLeft, int8_t targetSpeedRight) {
  * @return the speed from -128 to 128
  */
 int8_t parse_speed(const char* str) {
-  return parse_hex_byte(str);
+  return parse_hex8(str);
 }
 
 void assert_failed(uint8_t* file, uint32_t line) {
@@ -222,8 +237,5 @@ void assert_failed(uint8_t* file, uint32_t line) {
   /* Infinite loop */
   while (1) {
     delay_ms(100);
-    status_led_on();
-    delay_ms(100);
-    status_led_off();
   }
 }

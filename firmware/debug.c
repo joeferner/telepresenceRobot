@@ -2,7 +2,6 @@
 #include "platform_config.h"
 #include "debug.h"
 #include "delay.h"
-#include "status_led.h"
 #include "util.h"
 #include <stm32f10x_usart.h>
 #include <stm32f10x_rcc.h>
