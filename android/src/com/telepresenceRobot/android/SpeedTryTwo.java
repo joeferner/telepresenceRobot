@@ -9,7 +9,7 @@ public class SpeedTryTwo implements Speed {
 
     // adjust to change how much wiggle room there is n the joystick when going straight
     // forward,back, or spinning
-    private static final double DEAD_ZONE = Math.PI/32;
+    private static final double DEAD_ZONE = Math.PI/16;
 
     // adjust lower to slow down the in place spin
     private static final double SPIN_SPEED = 1.0;
@@ -57,8 +57,8 @@ public class SpeedTryTwo implements Speed {
             }
         }
 
-        leftSpeed = leftSpeed * power;
-        rightSpeed = rightSpeed * power;
+        leftSpeed = leftSpeed * Math.max(0,(power-0.2f)) * 1.25;
+        rightSpeed = rightSpeed * Math.max(0,(power-0.2f)) * 1.25;
     }
 
     public double getLeftSpeed() {
@@ -71,7 +71,7 @@ public class SpeedTryTwo implements Speed {
 
     public static final void main(String[] args) {
         for(double r = -Math.PI; r < Math.PI; r += Math.PI/64) {
-            Speed s = new SpeedTryTwo(r, 1.0);
+            Speed s = new SpeedTryTwo(r, 0.3);
             System.out.printf("%f | %f | %f\n", r, s.getLeftSpeed(), s.getRightSpeed());
         }
     }

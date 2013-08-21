@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
                                 Log.i("telepresenceRobot", "setting status led " + newState);
                                 robotLink.setStatusLed(newState);
                             } else if (type.equals("setSpeedPolar")) {
-                                Speed speed = new SpeedTryOne(t.getDouble("angle"), t.getDouble("power"));
+                                Speed speed = new SpeedTryTwo(t.getDouble("angle"), t.getDouble("power"));
                                 log("Setting speed " + speed.getLeftSpeed() + ", " + speed.getRightSpeed());
                                 robotLink.setSpeed(speed.getLeftSpeed(), speed.getRightSpeed());
                             } else {

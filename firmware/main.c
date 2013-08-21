@@ -53,7 +53,7 @@ int main(void) {
   init_robot_registers();
   motor_config();
   time_config();
-  usb_config();
+  //usb_config();
   battery_voltage_config();
   print_info("END Init\n");
 
