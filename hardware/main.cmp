@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 26 Aug 2013 11:54:49 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Tue 27 Aug 2013 07:37:14 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -353,7 +353,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5206ECE8/52068DDB;
 Reference = FB1;
-ValeurCmp = FERRITEBEAD;
+ValeurCmp = MH2029-300Y;
 IdModule  = ;
 EndCmp
 
@@ -367,7 +367,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5206ECE8/52068DCC;
 Reference = J2;
-ValeurCmp = USB_2;
+ValeurCmp = USB_TO_ANDROID;
 IdModule  = ;
 EndCmp
 
@@ -500,29 +500,29 @@ EndCmp
 BeginCmp
 TimeStamp = /52069BCD;
 Reference = Q1;
-ValeurCmp = MOSFET-P;
-IdModule  = ;
+ValeurCmp = ZXMP2120FFTA;
+IdModule  = SOT95P237X112_123-3N;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F5CB56;
 Reference = Q2;
 ValeurCmp = BD242CG;
-IdModule  = ;
+IdModule  = TO254P1512X997X450-123-3P;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/520671F4;
 Reference = Q3;
-ValeurCmp = MOSFET-N;
-IdModule  = ;
+ValeurCmp = IRLML2803TRPBF;
+IdModule  = SOT95P237X112_123-3N;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/52067201;
 Reference = Q4;
-ValeurCmp = MOSFET-N;
-IdModule  = ;
+ValeurCmp = IRLML2803TRPBF;
+IdModule  = SOT95P237X112_123-3N;
 EndCmp
 
 BeginCmp
