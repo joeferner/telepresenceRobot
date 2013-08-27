@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 25 Aug 2013 08:59:14 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 26 Aug 2013 09:02:07 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -94,7 +94,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51EB1CB9/51EDC914;
 Reference = C12;
-ValeurCmp = 100uF 35V ???;
+ValeurCmp = 100uF 35V;
 IdModule  = ;
 EndCmp
 
@@ -129,7 +129,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51EB1CB9/5214354B;
 Reference = C17;
-ValeurCmp = 22uF;
+ValeurCmp = 100uF 15V;
 IdModule  = ;
 EndCmp
 
@@ -452,27 +452,20 @@ BeginCmp
 TimeStamp = /51EB1CB9/5214B691;
 Reference = P7;
 ValeurCmp = BATCHG;
-IdModule  = ;
+IdModule  = HDRV2W66P254_1X2_508X249X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/52145BAB;
 Reference = P8;
 ValeurCmp = 12VIN;
-IdModule  = ;
+IdModule  = HDRV2W66P254_1X2_508X249X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/52146134;
 Reference = P9;
 ValeurCmp = BAT;
-IdModule  = ;
-EndCmp
-
-BeginCmp
-TimeStamp = /51EB1CB9/52145DA1;
-Reference = P10;
-ValeurCmp = 5VOUT;
 IdModule  = ;
 EndCmp
 
@@ -494,7 +487,7 @@ BeginCmp
 TimeStamp = /5206ECE8/52146D75;
 Reference = P13;
 ValeurCmp = AND5V;
-IdModule  = ;
+IdModule  = HDRV2W66P254_1X2_508X249X838P;
 EndCmp
 
 BeginCmp
@@ -913,7 +906,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5206ECE8/520691C2;
 Reference = X2;
-ValeurCmp = XTAL;
+ValeurCmp = 12MHz;
 IdModule  = ;
 EndCmp
 
