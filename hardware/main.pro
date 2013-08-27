@@ -1,4 +1,4 @@
-update=Sun 25 Aug 2013 12:22:43 PM EDT
+update=Mon 26 Aug 2013 09:08:03 PM EDT
 version=1
 last_client=pcbnew
 [general]
@@ -24,7 +24,7 @@ LastNetListRead=main.net
 UseCmpFile=1
 PadDrill="    0.000000"
 PadDrillOvalY="    0.000000"
-PadSizeH="    1.150000"
+PadSizeH="    1.000000"
 PadSizeV="    1.450000"
 PcbTextSizeV="    1.500000"
 PcbTextSizeH="    1.500000"
@@ -36,7 +36,7 @@ SolderMaskClearance="    0.000000"
 SolderMaskMinWidth="    0.000000"
 DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
-ModuleOutlineThickness="    0.150000"
+ModuleOutlineThickness="    0.100000"
 [pcbnew/libraries]
 LibDir=
 LibName1=telepresenceRobotNew

@@ -1,17 +1,17 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 26 Aug 2013 09:02:07 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Mon 26 Aug 2013 11:54:49 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
 Reference = BT1;
 ValeurCmp = BATTERY;
-IdModule  = ;
+IdModule  = EMPTY;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F5672D;
 Reference = BT2;
 ValeurCmp = BATTERY;
-IdModule  = ;
+IdModule  = EMPTY;
 EndCmp
 
 BeginCmp
@@ -95,7 +95,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/51EDC914;
 Reference = C12;
 ValeurCmp = 100uF 35V;
-IdModule  = ;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
@@ -116,7 +116,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/5206CE7D;
 Reference = C15;
 ValeurCmp = 100uF;
-IdModule  = ;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
@@ -130,7 +130,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/5214354B;
 Reference = C17;
 ValeurCmp = 100uF 15V;
-IdModule  = ;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
@@ -158,7 +158,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/51EDEB39;
 Reference = C21;
 ValeurCmp = 100uF;
-IdModule  = ;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
@@ -333,21 +333,21 @@ BeginCmp
 TimeStamp = /51EB1CB9/51F5CF18;
 Reference = D1;
 ValeurCmp = DIODE;
-IdModule  = ;
+IdModule  = DIOM5226X220N;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/5206D1C0;
 Reference = D2;
 ValeurCmp = PWR;
-IdModule  = ;
+IdModule  = LEDC3216X100N;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206ECE8/52069771;
 Reference = D3;
 ValeurCmp = LED;
-IdModule  = ;
+IdModule  = LEDC3216X100N;
 EndCmp
 
 BeginCmp
@@ -382,70 +382,70 @@ BeginCmp
 TimeStamp = /51EDC330;
 Reference = M1;
 ValeurCmp = Mounting Hole;
-IdModule  = ;
+IdModule  = MTGNP565H328Z565P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EDC379;
 Reference = M2;
 ValeurCmp = Mounting Hole;
-IdModule  = ;
+IdModule  = MTGNP565H328Z565P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EDC37F;
 Reference = M3;
 ValeurCmp = Mounting Hole;
-IdModule  = ;
+IdModule  = MTGNP565H328Z565P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EDC385;
 Reference = M4;
 ValeurCmp = Mounting Hole;
-IdModule  = ;
+IdModule  = MTGNP565H328Z565P;
 EndCmp
 
 BeginCmp
 TimeStamp = /520AE088;
 Reference = P1;
 ValeurCmp = VBAT-TEST;
-IdModule  = ;
+IdModule  = HDRV1W66P254_1X1_254X249X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206B127;
 Reference = P2;
 ValeurCmp = USB-VBUS;
-IdModule  = ;
+IdModule  = HDRV1W66P254_1X1_254X249X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206EC7E;
 Reference = P3;
-ValeurCmp = P03;
-IdModule  = ;
+ValeurCmp = SERVO-TILT;
+IdModule  = HDRV3W66P254_1X3_762X249X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206873A;
 Reference = P4;
 ValeurCmp = JTAG10;
-IdModule  = ;
+IdModule  = HDRV10W66P254_2X5_1270X503X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/5206DA5F;
 Reference = P5;
 ValeurCmp = POWER-CHARGE;
-IdModule  = ;
+IdModule  = TECONN-2-1445098-2;
 EndCmp
 
 BeginCmp
 TimeStamp = /51EB1CB9/5206B9B3;
 Reference = P6;
 ValeurCmp = POWER;
-IdModule  = ;
+IdModule  = HDRV4W66P254_1X4_1016X249X838P;
 EndCmp
 
 BeginCmp
@@ -466,21 +466,21 @@ BeginCmp
 TimeStamp = /51EB1CB9/52146134;
 Reference = P9;
 ValeurCmp = BAT;
-IdModule  = ;
+IdModule  = TECONN-2-1445098-3;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/52067630;
 Reference = P11;
 ValeurCmp = MOTOR-R;
-IdModule  = ;
+IdModule  = TECONN-2-1445098-2;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/52068DE0;
 Reference = P12;
 ValeurCmp = MOTOR-L;
-IdModule  = ;
+IdModule  = TECONN-2-1445098-2;
 EndCmp
 
 BeginCmp
@@ -494,7 +494,7 @@ BeginCmp
 TimeStamp = /52148017;
 Reference = P14;
 ValeurCmp = P24;
-IdModule  = ;
+IdModule  = HDRV24W66P254_2X12_3048X503X838P;
 EndCmp
 
 BeginCmp

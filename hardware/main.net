@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jferner/dev/telepresenceRobot/hardware/main.sch)
-    (date "Mon 26 Aug 2013 09:00:54 PM EDT")
+    (date "Mon 26 Aug 2013 09:14:53 PM EDT")
     (tool "eeschema (2013-mar-13)-testing"))
   (components
     (comp (ref M1)
@@ -145,7 +145,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 5206CCB6))
     (comp (ref P3)
-      (value P03)
+      (value SERVO-TILT)
       (libsource (lib userFavorites) (part P03))
       (sheetpath (names /) (tstamps /))
       (tstamp 5206EC7E))
