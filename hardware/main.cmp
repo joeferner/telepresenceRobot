@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Tue 27 Aug 2013 11:41:57 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Wed 28 Aug 2013 12:08:50 AM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -851,7 +851,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/51F55FCA;
 Reference = U2;
 ValeurCmp = BQ24450;
-IdModule  = ;
+IdModule  = SOIC127P1030X265-16N;
 EndCmp
 
 BeginCmp
