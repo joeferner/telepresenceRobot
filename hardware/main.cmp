@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Tue 27 Aug 2013 07:37:14 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Tue 27 Aug 2013 11:41:57 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -360,7 +360,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5206A480;
 Reference = J1;
-ValeurCmp = USB_2;
+ValeurCmp = USB_DEBUG;
 IdModule  = ;
 EndCmp
 
@@ -837,14 +837,14 @@ BeginCmp
 TimeStamp = /5214E3B3;
 Reference = S1;
 ValeurCmp = BTN_SPST;
-IdModule  = ;
+IdModule  = CKCOMP-PTS525SM10SMTR;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206DB1D;
 Reference = U1;
 ValeurCmp = STM32F102C6;
-IdModule  = ;
+IdModule  = QFP50P900X900X160-48N;
 EndCmp
 
 BeginCmp
