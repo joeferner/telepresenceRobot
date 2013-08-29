@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Wed 28 Aug 2013 12:08:50 AM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Wed 28 Aug 2013 11:53:11 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -865,14 +865,14 @@ BeginCmp
 TimeStamp = /51EB1CB9/52143251;
 Reference = U4;
 ValeurCmp = AP6502;
-IdModule  = ;
+IdModule  = SOIC127P600X150-9N;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/52066E45;
 Reference = U5;
 ValeurCmp = 7408;
-IdModule  = ;
+IdModule  = SOIC127P600X175-14N;
 EndCmp
 
 BeginCmp
@@ -900,14 +900,14 @@ BeginCmp
 TimeStamp = /520680FD;
 Reference = X1;
 ValeurCmp = 8MHz;
-IdModule  = ;
+IdModule  = XTAL8045X200N;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206ECE8/520691C2;
 Reference = X2;
 ValeurCmp = 12MHz;
-IdModule  = ;
+IdModule  = XTAL8045X200N;
 EndCmp
 
 EndListe

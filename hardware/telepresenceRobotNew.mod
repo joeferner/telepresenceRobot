@@ -19,10 +19,13 @@ MTGNP565H328Z565P
 QFP50P900X900X160-48N
 RESC2012X100N
 SOIC127P1030X265-16N
+SOIC127P600X150-9N
+SOIC127P600X175-14N
 SOT95P237X112_123-3N
 TECONN-2-1445098-2
 TECONN-2-1445098-3
 TO254P1512X997X450-123-3P
+XTAL8045X200N
 $EndINDEX
 # L: 7.00mm +/- 0.4mm
 # T: 2.40mm +/- 0.2mm
@@ -1304,6 +1307,223 @@ Ne 0 ""
 Po 4.65 -4.445
 $EndPAD
 $EndMODULE SOIC127P1030X265-16N
+# ThermalTab: true
+# Pitch: 1.27mm
+# PinPackage: 8
+# L: 5.90mm - 6.10mm
+# T: 0.62mm - 0.82mm
+# W: 0.30mm - 0.50mm
+# Tt: 3.35mm
+# Wt: 2.71mm
+# A: 3.80mm - 3.90mm
+# B: 4.85mm - 4.95mm
+# H: 1.50mm
+# K: 0.13mm
+$MODULE SOIC127P600X150-9N
+Po 0 0 0 15 521EB92D 00000000 ~~
+Li SOIC127P600X150-9N
+Sc 0
+AR
+Op 0 0 0
+T0 0 3.6 1 1 0 0.15 N V 21 N "SOIC127P600X150-9N"
+T1 0 0 1 1 0 0.15 N V 21 N "VAL**"
+DC -3.1 -2.7 -3 -2.7 0.3 21
+DS -3.7 -2.75 3.7 -2.75 0.1 25
+DS 3.7 -2.75 3.7 2.75 0.1 25
+DS 3.7 2.75 -3.7 2.75 0.1 25
+DS -3.7 2.75 -3.7 -2.75 0.1 25
+DS -1.5 -2.45 1.5 -2.45 0.1 21
+DS 1.5 2.45 -1.5 2.45 0.1 21
+$PAD
+Sh "1" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.65 -1.905
+$EndPAD
+$PAD
+Sh "2" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.65 -0.635
+$EndPAD
+$PAD
+Sh "3" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.65 0.635
+$EndPAD
+$PAD
+Sh "4" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.65 1.905
+$EndPAD
+$PAD
+Sh "5" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.65 1.905
+$EndPAD
+$PAD
+Sh "6" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.65 0.635
+$EndPAD
+$PAD
+Sh "7" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.65 -0.635
+$EndPAD
+$PAD
+Sh "8" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.65 -1.905
+$EndPAD
+$PAD
+Sh "9" R 2.7 3.35 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE SOIC127P600X150-9N
+# Pitch: 1.27mm
+# PinPackage: 14
+# L: 5.8mm - 6.2mm
+# T: 0.4mm - 1.27mm
+# W: 0.35mm - 0.51mm
+# A: 3.8mm - 4.0mm
+# B: 8.51mm - 8.71mm
+# H: 1.75mm
+# K: 0.10mm
+$MODULE SOIC127P600X175-14N
+Po 0 0 0 15 521EC1A6 00000000 ~~
+Li SOIC127P600X175-14N
+Sc 0
+AR
+Op 0 0 0
+T0 0 5.6 1 1 0 0.15 N V 21 N "SOIC127P600X175-14N"
+T1 0.1 0 1 1 0 0.15 N V 21 N "VAL**"
+DC -3.2 -4.6 -3.1 -4.6 0.3 21
+DC -0.9 -3.6 -0.7 -3.6 0.4 21
+DS -3.75 -4.65 3.75 -4.65 0.1 25
+DS 3.75 -4.65 3.75 4.65 0.1 25
+DS 3.75 4.65 -3.75 4.65 0.1 25
+DS -3.75 4.65 -3.75 -4.65 0.1 25
+DS -1.6 -4.3 1.6 -4.3 0.1 21
+DS 1.6 -4.3 1.6 4.3 0.1 21
+DS 1.6 4.3 -1.6 4.3 0.1 21
+DS -1.6 4.3 -1.6 -4.3 0.1 21
+$PAD
+Sh "1" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 -3.81
+$EndPAD
+$PAD
+Sh "2" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 -2.54
+$EndPAD
+$PAD
+Sh "3" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 -1.27
+$EndPAD
+$PAD
+Sh "4" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 0
+$EndPAD
+$PAD
+Sh "5" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 1.27
+$EndPAD
+$PAD
+Sh "6" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 2.54
+$EndPAD
+$PAD
+Sh "7" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.7 3.81
+$EndPAD
+$PAD
+Sh "8" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 3.81
+$EndPAD
+$PAD
+Sh "9" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 2.54
+$EndPAD
+$PAD
+Sh "10" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 1.27
+$EndPAD
+$PAD
+Sh "11" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 0
+$EndPAD
+$PAD
+Sh "12" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 -1.27
+$EndPAD
+$PAD
+Sh "13" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 -2.54
+$EndPAD
+$PAD
+Sh "14" R 1.55 0.6 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.7 -3.81
+$EndPAD
+$EndMODULE SOIC127P600X175-14N
 # P: 0.95mm
 # PinPackage: 6
 # PinCount: 3
@@ -1496,4 +1716,44 @@ Ne 0 ""
 Po 19.05 2.54
 $EndPAD
 $EndMODULE TO254P1512X997X450-123-3P
+# L: 7.8mm - 8.2mm
+# T1: 1.3mm - 1.7mm
+# W1: 1.8mm - 2.2mm
+# T2: 1.3mm - 1.7mm
+# W2: 1.8mm - 2.2mm
+# B: 4.3mm - 4.7mm
+# H: 2.0mm
+$MODULE XTAL8045X200N
+Po 0 0 0 15 521EC505 00000000 ~~
+Li XTAL8045X200N
+Sc 0
+AR
+Op 0 0 0
+T0 0 3.5 1 1 0 0.15 N V 21 N "XTAL8045X200N"
+T1 0 0 1 1 0 0.15 N V 21 N "VAL**"
+DS -4.9 -2.6 4.9 -2.6 0.1 25
+DS 4.9 -2.6 4.9 2.6 0.1 25
+DS 4.9 2.6 -4.9 2.6 0.1 25
+DS -4.9 2.6 -4.9 -2.6 0.1 25
+DS 4 1.6 4 2.25 0.1 21
+DS -4 2.25 4 2.25 0.1 21
+DS -4 2.25 -4 1.6 0.1 21
+DS -4 -1.6 -4 -2.25 0.1 21
+DS -4 -2.25 4 -2.25 0.1 21
+DS 4 -2.25 4 -1.6 0.1 21
+$PAD
+Sh "1" R 2.45 2.1 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.4 0
+$EndPAD
+$PAD
+Sh "2" R 2.45 2.1 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.4 0
+$EndPAD
+$EndMODULE XTAL8045X200N
 $EndLIBRARY
