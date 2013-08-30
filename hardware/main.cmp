@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 08:50:27 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 09:07:24 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -858,7 +858,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/5206C05A;
 Reference = U3;
 ValeurCmp = ZLDO1117;
-IdModule  = ;
+IdModule  = SOT230P700X180-4N;
 EndCmp
 
 BeginCmp

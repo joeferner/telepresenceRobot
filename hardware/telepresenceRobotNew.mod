@@ -16,6 +16,7 @@ HDRV3W66P254_1X3_762X249X838P
 HDRV4W66P254_1X4_1016X249X838P
 LEDC3216X100N
 MTGNP565H328Z565P
+PQFN80P800X800X220-33N
 QFP50P900X900X160-48N
 QFP80P900X900X160-32N
 RESC2012X100N
@@ -767,6 +768,275 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE MTGNP565H328Z565P
+# Pitch: 0.8mm
+# PinsA: 7
+# PinsB: 9
+# PinCount: 32
+# PullBack: 0.05mm
+# A: 8.0mm - 8.0mm
+# B: 8.0mm - 8.0mm
+# H: 2.2mm
+# T: 0.95mm - 1.15mm
+# W: 0.45mm - 0.45mm
+# Tt: 5.0mm
+# Wt: 5.0mm
+# Ft: 0.7mm
+# Rt: 0.0mm
+# Notes: Pins and heat pad were shrunk to fit 8mil
+$MODULE PQFN80P800X800X220-33N
+Po 0 0 0 15 521FF959 00000000 ~~
+Li PQFN80P800X800X220-33N
+Sc 0
+AR
+Op 0 0 0
+.LocalClearance 0.2286
+T0 0 5.2 1 1 0 0.15 N V 21 N "PQFN80P800X800X220-33N"
+T1 0 0 1 1 0 0.15 N V 21 N "VAL**"
+DS -4.25 -4.25 4.25 -4.25 0.1 25
+DS 4.25 -4.25 4.25 4.25 0.1 25
+DS 4.25 4.25 -4.25 4.25 0.1 25
+DS -4.25 4.25 -4.25 -4.25 0.1 25
+DS -4.2 3.2 -4.2 4.2 0.1 21
+DS -4.2 4.2 -3.2 4.2 0.1 21
+DS 4.2 3.2 4.2 4.2 0.1 21
+DS 4.2 4.2 3.2 4.2 0.1 21
+DS 3.2 -4.2 4.2 -4.2 0.1 21
+DS 4.2 -4.2 4.2 -3.2 0.1 21
+DS -4.2 -3.2 -4.2 -4.2 0.1 21
+DS -4.2 -4.2 -3.2 -4.2 0.1 21
+DC -4.6 -3.5 -4.5 -3.5 0.2 21
+$PAD
+Sh "1" R 1.08 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 -3.45
+$EndPAD
+$PAD
+Sh "2" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 -2.4
+$EndPAD
+$PAD
+Sh "3" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 -1.6
+$EndPAD
+$PAD
+Sh "4" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 -0.8
+$EndPAD
+$PAD
+Sh "5" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 0
+$EndPAD
+$PAD
+Sh "6" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 0.8
+$EndPAD
+$PAD
+Sh "7" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 1.6
+$EndPAD
+$PAD
+Sh "8" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 2.4
+$EndPAD
+$PAD
+Sh "9" R 1.08 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -3.45 3.45
+$EndPAD
+$PAD
+Sh "10" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.4 3.45
+$EndPAD
+$PAD
+Sh "11" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -1.6 3.45
+$EndPAD
+$PAD
+Sh "12" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -0.8 3.45
+$EndPAD
+$PAD
+Sh "13" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 3.45
+$EndPAD
+$PAD
+Sh "14" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0.8 3.45
+$EndPAD
+$PAD
+Sh "15" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 1.6 3.45
+$EndPAD
+$PAD
+Sh "16" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.4 3.45
+$EndPAD
+$PAD
+Sh "17" R 1.08 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 3.45
+$EndPAD
+$PAD
+Sh "18" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 2.4
+$EndPAD
+$PAD
+Sh "19" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 1.6
+$EndPAD
+$PAD
+Sh "20" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 0.8
+$EndPAD
+$PAD
+Sh "21" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 0
+$EndPAD
+$PAD
+Sh "22" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 -0.8
+$EndPAD
+$PAD
+Sh "23" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 -1.6
+$EndPAD
+$PAD
+Sh "24" R 1.08 0.55 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 -2.4
+$EndPAD
+$PAD
+Sh "25" R 1.08 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 3.45 -3.45
+$EndPAD
+$PAD
+Sh "26" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 2.4 -3.45
+$EndPAD
+$PAD
+Sh "27" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 1.6 -3.45
+$EndPAD
+$PAD
+Sh "28" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0.8 -3.45
+$EndPAD
+$PAD
+Sh "29" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 -3.45
+$EndPAD
+$PAD
+Sh "30" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -0.8 -3.45
+$EndPAD
+$PAD
+Sh "31" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -1.6 -3.45
+$EndPAD
+$PAD
+Sh "32" R 0.55 1.08 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po -2.4 -3.45
+$EndPAD
+$PAD
+Sh "33" R 5 5 0 0 0
+Dr 0 0 0
+At SMD N 00888000
+Ne 0 ""
+Po 0 0
+$EndPAD
+$EndMODULE PQFN80P800X800X220-33N
 # P: 0.50mm
 # PinsA: 12
 # PinsB: 12
@@ -1797,7 +2067,7 @@ Li SOT230P700X180-4N
 Sc 0
 AR
 Op 0 0 0
-T0 0 7.3 1 1 0 0.15 N V 21 N "SOT230P700X180-4N"
+T0 0 4.4 1 1 0 0.15 N V 21 N "SOT230P700X180-4N"
 T1 0 0 1 1 0 0.15 N V 21 N "VAL**"
 DC -3.7 -3.3 -3.6 -3.3 0.2 21
 DC -1 -2.4 -0.8 -2.4 0.4 21
