@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 09:07:24 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 09:50:30 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -879,14 +879,14 @@ BeginCmp
 TimeStamp = /52066E3D/52067209;
 Reference = U6;
 ValeurCmp = MC33926;
-IdModule  = ;
+IdModule  = PQFN80P800X800X220-33N;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/52067216;
 Reference = U7;
 ValeurCmp = MC33926;
-IdModule  = ;
+IdModule  = PQFN80P800X800X220-33N;
 EndCmp
 
 BeginCmp
