@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 09:50:30 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:05:28 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -354,7 +354,7 @@ BeginCmp
 TimeStamp = /5206ECE8/52068DDB;
 Reference = FB1;
 ValeurCmp = MH2029-300Y;
-IdModule  = ;
+IdModule  = INDC2012X110N;
 EndCmp
 
 BeginCmp
