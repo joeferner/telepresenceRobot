@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:15:03 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:36:24 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -361,14 +361,14 @@ BeginCmp
 TimeStamp = /5206A480;
 Reference = J1;
 ValeurCmp = USB_DEBUG;
-IdModule  = ;
+IdModule  = JST_UB-MC5BR3-SD204-4S-NMP;
 EndCmp
 
 BeginCmp
 TimeStamp = /5206ECE8/52068DCC;
 Reference = J2;
 ValeurCmp = USB_TO_ANDROID;
-IdModule  = ;
+IdModule  = JST_UB-MC5BR3-SD204-4S-NMP;
 EndCmp
 
 BeginCmp

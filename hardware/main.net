@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jferner/dev/telepresenceRobot/hardware/main.sch)
-    (date "Tue 27 Aug 2013 07:37:44 PM EDT")
+    (date "Thu 29 Aug 2013 10:36:34 PM EDT")
     (tool "eeschema (2013-mar-13)-testing"))
   (components
     (comp (ref M1)
