@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:05:28 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:15:03 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -375,7 +375,7 @@ BeginCmp
 TimeStamp = /51EB1CB9/51EDD3F6;
 Reference = L1;
 ValeurCmp = 68uH;
-IdModule  = ;
+IdModule  = IND_ASPI-8040S-680M-T;
 EndCmp
 
 BeginCmp
