@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Thu 29 Aug 2013 10:36:24 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sat 31 Aug 2013 11:04:21 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -186,14 +186,14 @@ BeginCmp
 TimeStamp = /52066E3D/52067F26;
 Reference = C25;
 ValeurCmp = 100uF 35V;
-IdModule  = CAPC2012X100N;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
 TimeStamp = /52066E3D/5206A299;
 Reference = C26;
 ValeurCmp = 100uF 35V;
-IdModule  = CAPC2012X100N;
+IdModule  = CAPAE660X790N;
 EndCmp
 
 BeginCmp
