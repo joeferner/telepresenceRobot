@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jferner/dev/telepresenceRobot/hardware/main.sch)
-    (date "Sat 31 Aug 2013 11:19:02 PM EDT")
+    (date "Sun 01 Sep 2013 09:19:22 PM EDT")
     (tool "eeschema (2013-mar-13)-testing"))
   (components
     (comp (ref M1)
@@ -1092,7 +1092,7 @@
       (node (ref R35) (pin 2))
       (node (ref BT2) (pin 2))
       (node (ref R39) (pin 2))
-      (node (ref P5) (pin 2))
+      (node (ref P5) (pin 1))
       (node (ref C16) (pin 2))
       (node (ref C15) (pin 2))
       (node (ref D2) (pin 2))
@@ -1301,7 +1301,7 @@
       (node (ref U1) (pin 14))
       (node (ref P14) (pin 5)))
     (net (code 37) (name /Power/VIN+)
-      (node (ref P5) (pin 1))
+      (node (ref P5) (pin 2))
       (node (ref U2) (pin 5))
       (node (ref R14) (pin 1))
       (node (ref C13) (pin 1))
