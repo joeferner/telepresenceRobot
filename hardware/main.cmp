@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sat 31 Aug 2013 11:04:21 PM EDT
+Cmp-Mod V01 Created by PcbNew date = Tue 03 Sep 2013 04:24:04 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -431,7 +431,7 @@ BeginCmp
 TimeStamp = /5206873A;
 Reference = P4;
 ValeurCmp = JTAG10;
-IdModule  = HDRV10W66P254_2X5_1270X503X838P;
+IdModule  = SHDRV10W66P254_2X5_2035X870X609P;
 EndCmp
 
 BeginCmp

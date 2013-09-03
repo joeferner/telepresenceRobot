@@ -1,6 +1,6 @@
-update=Mon 26 Aug 2013 09:08:03 PM EDT
+update=Tue 03 Sep 2013 04:21:39 PM EDT
 version=1
-last_client=pcbnew
+last_client=cvpcb
 [general]
 version=1
 [eeschema]
@@ -15,9 +15,6 @@ LabSize=60
 LibName1=power
 LibName2=telepresenceRobot
 LibName3=userFavorites
-[cvpcb]
-version=1
-NetIExt=net
 [pcbnew]
 version=1
 LastNetListRead=main.net
@@ -38,8 +35,8 @@ DrawSegmentWidth="    0.200000"
 BoardOutlineThickness="    0.100000"
 ModuleOutlineThickness="    0.100000"
 [pcbnew/libraries]
-LibDir=
 LibName1=telepresenceRobotNew
-LibName2=telepresenceRobot
-LibName3=userFavorites-deci-mils
-LibName4=userFavorites-mm
+LibDir=
+[cvpcb]
+version=1
+NetIExt=net
