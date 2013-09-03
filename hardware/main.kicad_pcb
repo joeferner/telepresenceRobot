@@ -59,9 +59,9 @@
     (aux_axis_origin 0 0)
     (visible_elements FFFEFF7F)
     (pcbplotparams
-      (layerselection 15761409)
+      (layerselection 284196865)
       (usegerberextensions true)
-      (excludeedgelayer false)
+      (excludeedgelayer true)
       (linewidth 0.150000)
       (plotframeref false)
       (viasonmask false)
