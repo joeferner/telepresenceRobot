@@ -34,12 +34,6 @@ TECONN-2-1445098-3
 TO254P1512X997X450-231-3P
 XTAL8045X200N
 $EndINDEX
-# L: 7.00mm +/- 0.4mm
-# T: 2.40mm +/- 0.2mm
-# W: 0.65mm +/- 0.15mm
-# A: 6.60mm +/- 0.20mm
-# B: 6.60mm +/- 0.20mm
-# H: 7.70mm +0.20mm
 $MODULE CAPAE660X790N
 Po 0 0 0 15 521C0E68 00000000 ~~
 Li CAPAE660X790N
@@ -74,11 +68,6 @@ Ne 0 ""
 Po 2.6 0
 $EndPAD
 $EndMODULE CAPAE660X790N
-# Capacitor - EIA 0805, Metric 2012
-# L: 2.00mm +/-0.00
-# T1, T2: 0.5mm +/-0.00
-# W: 1.25mm +/-0.15
-# H: 1.00mm
 $MODULE CAPC2012X100N
 Po 0 0 0 15 521A3337 00000000 ~~
 Li CAPC2012X100N
@@ -107,11 +96,6 @@ Ne 0 ""
 Po 0.95 0
 $EndPAD
 $EndMODULE CAPC2012X100N
-# Capacitor Polarized - EIA 0805, Metric 2012
-# L: 2.00mm +/-0.00
-# T1, T2: 0.5mm +/-0.00
-# W: 1.25mm +/-0.15
-# H: 1.00mm
 $MODULE CAPCP2012X100N
 Po 0 0 0 15 521A341A 00000000 ~~
 Li CAPCP2012X100N
@@ -187,13 +171,6 @@ Ne 0 ""
 Po 3.1 1.85
 $EndPAD
 $EndMODULE CKCOMP-PTS525SM10SMTR
-# L: 5.21mm +/- 0.38mm
-# T1: 1.14mm +/- 0.38mm
-# W1: 1.45mm +/- 0.18mm
-# T2: 1.14mm +/- 0.38mm
-# W2: 1.45mm +/- 0.18mm
-# B: 2.605mm +/- 0.315mm
-# H: 2.2mm
 $MODULE DIOM5226X220N
 Po 0 0 0 15 521C12CD 00000000 ~~
 Li DIOM5226X220N
@@ -234,17 +211,6 @@ Op 0 0 0
 T0 0 -1.27 1 1 0 0.15 N I 21 N "EMPTY"
 T1 0 0 1 1 0 0.15 N I 21 N "VAL**"
 $EndMODULE EMPTY
-# Rows: 2
-# RowsPitch: 2.54mm
-# Positions: 5
-# PositionsPitch: 2.54mm
-# PinCount: 10
-# A: 12.7mm
-# B: 5.03mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV10W66P254_2X5_1270X503X838P
 Po 0 0 0 15 521C0352 00000000 ~~
 Li HDRV10W66P254_2X5_1270X503X838P
@@ -332,17 +298,6 @@ Ne 0 ""
 Po 10.16 -2.54
 $EndPAD
 $EndMODULE HDRV10W66P254_2X5_1270X503X838P
-# Rows: 1
-# RowsPitch: 2.54mm
-# Positions: 1
-# PositionsPitch: 2.54mm
-# PinCount: 1
-# A: 2.54mm
-# B: 2.49mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV1W66P254_1X1_254X249X838P
 Po 0 0 0 15 521BFD4D 00000000 ~~
 Li HDRV1W66P254_1X1_254X249X838P
@@ -367,17 +322,6 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE HDRV1W66P254_1X1_254X249X838P
-# Rows: 2
-# RowsPitch: 2.54mm
-# Positions: 12
-# PositionsPitch: 2.54mm
-# PinCount: 24
-# A: 30.48mm
-# B: 5.03mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV24W66P254_2X12_3048X503X838P
 Po 0 0 0 15 521C0968 00000000 ~~
 Li HDRV24W66P254_2X12_3048X503X838P
@@ -563,17 +507,6 @@ Ne 0 ""
 Po 27.94 -2.54
 $EndPAD
 $EndMODULE HDRV24W66P254_2X12_3048X503X838P
-# Rows: 1
-# RowsPitch: 2.54mm
-# Positions: 2
-# PositionsPitch: 2.54mm
-# PinCount: 2
-# A: 5.08mm
-# B: 2.49mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV2W66P254_1X2_508X249X838P
 Po 0 0 0 15 521BF8F7 00000000 ~~
 Li HDRV2W66P254_1X2_508X249X838P
@@ -605,17 +538,6 @@ Ne 0 ""
 Po 2.54 0
 $EndPAD
 $EndMODULE HDRV2W66P254_1X2_508X249X838P
-# Rows: 1
-# RowsPitch: 2.54mm
-# Positions: 3
-# PositionsPitch: 2.54mm
-# PinCount: 3
-# A: 7.62mm
-# B: 2.49mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV3W66P254_1X3_762X249X838P
 Po 0 0 0 15 521BFFDA 00000000 ~~
 Li HDRV3W66P254_1X3_762X249X838P
@@ -654,17 +576,6 @@ Ne 0 ""
 Po 5.08 0
 $EndPAD
 $EndMODULE HDRV3W66P254_1X3_762X249X838P
-# Rows: 1
-# RowsPitch: 2.54mm
-# Positions: 4
-# PositionsPitch: 2.54mm
-# PinCount: 4
-# A: 10.16mm
-# B: 2.49mm
-# T: 2.29mm
-# H: 6.09mm
-# h: 3.18mm
-# d: 0.66mm
 $MODULE HDRV4W66P254_1X4_1016X249X838P
 Po 0 0 0 15 521C0114 00000000 ~~
 Li HDRV4W66P254_1X4_1016X249X838P
@@ -710,12 +621,6 @@ Ne 0 ""
 Po 7.62 0
 $EndPAD
 $EndMODULE HDRV4W66P254_1X4_1016X249X838P
-# Family: Inductor
-# L: 1.8mm - 2.2mm
-# T1: 0.26mm - 0.76mm
-# T2: 0.26mm - 0.76mm
-# W: 1.05mm - 1.45mm
-# H: 1.10mm
 $MODULE INDC2012X110N
 Po 0 0 0 15 521FFD59 00000000 ~~
 Li INDC2012X110N
@@ -864,11 +769,6 @@ Ne 0 ""
 Po 1.2 0
 $EndPAD
 $EndMODULE JST_UB-MC5BR3-SD204-4S-NMP
-# L: 3.20mm
-# T1: 0.50mm +/- 0.20mm
-# T2: 0.50mm +/- 0.20mm
-# W: 1.60mm
-# H: 1.00mm
 $MODULE LEDC3216X100N
 Po 0 0 0 15 521C15FF 00000000 ~~
 Li LEDC3216X100N
@@ -902,13 +802,6 @@ Ne 0 ""
 Po 1.5 0
 $EndPAD
 $EndMODULE LEDC3216X100N
-# Type: ANSI
-# Size: 4
-# Fit: User Defined
-# HoleDiameter: 3.2766mm
-# Profile: Pan Head
-# SupportDiameter: 5.6642
-# ViasNumer: 0
 $MODULE MTGNP565H328Z565P
 Po 0 0 0 15 521C1C28 00000000 ~~
 Li MTGNP565H328Z565P
@@ -926,21 +819,6 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE MTGNP565H328Z565P
-# Pitch: 0.8mm
-# PinsA: 7
-# PinsB: 9
-# PinCount: 32
-# PullBack: 0.05mm
-# A: 8.0mm - 8.0mm
-# B: 8.0mm - 8.0mm
-# H: 2.2mm
-# T: 0.95mm - 1.15mm
-# W: 0.45mm - 0.45mm
-# Tt: 5.0mm
-# Wt: 5.0mm
-# Ft: 0.7mm
-# Rt: 0.0mm
-# Notes: Pins and heat pad were shrunk to fit 8mil
 $MODULE PQFN80P800X800X220-33N
 Po 0 0 0 15 521FF959 00000000 ~~
 Li PQFN80P800X800X220-33N
@@ -1195,18 +1073,6 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE PQFN80P800X800X220-33N
-# P: 0.50mm
-# PinsA: 12
-# PinsB: 12
-# PinCount: 48
-# L1: 8.80mm - 9.20mm
-# L2: 8.80mm - 9.20mm
-# T: 0.45mm - 0.60mm
-# W: 0.17mm - 0.22mm
-# A: 6.80mm - 7.00mm
-# B: 6.80mm - 7.00mm
-# H: 1.60mm
-# K: 0.05mm
 $MODULE QFP50P900X900X160-48N
 Po 0 0 0 15 521D7291 00000000 ~~
 Li QFP50P900X900X160-48N
@@ -1563,16 +1429,6 @@ Ne 0 ""
 Po -2.75 -4.25
 $EndPAD
 $EndMODULE QFP50P900X900X160-48N
-# Pitch: 0.8mm
-# Pins: 8x8 (32)
-# L1: 9.00mm
-# L2: 9.00mm
-# T: 0.45mm - 0.75mm
-# W: 0.30mm - 0.44mm
-# A: 7.00mn - 7.00mm
-# B: 7.00mm - 7.00mm
-# H: 1.60mm
-# K: 0.05mm
 $MODULE QFP80P900X900X160-32N
 Po 0 0 0 15 521FE97D 00000000 ~~
 Li QFP80P900X900X160-32N
@@ -1817,11 +1673,6 @@ Ne 0 ""
 Po -2.8 -4.2
 $EndPAD
 $EndMODULE QFP80P900X900X160-32N
-# Resistor - EIA 0805, Metric 2012
-# L: 2.00mm +/-0.00
-# T1, T2: 0.5mm +/-0.00
-# W: 1.25mm +/-0.15
-# H: 1.00mm
 $MODULE RESC2012X100N
 Po 0 0 0 15 521A3345 00000000 ~~
 Li RESC2012X100N
@@ -1943,16 +1794,6 @@ Ne 0 ""
 Po 10.16 -2.54
 $EndPAD
 $EndMODULE SHDRV10W66P254_2X5_2035X870X609P
-# P: 1.27mm
-# PinPackage: 16
-# PinCount: 16
-# L: 9.97mm - 10.63mm
-# T: 0.40mm - 1.27mm
-# W: 0.31mm - 0.51mm
-# A: 7.40mm - 7.60mm
-# B: 10.10mm - 10.50mm
-# H: 2.65mm
-# K: 0.30mm
 $MODULE SOIC127P1030X265-16N
 Po 0 0 0 15 521D77B3 00000000 ~~
 Li SOIC127P1030X265-16N
@@ -2084,18 +1925,6 @@ Ne 0 ""
 Po 4.65 -4.445
 $EndPAD
 $EndMODULE SOIC127P1030X265-16N
-# ThermalTab: true
-# Pitch: 1.27mm
-# PinPackage: 8
-# L: 5.90mm - 6.10mm
-# T: 0.62mm - 0.82mm
-# W: 0.30mm - 0.50mm
-# Tt: 3.35mm
-# Wt: 2.71mm
-# A: 3.80mm - 3.90mm
-# B: 4.85mm - 4.95mm
-# H: 1.50mm
-# K: 0.13mm
 $MODULE SOIC127P600X150-9N
 Po 0 0 0 15 521EB92D 00000000 ~~
 Li SOIC127P600X150-9N
@@ -2175,15 +2004,6 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE SOIC127P600X150-9N
-# Pitch: 1.27mm
-# PinPackage: 14
-# L: 5.8mm - 6.2mm
-# T: 0.4mm - 1.27mm
-# W: 0.35mm - 0.51mm
-# A: 3.8mm - 4.0mm
-# B: 8.51mm - 8.71mm
-# H: 1.75mm
-# K: 0.10mm
 $MODULE SOIC127P600X175-14N
 Po 0 0 0 15 521EC1A6 00000000 ~~
 Li SOIC127P600X175-14N
@@ -2301,17 +2121,6 @@ Ne 0 ""
 Po 2.7 -3.81
 $EndPAD
 $EndMODULE SOIC127P600X175-14N
-# Pitch: 2.3mm
-# PinPackage: 4
-# PinCount: 4
-# L: 6.9mm - 7.1mm
-# T: 0.85mm - 1.05mm
-# W1: 0.6mm - 0.8mm
-# W2: 2.9mm - 3.1mm
-# A: 3.45mm - 3.55mm
-# B: 6.45mm - 6.55mm
-# H: 1.80mm
-# K: 0.01mm
 $MODULE SOT230P700X180-4N
 Po 0 0 0 15 521FEF41 00000000 ~~
 Li SOT230P700X180-4N
@@ -2359,16 +2168,6 @@ Ne 0 ""
 Po 3 0
 $EndPAD
 $EndMODULE SOT230P700X180-4N
-# P: 0.95mm
-# PinPackage: 6
-# PinCount: 3
-# L: 2.10mm - 2.64mm
-# T: 0.40mm - 0.60mm
-# W: 0.30mm - 0.50mm
-# A: 1.20mm - 1.40mm
-# B: 2.80mm - 3.04mm
-# H: 1.12mm
-# K: 0.20mm
 $MODULE SOT95P237X112_123-3N
 Po 0 0 0 15 521D03BF 00000000 ~~
 Li SOT95P237X112_123-3N
@@ -2494,19 +2293,6 @@ Ne 0 ""
 Po 6 0
 $EndPAD
 $EndMODULE TECONN-2-1445098-3
-# MountStyle: Horizontal
-# P: 2.54mm
-# PinPackage: 3
-# S: 0mm
-# L: 19.05mm
-# T1: 0.36mm - 0.64mm
-# W: 0.64mm - 0.91mm
-# T2: 5.97mm - 6.47mm
-# A: 9.66mm - 10.28mm
-# B: 8.51mm - 9.28mm
-# H: 4.50mm
-# M: 2.54mm - 3.05mm
-# d: 3.61mm - 4.09mm
 $MODULE TO254P1512X997X450-231-3P
 Po 0 0 0 15 52263256 00000000 ~~
 Li TO254P1512X997X450-231-3P
@@ -2555,13 +2341,6 @@ Ne 0 ""
 Po 19.05 2.54
 $EndPAD
 $EndMODULE TO254P1512X997X450-231-3P
-# L: 7.8mm - 8.2mm
-# T1: 1.3mm - 1.7mm
-# W1: 1.8mm - 2.2mm
-# T2: 1.3mm - 1.7mm
-# W2: 1.8mm - 2.2mm
-# B: 4.3mm - 4.7mm
-# H: 2.0mm
 $MODULE XTAL8045X200N
 Po 0 0 0 15 521EC505 00000000 ~~
 Li XTAL8045X200N
