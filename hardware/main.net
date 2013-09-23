@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jferner/dev/telepresenceRobot/hardware/main.sch)
-    (date "Sun 01 Sep 2013 09:19:22 PM EDT")
+    (date "Thu 12 Sep 2013 11:30:43 PM EDT")
     (tool "eeschema (2013-mar-13)-testing"))
   (components
     (comp (ref M1)
@@ -674,6 +674,17 @@
         (pin (num 12) (name A) (type input))
         (pin (num 13) (name B) (type input))
         (pin (num 14) (name +) (type power_in))))
+    (libpart (lib userFavorites) (part CPsmall)
+      (footprints
+        (fp SM*)
+        (fp C?)
+        (fp C1-1))
+      (fields
+        (field (name Reference) C)
+        (field (name Value) CPsmall))
+      (pins
+        (pin (num 1) (name ~) (type passive))
+        (pin (num 2) (name ~) (type passive))))
     (libpart (lib telepresenceRobot) (part AP6502)
       (fields
         (field (name Reference) U)
@@ -858,17 +869,6 @@
         (pin (num 1) (name ~) (type passive))
         (pin (num 2) (name ~) (type input))
         (pin (num 3) (name ~) (type passive))))
-    (libpart (lib userFavorites) (part CPsmall)
-      (footprints
-        (fp SM*)
-        (fp C?)
-        (fp C1-1))
-      (fields
-        (field (name Reference) C)
-        (field (name Value) CPsmall))
-      (pins
-        (pin (num 1) (name ~) (type passive))
-        (pin (num 2) (name ~) (type passive))))
     (libpart (lib userFavorites) (part CRYSTAL)
       (fields
         (field (name Reference) X)
@@ -1052,10 +1052,10 @@
         (pin (num 1) (name ~) (type passive))
         (pin (num 2) (name ~) (type passive)))))
   (libraries
-    (library (logical telepresenceRobot)
-      (uri telepresenceRobot.lib))
     (library (logical userFavorites)
-      (uri userFavorites.lib)))
+      (uri userFavorites.lib))
+    (library (logical telepresenceRobot)
+      (uri telepresenceRobot.lib)))
   (nets
     (net (code 1) (name /Android/TX)
       (node (ref U8) (pin 23))
