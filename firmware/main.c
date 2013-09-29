@@ -1,6 +1,7 @@
 
 #include "delay.h"
 #include "debug.h"
+#include "android.h"
 #include "battery_voltage.h"
 #include "usb.h"
 #include "ring_buffer.h"
@@ -49,7 +50,7 @@ int main(void) {
 
   debug_led_config();
 
-  debug_config();
+  android_config();
   delay_ms(1000); // !!!! IMPORTANT: Keep this line in here. If we have a JTAG issue we need this time to get in before JTAG is disabled.
   print_info("BEGIN Init\n");
   disable_jtag();
@@ -125,7 +126,7 @@ void init_robot_registers() {
   robot_registers.targetSpeedRight = 0;
 }
 
-void debug_on_rx(uint8_t* data, uint16_t len) {
+void android_on_rx(uint8_t* data, uint16_t len) {
   process_input(data, len);
 }
 

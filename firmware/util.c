@@ -1,6 +1,6 @@
 
 #include "util.h"
-#include "debug.h"
+#include "android.h"
 #include <string.h>
 #include <math.h>
 
@@ -42,7 +42,7 @@ uint32_t parse_hex32(const char* str) {
 
 void print(const char* str) {
   int len = strlen(str);
-  debug_write_bytes((const uint8_t*) str, len);
+  android_write_bytes((const uint8_t*) str, len);
   usb_write((const uint8_t*) str, len);
 }
 
