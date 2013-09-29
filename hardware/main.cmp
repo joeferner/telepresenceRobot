@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by PcbNew date = Tue 03 Sep 2013 04:24:04 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 29 Sep 2013 02:52:29 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -470,6 +470,13 @@ IdModule  = TECONN-2-1445098-3;
 EndCmp
 
 BeginCmp
+TimeStamp = /5248227E;
+Reference = P10;
+ValeurCmp = P03;
+IdModule  = HDRV3W66P254_1X3_762X249X838P;
+EndCmp
+
+BeginCmp
 TimeStamp = /52066E3D/52067630;
 Reference = P11;
 ValeurCmp = MOTOR-R;
@@ -495,6 +502,13 @@ TimeStamp = /52148017;
 Reference = P14;
 ValeurCmp = P24;
 IdModule  = HDRV24W66P254_2X12_3048X503X838P;
+EndCmp
+
+BeginCmp
+TimeStamp = /5248801F;
+Reference = P15;
+ValeurCmp = P02;
+IdModule  = HDRV2W66P254_1X2_508X249X838P;
 EndCmp
 
 BeginCmp
@@ -829,7 +843,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5214EB90;
 Reference = R44;
-ValeurCmp = 0R;
+ValeurCmp = 10k;
 IdModule  = RESC2012X100N;
 EndCmp
 
