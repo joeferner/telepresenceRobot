@@ -24,6 +24,7 @@ void usb_config(void) {
 
   ring_buffer_init(&usb_tx_ring_buffer, usb_tx_buffer, USB_TX_BUFFER_SIZE);
   
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
   /* Enable the USB disconnect GPIO clock */

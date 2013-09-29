@@ -3,6 +3,7 @@
 #include "usb_lib.h"
 #include "usb.h"
 #include "hw_config.h"
+#include "debug.h"
 
 ErrorStatus HSEStartUpStatus;
 static void IntToUnicode(uint32_t value, uint8_t *pbuf, uint8_t len);
@@ -39,9 +40,13 @@ void Leave_LowPowerMode(void) {
  */
 void USB_Cable_Config(FunctionalState NewState) {
   if (NewState != DISABLE) {
-    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - ON
+    debug_led_off();
+    // P-channel MOSFET - ON - Pull USB D+ to 3.3V
+    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
   } else {
-    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN); // P-channel MOSFET - OFF
+    debug_led_on();
+    // P-channel MOSFET - OFF - Give control to the micro
+    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
   }
 }
 

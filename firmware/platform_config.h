@@ -13,6 +13,10 @@
 #define ID2                    (0x1FFFF7EC)
 #define ID3                    (0x1FFFF7F0)
 
+#define DEBUG_LED              GPIOB
+#define DEBUG_LED_PIN          GPIO_Pin_0
+#define DEBUG_LED_RCC          RCC_APB2Periph_GPIOB
+
 #define USB_DISCONNECT         GPIOA
 #define USB_DISCONNECT_PIN     GPIO_Pin_8
 #define USB_DISCONNECT_RCC     RCC_APB2Periph_GPIOA

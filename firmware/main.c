@@ -10,6 +10,8 @@
 #include <misc.h>
 #include <string.h>
 
+#include <stm32f10x_gpio.h>
+
 typedef struct {
   volatile int8_t speedLeft;
   volatile int8_t speedRight;
@@ -45,15 +47,16 @@ int main(void) {
 
   ring_buffer_init(&input_ring_buffer, input_buffer, INPUT_BUFFER_SIZE);
 
+  debug_led_config();
+
   debug_config();
   delay_ms(1000); // !!!! IMPORTANT: Keep this line in here. If we have a JTAG issue we need this time to get in before JTAG is disabled.
-  print_info("****************************************\n");
   print_info("BEGIN Init\n");
   disable_jtag();
   init_robot_registers();
   motor_config();
   time_config();
-  //usb_config();
+  usb_config();
   battery_voltage_config();
   print_info("END Init\n");
 
