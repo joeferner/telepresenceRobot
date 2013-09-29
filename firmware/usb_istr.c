@@ -35,6 +35,10 @@ void (*pEpInt_OUT[7])(void) = {
   EP7_OUT_Callback,
 };
 
+void usb_poll_for_reset_flag_in_istr() {
+  while ((_GetISTR() & ISTR_RESET) == 0);
+}
+
 /*******************************************************************************
  * Function Name  : USB_Istr
  * Description    : ISTR events interrupt service routine
@@ -158,7 +162,7 @@ void USB_Istr(void) {
         _SetCNTR(wCNTR);
 
         /*poll for RESET flag in ISTR*/
-        while ((_GetISTR() & ISTR_RESET) == 0);
+        usb_poll_for_reset_flag_in_istr();
 
         /* clear RESET flag in ISTR */
         _SetISTR((uint16_t) CLR_RESET);
