@@ -23,7 +23,7 @@ void usb_config(void) {
   print_info("usb_config\n");
 
   ring_buffer_init(&usb_tx_ring_buffer, usb_tx_buffer, USB_TX_BUFFER_SIZE);
-  
+
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
@@ -43,23 +43,23 @@ void usb_config(void) {
   extiInitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
   extiInitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&extiInitStructure);
-  
+
   USB_Cable_Config(DISABLE);
 
   /* Enable USB clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
-  
+
   nvicInitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
   nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 2;
   nvicInitStructure.NVIC_IRQChannelSubPriority = 0;
   nvicInitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&nvicInitStructure);
-  
+
   /* Enable the USB Wake-up interrupt */
   nvicInitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
   nvicInitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_Init(&nvicInitStructure);
-  
+
   print_info("USB_Init\n");
   USB_Init();
   delay_ms(100); // TODO remove?
@@ -85,13 +85,13 @@ void usb_write(const uint8_t* data, uint16_t len) {
 void usb_send_data(void) {
   uint8_t txBuffer[VIRTUAL_COM_PORT_DATA_SIZE];
   uint16_t txCount;
-  
-  if(g_usb_deviceState != CONFIGURED) {
+
+  if (g_usb_deviceState != CONFIGURED) {
     return;
   }
-  
+
   txCount = min(usb_tx_ring_buffer.available, VIRTUAL_COM_PORT_DATA_SIZE);
-  if(txCount > 0) {
+  if (txCount > 0) {
     ring_buffer_read(&usb_tx_ring_buffer, txBuffer, txCount);
 
     UserToPMABufferCopy(txBuffer, ENDP1_TXADDR, txCount);
@@ -100,7 +100,7 @@ void usb_send_data(void) {
   }
 }
 
-void EP1_IN_Callback (void) {
+void EP1_IN_Callback(void) {
   usb_send_data();
 }
 
@@ -122,14 +122,14 @@ void EP3_OUT_Callback(void) {
 
 void SOF_Callback(void) {
   static uint32_t FrameCount = 0;
-  
-  if(g_usb_deviceState == CONFIGURED) {
+
+  if (g_usb_deviceState == CONFIGURED) {
     if (FrameCount++ == VCOMPORT_IN_FRAME_INTERVAL) {
       /* Reset the frame counter */
       FrameCount = 0;
-      
+
       /* Check the data to be sent through IN pipe */
       usb_send_data();
     }
-  }  
+  }
 }
