@@ -124,23 +124,22 @@ const uint8_t Virtual_Com_Port_StringLangID[VIRTUAL_COM_PORT_SIZ_STRING_LANGID] 
 const uint8_t Virtual_Com_Port_StringVendor[VIRTUAL_COM_PORT_SIZ_STRING_VENDOR] = {
   VIRTUAL_COM_PORT_SIZ_STRING_VENDOR,     /* Size of Vendor string */
   USB_STRING_DESCRIPTOR_TYPE,             /* bDescriptorType*/
-  /* Manufacturer: "STMicroelectronics" */
-  'S', 0, 'T', 0, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, 'e', 0,
-  'l', 0, 'e', 0, 'c', 0, 't', 0, 'r', 0, 'o', 0, 'n', 0, 'i', 0,
-  'c', 0, 's', 0
+  /* Manufacturer: "Joe Ferner" */
+  'J', 0, 'o', 0, 'e', 0, ' ', 0, 'F', 0, 'e', 0, 'r', 0, 'n', 0,
+  'e', 0, 'r', 0
 };
 
 const uint8_t Virtual_Com_Port_StringProduct[VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT] = {
   VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT,          /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
-  /* Product name: "STM32 Virtual COM Port" */
-  'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0, ' ', 0, 'V', 0, 'i', 0,
-  'r', 0, 't', 0, 'u', 0, 'a', 0, 'l', 0, ' ', 0, 'C', 0, 'O', 0,
-  'M', 0, ' ', 0, 'P', 0, 'o', 0, 'r', 0, 't', 0, ' ', 0, ' ', 0
+  /* Product name: "Android Telepresence" */
+  'A', 0, 'n', 0, 'd', 0, 'r', 0, 'o', 0, 'i', 0, 'd', 0, ' ', 0,
+  'T', 0, 'e', 0, 'l', 0, 'e', 0, 'p', 0, 'r', 0, 'e', 0, 's', 0,
+  'e', 0, 'n', 0, 'c', 0, 'e', 0
 };
 
 uint8_t Virtual_Com_Port_StringSerial[VIRTUAL_COM_PORT_SIZ_STRING_SERIAL] = {
   VIRTUAL_COM_PORT_SIZ_STRING_SERIAL,           /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,                   /* bDescriptorType */
-  'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0
+  '0', 0, '0', 0, '0', 0, '0', 0, '1', 0
 };
