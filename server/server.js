@@ -26,9 +26,9 @@ if (args.help) {
 var clients = {};
 
 var server = http.createServer(function(request, response) {
-  request.addListener('end', function() {
+  //request.addListener('end', function() {
     fileServer.serve(request, response);
-  });
+  //});
 });
 server.listen(args.port, function() {
   console.log('Server is listening: http://localhost:' + args.port);
