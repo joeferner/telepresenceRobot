@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Sun 29 Sep 2013 02:52:29 PM EDT
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Tue 08 Oct 2013 11:19:34 PM EDT
 
 BeginCmp
 TimeStamp = /51EB1CB9/51F56720;
@@ -330,6 +330,13 @@ IdModule  = CAPC2012X100N;
 EndCmp
 
 BeginCmp
+TimeStamp = /5254D3B1;
+Reference = C46;
+ValeurCmp = 100uF;
+IdModule  = CAPAE660X790N;
+EndCmp
+
+BeginCmp
 TimeStamp = /51EB1CB9/51F5CF18;
 Reference = D1;
 ValeurCmp = DIODE;
@@ -472,7 +479,7 @@ EndCmp
 BeginCmp
 TimeStamp = /5248227E;
 Reference = P10;
-ValeurCmp = P03;
+ValeurCmp = ANDROID-SERIAL-TEST;
 IdModule  = HDRV3W66P254_1X3_762X249X838P;
 EndCmp
 
@@ -500,14 +507,14 @@ EndCmp
 BeginCmp
 TimeStamp = /52148017;
 Reference = P14;
-ValeurCmp = P24;
+ValeurCmp = AUX;
 IdModule  = HDRV24W66P254_2X12_3048X503X838P;
 EndCmp
 
 BeginCmp
 TimeStamp = /5248801F;
 Reference = P15;
-ValeurCmp = P02;
+ValeurCmp = MOTOR-PWM-TEST;
 IdModule  = HDRV2W66P254_1X2_508X249X838P;
 EndCmp
 
