@@ -15,4 +15,7 @@
     <string name="foreground_ticker">Telepresence Robot</string>
     <string name="foreground_content_title">Telepresence Robot</string>
     <string name="foreground_content_text">Web Socket: %1$s. Robot: %2$s</string>
+    <string name="settings">Settings</string>
+    <string name="pref_url">URL</string>
+    <string name="settings_label">Telepresence Robot Settings</string>
 </resources>

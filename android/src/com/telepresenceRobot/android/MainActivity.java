@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.Speed;
@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
     private Button right;
     private Button connectWebSocket;
     private Button connectRobot;
-    private EditText address;
     private boolean webSocketConnected;
     private boolean robotConnected;
 
@@ -34,6 +33,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main);
 
@@ -45,7 +46,6 @@ public class MainActivity extends Activity {
         back = (Button) findViewById(R.id.back);
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
-        address = (EditText) findViewById(R.id.address);
 
         forward.setOnTouchListener(new MovementOnTouchListener(MovementDirection.FORWARD));
         back.setOnTouchListener(new MovementOnTouchListener(MovementDirection.BACK));
@@ -59,8 +59,7 @@ public class MainActivity extends Activity {
                     connectWebSocket.setText(getString(R.string.disconnecting_web_socket));
                     StatusBroadcast.sendWebSocketDisconnect(MainActivity.this);
                 } else {
-                    connectWebSocket.setText(getString(R.string.connecting_web_socket));
-                    StatusBroadcast.sendWebSocketConnect(MainActivity.this, address.getText().toString());
+                    webSocketConnect();
                 }
             }
         });
@@ -72,8 +71,7 @@ public class MainActivity extends Activity {
                     connectRobot.setText(getString(R.string.disconnecting_robot));
                     StatusBroadcast.sendRobotDisconnect(MainActivity.this);
                 } else {
-                    connectRobot.setText(getString(R.string.connecting_robot));
-                    StatusBroadcast.sendRobotConnect(MainActivity.this);
+                    robotConnect();
                 }
             }
         });
@@ -82,6 +80,39 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).registerReceiver(statusBroadcastReceiver, new IntentFilter(StatusBroadcast.BROADCAST_NAME));
 
         ForegroundService.startService(this);
+
+        webSocketConnect();
+        robotConnect();
+    }
+
+    private void robotConnect() {
+        connectRobot.setText(getString(R.string.connecting_robot));
+        StatusBroadcast.sendRobotConnect(this);
+    }
+
+    private void webSocketConnect() {
+        connectWebSocket.setText(getString(R.string.connecting_web_socket));
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String address = sharedPref.getString(SettingsActivity.WEB_SOCKET_URL, null);
+        log("Connecting to " + address);
+        StatusBroadcast.sendWebSocketConnect(this, address);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            startActivityForResult(new Intent(this, SettingsActivity.class), 0);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private StatusBroadcast.Receiver statusBroadcastReceiver = new StatusBroadcast.Receiver() {
