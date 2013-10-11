@@ -40,7 +40,16 @@ public class RobotService extends IntentService {
     public void onDestroy() {
         destorying = true;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(robotBroadcastReceiver);
-        this.uartInterface.destroyAccessory(true);
+        try {
+            Thread.sleep(1000);
+            Log.i(Constants.LOG, "BEFORE destroyAccessory");
+            this.uartInterface.destroyAccessory(true);
+            Log.i(Constants.LOG, "AFTER destroyAccessory");
+        } catch (Exception ex) {
+            Log.e(Constants.LOG, "Could not destroy accessory", ex);
+            StatusBroadcast.sendException(this, ex);
+        }
+        RobotBroadcast.sendDisconnected(this);
         super.onDestroy();
     }
 
@@ -57,11 +66,13 @@ public class RobotService extends IntentService {
                 try {
                     loop();
                 } catch (Exception ex) {
+                    Log.e(Constants.LOG, "loop failed", ex);
                     StatusBroadcast.sendException(this, ex);
                 }
             }
         } catch (Exception ex) {
             StatusBroadcast.sendException(this, ex);
+            RobotBroadcast.sendDisconnected(this);
         } finally {
             Log.i(Constants.LOG, "Stopped robot loop");
         }

@@ -7,7 +7,7 @@ import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.widget.Toast;
+import com.telepresenceRobot.android.Constants;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -20,396 +20,373 @@ import java.io.IOException;
  */
 public class FT31xUARTInterface extends Activity {
 
-  private static final String ACTION_USB_PERMISSION = "com.UARTTest.USB_PERMISSION";
-  private static final String LOG_TAG = "FT31xUARTInterface";
-  public UsbManager usbmanager;
-  public UsbAccessory usbaccessory;
-  public PendingIntent mPermissionIntent;
-  public ParcelFileDescriptor filedescriptor = null;
-  public FileInputStream inputstream = null;
-  public FileOutputStream outputstream = null;
-  public boolean mPermissionRequestPending = false;
-  public ReadThread readThread;
+    private static final String ACTION_USB_PERMISSION = "com.UARTTest.USB_PERMISSION";
+    private static final String LOG_TAG = Constants.LOG + "-FT31x";
+    private final Context context;
+    public UsbManager usbManager;
+    public UsbAccessory usbAccessory;
+    public PendingIntent permissionIntent;
+    public ParcelFileDescriptor fileDescriptor = null;
+    public FileInputStream inputStream = null;
+    public FileOutputStream outputStream = null;
+    public boolean permissionRequestPending = false;
+    public ReadThread readThread;
 
-  private byte[] usbdata;
-  private byte[] writeusbdata;
-  private byte[] readBuffer; /*circular buffer*/
-  private int readcount;
-  private int totalBytes;
-  private int writeIndex;
-  private int readIndex;
-  private byte status;
-  final int maxnumbytes = 65536;
+    private byte[] usbData;
+    private byte[] writeUsbData;
+    private byte[] readBuffer; /*circular buffer*/
+    private int totalBytes;
+    private int writeIndex;
+    private int readIndex;
+    private byte status;
+    final int maxNumBytes = 65536;
 
-  public boolean datareceived = false;
-  public boolean readEnable = false;
-  public boolean accessory_attached = false;
+    public boolean readEnable = false;
+    public boolean accessoryAttached = false;
 
-  public Context global_context;
+    public static String ManufacturerString = "mManufacturer=FTDI";
+    public static String ModelString1 = "mModel=FTDIUARTDemo";
+    public static String ModelString2 = "mModel=Android Accessory FT312D";
+    public static String VersionString = "mVersion=1.0";
 
-  public static String ManufacturerString = "mManufacturer=FTDI";
-  public static String ModelString1 = "mModel=FTDIUARTDemo";
-  public static String ModelString2 = "mModel=Android Accessory FT312D";
-  public static String VersionString = "mVersion=1.0";
+    public SharedPreferences sharePrefSettings;
 
-  public SharedPreferences intsharePrefSettings;
+    public FT31xUARTInterface(Context context, SharedPreferences sharePrefSettings) {
+        super();
+        this.context = context;
+        this.sharePrefSettings = sharePrefSettings;
 
-  /*constructor*/
-  public FT31xUARTInterface(Context context, SharedPreferences sharePrefSettings) {
-    super();
-    global_context = context;
-    intsharePrefSettings = sharePrefSettings;
-    /*shall we start a thread here or what*/
-    usbdata = new byte[1024];
-    writeusbdata = new byte[256];
-    /*128(make it 256, but looks like bytes should be enough)*/
-    readBuffer = new byte[maxnumbytes];
+        // shall we start a thread here or what
+        usbData = new byte[1024];
+        writeUsbData = new byte[256];
+
+        // 128 (make it 256, but looks like bytes should be enough)
+        readBuffer = new byte[maxNumBytes];
 
 
-    readIndex = 0;
-    writeIndex = 0;
-    /***********************USB handling******************************************/
+        readIndex = 0;
+        writeIndex = 0;
 
-    usbmanager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-    // Log.d("LED", "usbmanager" +usbmanager);
-    mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-    IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-    filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
-    context.registerReceiver(mUsbReceiver, filter);
+        /***********************USB handling******************************************/
+        usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        permissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+        context.registerReceiver(usbReceiver, filter);
 
-    inputstream = null;
-    outputstream = null;
-  }
-
-
-  public void setConfig(int baud, byte dataBits, byte stopBits,
-                        byte parity, byte flowControl) {
-
-		/*prepare the baud rate buffer*/
-    writeusbdata[0] = (byte) baud;
-    writeusbdata[1] = (byte) (baud >> 8);
-    writeusbdata[2] = (byte) (baud >> 16);
-    writeusbdata[3] = (byte) (baud >> 24);
-
-		/*data bits*/
-    writeusbdata[4] = dataBits;
-    /*stop bits*/
-    writeusbdata[5] = stopBits;
-    /*parity*/
-    writeusbdata[6] = parity;
-    /*flow control*/
-    writeusbdata[7] = flowControl;
-
-		/*send the UART configuration packet*/
-    sendPacket((int) 8);
-  }
-
-
-  /*write data*/
-  public byte sendData(int numBytes, byte[] buffer) {
-    status = 0x00; /*success by default*/
-    /*
-     * if num bytes are more than maximum limit
-		 */
-    if (numBytes < 1) {
-      /*return the status with the error in the command*/
-      return status;
-    }
-	 		
-		/*check for maximum limit*/
-    if (numBytes > 256) {
-      numBytes = 256;
+        inputStream = null;
+        outputStream = null;
     }
 
-		/*prepare the packet to be sent*/
-    for (int count = 0; count < numBytes; count++) {
-      writeusbdata[count] = buffer[count];
+    public void setConfig(int baud, byte dataBits, byte stopBits,
+                          byte parity, byte flowControl) {
+
+        // prepare the baud rate buffer
+        writeUsbData[0] = (byte) baud;
+        writeUsbData[1] = (byte) (baud >> 8);
+        writeUsbData[2] = (byte) (baud >> 16);
+        writeUsbData[3] = (byte) (baud >> 24);
+
+        // data bits
+        writeUsbData[4] = dataBits;
+
+        // stop bits
+        writeUsbData[5] = stopBits;
+
+        // parity
+        writeUsbData[6] = parity;
+
+        // flow control
+        writeUsbData[7] = flowControl;
+
+        //send the UART configuration packet
+        sendPacketToUsb(8);
     }
 
-    if (numBytes != 64) {
-      sendPacket(numBytes);
-    } else {
-      byte temp = writeusbdata[63];
-      sendPacket(63);
-      writeusbdata[0] = temp;
-      sendPacket(1);
-    }
+    public byte sendData(int numBytes, byte[] buffer) {
+        status = 0x00; // success by default
 
-    return status;
-  }
-
-  /*read data*/
-  public byte readData(int numBytes, byte[] buffer, int[] actualNumBytes) {
-    status = 0x00; /*success by default*/
-
-		/*should be at least one byte to read*/
-    if ((numBytes < 1) || (totalBytes == 0)) {
-      actualNumBytes[0] = 0;
-      status = 0x01;
-      return status;
-    }
-
-		/*check for max limit*/
-    if (numBytes > totalBytes)
-      numBytes = totalBytes;
-
-		/*update the number of bytes available*/
-    totalBytes -= numBytes;
-
-    actualNumBytes[0] = numBytes;
-
-		/*copy to the user buffer*/
-    for (int count = 0; count < numBytes; count++) {
-      buffer[count] = readBuffer[readIndex];
-      readIndex++;
-			/*shouldnt read more than what is there in the buffer,
-			 * 	so no need to check the overflow
-			 */
-      readIndex %= maxnumbytes;
-    }
-    return status;
-  }
-
-  /*method to send on USB*/
-  private void sendPacket(int numBytes) {
-    try {
-      if (outputstream != null) {
-        outputstream.write(writeusbdata, 0, numBytes);
-      }
-    } catch (IOException e) {
-      Log.e(LOG_TAG, "Could not write packet", e);
-    }
-  }
-
-  /*resume accessory*/
-  public int resumeAccessory() {
-    // Intent intent = getIntent();
-    if (inputstream != null && outputstream != null) {
-      return 1;
-    }
-
-    UsbAccessory[] accessories = usbmanager.getAccessoryList();
-    if (accessories != null) {
-      Toast.makeText(global_context, "Accessory Attached", Toast.LENGTH_SHORT).show();
-    } else {
-      // return 2 for accessory detached case
-      //Log.e(">>@@","resumeAccessory RETURN 2 (accessories == null)");
-      accessory_attached = false;
-      return 2;
-    }
-
-    UsbAccessory accessory = (accessories == null ? null : accessories[0]);
-    if (accessory != null) {
-      if (-1 == accessory.toString().indexOf(ManufacturerString)) {
-        Toast.makeText(global_context, "Manufacturer is not matched!", Toast.LENGTH_SHORT).show();
-        return 1;
-      }
-
-      if (-1 == accessory.toString().indexOf(ModelString1) && -1 == accessory.toString().indexOf(ModelString2)) {
-        Toast.makeText(global_context, "Model is not matched!", Toast.LENGTH_SHORT).show();
-        return 1;
-      }
-
-      if (-1 == accessory.toString().indexOf(VersionString)) {
-        Toast.makeText(global_context, "Version is not matched!", Toast.LENGTH_SHORT).show();
-        return 1;
-      }
-
-      Toast.makeText(global_context, "Manufacturer, Model & Version are matched!", Toast.LENGTH_SHORT).show();
-      accessory_attached = true;
-
-      if (usbmanager.hasPermission(accessory)) {
-        openAccessory(accessory);
-      } else {
-        synchronized (mUsbReceiver) {
-          if (!mPermissionRequestPending) {
-            Toast.makeText(global_context, "Request USB Permission", Toast.LENGTH_SHORT).show();
-            usbmanager.requestPermission(accessory,
-                mPermissionIntent);
-            mPermissionRequestPending = true;
-          }
+        // if num bytes are more than maximum limit
+        if (numBytes < 1) {
+            // return the status with the error in the command
+            return status;
         }
-      }
-    } else {
-    }
 
-    return 0;
-  }
-
-  /*destroy accessory*/
-  public void destroyAccessory(boolean bConfiged) {
-
-    if (true == bConfiged) {
-      readEnable = false;  // set false condition for handler_thread to exit waiting data loop
-      writeusbdata[0] = 0;  // send dummy data for instream.read going
-      sendPacket(1);
-    } else {
-      setConfig(9600, (byte) 1, (byte) 8, (byte) 0, (byte) 0);  // send default setting data for config
-      try {
-        Thread.sleep(10);
-      } catch (Exception e) {
-      }
-
-      readEnable = false;  // set false condition for handler_thread to exit waiting data loop
-      writeusbdata[0] = 0;  // send dummy data for instream.read going
-      sendPacket(1);
-      if (true == accessory_attached) {
-        saveDefaultPreference();
-      }
-    }
-
-    try {
-      Thread.sleep(10);
-    } catch (Exception e) {
-    }
-    closeAccessory();
-  }
-
-  /**
-   * ******************helper routines************************************************
-   */
-
-  public void openAccessory(UsbAccessory accessory) {
-    filedescriptor = usbmanager.openAccessory(accessory);
-    if (filedescriptor != null) {
-      usbaccessory = accessory;
-
-      FileDescriptor fd = filedescriptor.getFileDescriptor();
-
-      inputstream = new FileInputStream(fd);
-      outputstream = new FileOutputStream(fd);
-			/*check if any of them are null*/
-      if (inputstream == null || outputstream == null) {
-        return;
-      }
-
-      if (readEnable == false) {
-        readEnable = true;
-        readThread = new ReadThread(inputstream);
-        readThread.start();
-      }
-    }
-  }
-
-  private void closeAccessory() {
-    try {
-      if (filedescriptor != null)
-        filedescriptor.close();
-
-    } catch (IOException e) {
-    }
-
-    try {
-      if (inputstream != null)
-        inputstream.close();
-    } catch (IOException e) {
-    }
-
-    try {
-      if (outputstream != null)
-        outputstream.close();
-
-    } catch (IOException e) {
-    }
-		/*FIXME, add the notfication also to close the application*/
-
-    filedescriptor = null;
-    inputstream = null;
-    outputstream = null;
-
-    System.exit(0);
-  }
-
-  protected void saveDetachPreference() {
-    if (intsharePrefSettings != null) {
-      intsharePrefSettings.edit()
-          .putString("configed", "FALSE")
-          .commit();
-    }
-  }
-
-  protected void saveDefaultPreference() {
-    if (intsharePrefSettings != null) {
-      intsharePrefSettings.edit().putString("configed", "TRUE").commit();
-      intsharePrefSettings.edit().putInt("baudRate", 9600).commit();
-      intsharePrefSettings.edit().putInt("stopBit", 1).commit();
-      intsharePrefSettings.edit().putInt("dataBit", 8).commit();
-      intsharePrefSettings.edit().putInt("parity", 0).commit();
-      intsharePrefSettings.edit().putInt("flowControl", 0).commit();
-    }
-  }
-
-  /**
-   * ********USB broadcast receiver******************************************
-   */
-  private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      String action = intent.getAction();
-      if (ACTION_USB_PERMISSION.equals(action)) {
-        synchronized (this) {
-          UsbAccessory accessory = (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-          if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-            Toast.makeText(global_context, "Allow USB Permission", Toast.LENGTH_SHORT).show();
-            openAccessory(accessory);
-          } else {
-            Toast.makeText(global_context, "Deny USB Permission", Toast.LENGTH_SHORT).show();
-            Log.d("LED", "permission denied for accessory " + accessory);
-
-          }
-          mPermissionRequestPending = false;
+        // check for maximum limit
+        if (numBytes > 256) {
+            numBytes = 256;
         }
-      } else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
-        saveDetachPreference();
-        destroyAccessory(true);
-        //closeAccessory();
-      } else {
-        Log.d("LED", "....");
-      }
-    }
-  };
 
-  /*usb input data handler*/
-  private class ReadThread extends Thread {
-    FileInputStream instream;
+        // prepare the packet to be sent
+        System.arraycopy(buffer, 0, writeUsbData, 0, numBytes);
 
-    ReadThread(FileInputStream stream) {
-      instream = stream;
-      this.setPriority(Thread.MAX_PRIORITY);
+        if (numBytes != 64) {
+            sendPacketToUsb(numBytes);
+        } else {
+            byte temp = writeUsbData[63];
+            sendPacketToUsb(63);
+            writeUsbData[0] = temp;
+            sendPacketToUsb(1);
+        }
+
+        return status;
     }
 
-    public void run() {
-      while (readEnable == true) {
-        while (totalBytes > (maxnumbytes - 1024)) {
-          try {
-            Thread.sleep(50);
-          } catch (InterruptedException e) {
+    public byte readData(int numBytes, byte[] buffer, int[] actualNumBytes) {
+        status = 0x00; // success by default
+
+        // should be at least one byte to read
+        if ((numBytes < 1) || (totalBytes == 0)) {
+            actualNumBytes[0] = 0;
+            status = 0x01;
+            return status;
+        }
+
+        // check for max limit
+        if (numBytes > totalBytes)
+            numBytes = totalBytes;
+
+        // update the number of bytes available
+        totalBytes -= numBytes;
+
+        actualNumBytes[0] = numBytes;
+
+        // copy to the user buffer
+        for (int count = 0; count < numBytes; count++) {
+            buffer[count] = readBuffer[readIndex];
+            readIndex++;
+            // shouldn't read more than what is there in the buffer,
+            // so no need to check the overflow
+            readIndex %= maxNumBytes;
+        }
+        return status;
+    }
+
+    private void sendPacketToUsb(int numBytes) {
+        try {
+            if (outputStream != null) {
+                outputStream.write(writeUsbData, 0, numBytes);
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Could not write packet", e);
+        }
+    }
+
+    public int resumeAccessory() {
+        if (inputStream != null && outputStream != null) {
+            return 1;
+        }
+
+        UsbAccessory[] accessories = usbManager.getAccessoryList();
+        if (accessories != null) {
+            Log.i(LOG_TAG, "Accessory Attached");
+        } else {
+            // return 2 for accessory detached case
+            //Log.e(">>@@","resumeAccessory RETURN 2 (accessories == null)");
+            accessoryAttached = false;
+            return 2;
+        }
+
+        UsbAccessory accessory = accessories[0];
+        if (accessory != null) {
+            if (!accessory.toString().contains(ManufacturerString)) {
+                Log.e(LOG_TAG, "Manufacturer is not matched! Expected " + ManufacturerString + " found " + accessory);
+                return 1;
+            }
+
+            if (!accessory.toString().contains(ModelString1) && !accessory.toString().contains(ModelString2)) {
+                Log.e(LOG_TAG, "Model is not matched! Expected " + ModelString1 + " and " + ModelString2 + " found " + accessory);
+                return 1;
+            }
+
+            if (!accessory.toString().contains(VersionString)) {
+                Log.e(LOG_TAG, "Version is not matched! Expected " + VersionString + " found " + accessory);
+                return 1;
+            }
+
+            Log.i(LOG_TAG, "Manufacturer, Model & Version are matched!");
+            accessoryAttached = true;
+
+            if (usbManager.hasPermission(accessory)) {
+                openAccessory(accessory);
+            } else {
+                synchronized (usbReceiver) {
+                    if (!permissionRequestPending) {
+                        Log.i(LOG_TAG, "Request USB Permission");
+                        usbManager.requestPermission(accessory, permissionIntent);
+                        permissionRequestPending = true;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    public void destroyAccessory(boolean configured) {
+        Log.i(LOG_TAG, "destroyAccessory " + configured);
+        if (configured) {
+            readEnable = false;  // set false condition for handler_thread to exit waiting data loop
+            writeUsbData[0] = 0;  // send dummy data for inStream.read going
+            sendPacketToUsb(1);
+        } else {
+            setConfig(9600, (byte) 1, (byte) 8, (byte) 0, (byte) 0);  // send default setting data for config
+            safeSleep(10);
+
+            readEnable = false;  // set false condition for handler_thread to exit waiting data loop
+            writeUsbData[0] = 0;  // send dummy data for inStream.read going
+            sendPacketToUsb(1);
+            if (accessoryAttached) {
+                saveDefaultPreference();
+            }
+        }
+
+        safeSleep(10);
+        closeAccessory();
+
+        context.unregisterReceiver(usbReceiver);
+    }
+
+    private void safeSleep(int duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (Exception e) {
             Log.e(LOG_TAG, "Could not sleep", e);
-          }
+        }
+    }
+
+    public void openAccessory(UsbAccessory accessory) {
+        fileDescriptor = usbManager.openAccessory(accessory);
+        if (fileDescriptor != null) {
+            usbAccessory = accessory;
+
+            FileDescriptor fd = fileDescriptor.getFileDescriptor();
+
+            inputStream = new FileInputStream(fd);
+            outputStream = new FileOutputStream(fd);
+
+            if (!readEnable) {
+                readEnable = true;
+                readThread = new ReadThread(inputStream);
+                readThread.start();
+            }
+        }
+    }
+
+    private void closeAccessory() {
+        Log.i(LOG_TAG, "closeAccessory");
+        try {
+            if (fileDescriptor != null) {
+                fileDescriptor.close();
+                fileDescriptor = null;
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "could not close fileDescriptor", e);
         }
 
         try {
-          if (instream != null) {
-            readcount = instream.read(usbdata, 0, 1024);
-            if (readcount > 0) {
-              for (int count = 0; count < readcount; count++) {
-                readBuffer[writeIndex] = usbdata[count];
-                writeIndex++;
-                writeIndex %= maxnumbytes;
-              }
+            if (inputStream != null) {
+                inputStream.close();
+                inputStream = null;
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "could not close inputStream", e);
+        }
 
-              if (writeIndex >= readIndex)
-                totalBytes = writeIndex - readIndex;
-              else
-                totalBytes = (maxnumbytes - readIndex) + writeIndex;
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+                outputStream = null;
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "could not close outputStream", e);
+        }
+    }
+
+    protected void saveDetachPreference() {
+        if (sharePrefSettings != null) {
+            sharePrefSettings.edit()
+                    .putString("configed", "FALSE")
+                    .commit();
+        }
+    }
+
+    protected void saveDefaultPreference() {
+        if (sharePrefSettings != null) {
+            sharePrefSettings.edit().putString("configed", "TRUE").commit();
+            sharePrefSettings.edit().putInt("baudRate", 9600).commit();
+            sharePrefSettings.edit().putInt("stopBit", 1).commit();
+            sharePrefSettings.edit().putInt("dataBit", 8).commit();
+            sharePrefSettings.edit().putInt("parity", 0).commit();
+            sharePrefSettings.edit().putInt("flowControl", 0).commit();
+        }
+    }
+
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case ACTION_USB_PERMISSION:
+                    synchronized (this) {
+                        UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                            Log.i(LOG_TAG, "Allow USB Permission");
+                            openAccessory(accessory);
+                        } else {
+                            Log.e(LOG_TAG, "permission denied for accessory " + accessory);
+                        }
+                        permissionRequestPending = false;
+                    }
+                    break;
+                case UsbManager.ACTION_USB_ACCESSORY_DETACHED:
+                    saveDetachPreference();
+                    destroyAccessory(true);
+                    //closeAccessory();
+                    break;
+                default:
+                    Log.d(LOG_TAG, "received unknown action " + action);
+                    break;
+            }
+        }
+    };
+
+    private class ReadThread extends Thread {
+        FileInputStream inStream;
+
+        ReadThread(FileInputStream stream) {
+            inStream = stream;
+            this.setPriority(Thread.MAX_PRIORITY);
+        }
+
+        public void run() {
+            while (readEnable) {
+                while (totalBytes > (maxNumBytes - 1024)) {
+                    safeSleep(50);
+                }
+
+                try {
+                    if (inStream != null) {
+                        int readCount = inStream.read(usbData, 0, 1024);
+                        if (readCount > 0) {
+                            for (int count = 0; count < readCount; count++) {
+                                readBuffer[writeIndex] = usbData[count];
+                                writeIndex++;
+                                writeIndex %= maxNumBytes;
+                            }
+
+                            if (writeIndex >= readIndex)
+                                totalBytes = writeIndex - readIndex;
+                            else
+                                totalBytes = (maxNumBytes - readIndex) + writeIndex;
 
 //					    		Log.e(">>@@","totalBytes:"+totalBytes);
+                        }
+                    }
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Could not read", e);
+                }
             }
-          }
-        } catch (IOException e) {
-          Log.e(LOG_TAG, "Could not read", e);
         }
-      }
     }
-  }
 }

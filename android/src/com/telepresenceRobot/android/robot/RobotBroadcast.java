@@ -19,6 +19,12 @@ public class RobotBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
+    public static void sendDisconnected(Context source) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", TYPE_DISCONNECTED);
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
     public static void sendData(Context source, byte[] buffer) {
         Intent intent = new Intent(BROADCAST_NAME);
         intent.putExtra("type", TYPE_DATA);
@@ -41,7 +47,7 @@ public class RobotBroadcast {
             if (type.equals(TYPE_CONNECTED)) {
                 onConnected(context, intent);
             } else if (type.equals(TYPE_DISCONNECTED)) {
-                onConnected(context, intent);
+                onDisconnected(context, intent);
             } else if (type.equals(TYPE_DATA)) {
                 byte[] buffer = intent.getByteArrayExtra("buffer");
                 onData(context, intent, buffer);
