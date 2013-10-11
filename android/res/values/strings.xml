@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Telepresence Robot</string>
+    <string name="connectWebSocket">Connect Web Socket</string>
+    <string name="connectRobot">Connect Robot</string>
+    <string name="disconnectWebSocket">Disconnect Web Socket</string>
+    <string name="disconnectRobot">Disconnect Robot</string>
 </resources>

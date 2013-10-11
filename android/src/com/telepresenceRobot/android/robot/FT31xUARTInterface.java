@@ -1,4 +1,4 @@
-package com.telepresenceRobot.android;
+package com.telepresenceRobot.android.robot;
 
 import android.app.Activity;
 import android.app.PendingIntent;

@@ -23,6 +23,13 @@
                     android:resource="@xml/accessory_filter">
             </meta-data>
         </activity>
+
+        <service
+                android:name="com.telepresenceRobot.android.webSocket.WebSocketService"
+                android:exported="false"/>
+        <service
+                android:name="com.telepresenceRobot.android.robot.RobotService"
+                android:exported="false"/>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>

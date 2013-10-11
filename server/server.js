@@ -27,7 +27,7 @@ var clients = {};
 
 var server = http.createServer(function(request, response) {
   //request.addListener('end', function() {
-    fileServer.serve(request, response);
+  fileServer.serve(request, response);
   //});
 });
 server.listen(args.port, function() {
@@ -49,7 +49,9 @@ wsServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       var data = JSON.parse(message.utf8Data);
-      if (data.type == 'setId') {
+      if (data.type == 'broadcast') {
+        // ignore
+      } else if (data.type == 'setId') {
         id = data.id;
         clients[data.id] = connection;
         console.log('Client with id registered:', data.id);
@@ -67,8 +69,8 @@ wsServer.on('request', function(request) {
 });
 
 function broadcast(data, excludeId) {
-  for(var clientId in clients) {
-    if(clientId == excludeId) {
+  for (var clientId in clients) {
+    if (clientId == excludeId) {
       continue;
     }
     var client = clients[clientId];
