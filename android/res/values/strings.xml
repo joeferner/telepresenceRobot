@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Telepresence Robot</string>
-    <string name="connectWebSocket">Connect Web Socket</string>
-    <string name="connectRobot">Connect Robot</string>
-    <string name="disconnectWebSocket">Disconnect Web Socket</string>
-    <string name="disconnectRobot">Disconnect Robot</string>
+    <string name="app_name">Telepresence Robot</string>
+
+    <string name="connect_web_socket">Connect Web Socket</string>
+    <string name="connecting_web_socket">Connecting Web Socket</string>
+    <string name="disconnect_web_socket">Disconnect Web Socket</string>
+    <string name="disconnecting_web_socket">Disconnecting Web Socket</string>
+
+    <string name="connect_robot">Connect Robot</string>
+    <string name="connecting_robot">Connect Robot</string>
+    <string name="disconnect_robot">Disconnecting Robot</string>
+    <string name="disconnecting_robot">Disconnecting Robot</string>
+
+    <string name="foreground_ticker">Telepresence Robot</string>
+    <string name="foreground_content_title">Telepresence Robot</string>
+    <string name="foreground_content_text">Web Socket: %1$s. Robot: %2$s</string>
 </resources>

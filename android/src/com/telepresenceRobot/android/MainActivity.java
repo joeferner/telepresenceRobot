@@ -14,9 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
-import com.telepresenceRobot.android.robot.RobotService;
 import com.telepresenceRobot.android.robot.Speed;
-import com.telepresenceRobot.android.webSocket.WebSocketService;
 
 public class MainActivity extends Activity {
     private StringBuilder logBuffer = new StringBuilder();
@@ -56,20 +54,26 @@ public class MainActivity extends Activity {
         connectWebSocket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                connectWebSocket.setEnabled(false);
                 if (webSocketConnected) {
-                    disconnectWebSocket();
+                    connectWebSocket.setText(getString(R.string.disconnecting_web_socket));
+                    StatusBroadcast.sendWebSocketDisconnect(MainActivity.this);
                 } else {
-                    connectWebSocket();
+                    connectWebSocket.setText(getString(R.string.connecting_web_socket));
+                    StatusBroadcast.sendWebSocketConnect(MainActivity.this, address.getText().toString());
                 }
             }
         });
         connectRobot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                connectRobot.setEnabled(false);
                 if (robotConnected) {
-                    disconnectRobot();
+                    connectRobot.setText(getString(R.string.disconnecting_robot));
+                    StatusBroadcast.sendRobotDisconnect(MainActivity.this);
                 } else {
-                    connectRobot();
+                    connectRobot.setText(getString(R.string.connecting_robot));
+                    StatusBroadcast.sendRobotConnect(MainActivity.this);
                 }
             }
         });
@@ -77,44 +81,25 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).registerReceiver(robotBroadcastReceiver, new IntentFilter(RobotBroadcast.BROADCAST_NAME));
         LocalBroadcastManager.getInstance(this).registerReceiver(statusBroadcastReceiver, new IntentFilter(StatusBroadcast.BROADCAST_NAME));
 
-        connectWebSocket();
-        connectRobot();
-    }
-
-    private void connectRobot() {
-        log("Connecting robot...");
-        RobotService.startService(this);
-    }
-
-    private void disconnectRobot() {
-        log("Disconnecting robot...");
-        RobotService.stopService(this);
-    }
-
-    private void connectWebSocket() {
-        log("Connecting web socket...");
-        WebSocketService.startService(this, address.getText().toString());
-    }
-
-    private void disconnectWebSocket() {
-        log("Disconnecting...");
-        WebSocketService.stopService(this);
+        ForegroundService.startService(this);
     }
 
     private StatusBroadcast.Receiver statusBroadcastReceiver = new StatusBroadcast.Receiver() {
         @Override
         protected void onWebSocketOpened(Context context, Intent intent) {
             super.onWebSocketOpened(context, intent);
+            connectWebSocket.setEnabled(true);
             webSocketConnected = true;
-            connectWebSocket.setText(getString(R.string.disconnectWebSocket));
+            connectWebSocket.setText(getString(R.string.disconnect_web_socket));
             log("Web socket opened");
         }
 
         @Override
         protected void onWebSocketClosed(Context context, Intent intent) {
             super.onWebSocketClosed(context, intent);
+            connectWebSocket.setEnabled(true);
             webSocketConnected = false;
-            connectWebSocket.setText(getString(R.string.connectWebSocket));
+            connectWebSocket.setText(getString(R.string.connect_web_socket));
             log("Web socket disconnected");
         }
 
@@ -142,16 +127,18 @@ public class MainActivity extends Activity {
         protected void onConnected(Context context, Intent intent) {
             super.onConnected(context, intent);
             log("robot connected");
+            connectRobot.setEnabled(true);
             robotConnected = true;
-            connectRobot.setText(getString(R.string.disconnectRobot));
+            connectRobot.setText(getString(R.string.disconnect_robot));
         }
 
         @Override
         protected void onDisconnected(Context context, Intent intent) {
             super.onDisconnected(context, intent);
             log("robot disconnected");
+            connectRobot.setEnabled(true);
             robotConnected = false;
-            connectRobot.setText(getString(R.string.connectRobot));
+            connectRobot.setText(getString(R.string.connect_robot));
         }
     };
 
@@ -174,6 +161,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(robotBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(statusBroadcastReceiver);
         super.onDestroy();
     }
 

@@ -17,12 +17,12 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/connectWebSocket"
+                android:text="@string/connect_web_socket"
                 android:id="@+id/connectWebSocket"/>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/connectRobot"
+                android:text="@string/connect_robot"
                 android:id="@+id/connectRobot"/>
     </LinearLayout>
     <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
