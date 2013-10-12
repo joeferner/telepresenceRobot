@@ -38,6 +38,7 @@ public class WebSocketService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         destorying = false;
         this.url = intent.getStringExtra(EXTRA_URL);
+        StatusBroadcast.sendLog(this, "Connecting to web socket: " + this.url);
         tryReconnect();
         beginBroadcastLoop();
     }
@@ -199,7 +200,9 @@ public class WebSocketService extends IntentService {
                 reconnectAttempt++;
                 nextReconnectAttemptDurationMS = getNextReconnectAttemptTime();
                 Date nextReconnectAttemptDate = new Date(new Date().getTime() + nextReconnectAttemptDurationMS);
-                Log.i(Constants.LOG, "Waiting for reconnect (" + (nextReconnectAttemptDurationMS / 1000) + "s)");
+                String logMessage = "Web Socket waiting for reconnect (" + (nextReconnectAttemptDurationMS / 1000) + "s)";
+                Log.i(Constants.LOG, logMessage);
+                StatusBroadcast.sendLog(WebSocketService.this, logMessage);
                 while (new Date().getTime() < nextReconnectAttemptDate.getTime()) {
                     Thread.sleep(100);
                 }
@@ -210,7 +213,9 @@ public class WebSocketService extends IntentService {
 
             connect(nextReconnectAttemptDurationMS);
         } catch (Exception e) {
-            Log.e(Constants.LOG, "Failed to reconnect", e);
+            String logMessage = "Web Socket failed to connect to " + this.url;
+            Log.e(Constants.LOG, logMessage, e);
+            StatusBroadcast.sendLog(WebSocketService.this, logMessage);
             StatusBroadcast.sendException(this, e);
         }
     }

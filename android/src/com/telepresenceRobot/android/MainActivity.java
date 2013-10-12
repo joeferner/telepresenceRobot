@@ -59,7 +59,6 @@ public class MainActivity extends Activity {
     private void robotConnect() {
         robotConnectState = ConnectState.CONNECTING;
         updateMenuItems();
-        log("Connecting to robot");
         StatusBroadcast.sendRobotConnect(this);
     }
 
@@ -68,7 +67,6 @@ public class MainActivity extends Activity {
         updateMenuItems();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String address = sharedPref.getString(SettingsActivity.WEB_SOCKET_URL, null);
-        log("Connecting to " + address);
         StatusBroadcast.sendWebSocketConnect(this, address);
     }
 
@@ -196,6 +194,12 @@ public class MainActivity extends Activity {
             super.onForegroundServiceStarted(context, intent);
             robotConnect();
             webSocketConnect();
+        }
+
+        @Override
+        protected void onLog(Context context, Intent intent, String message) {
+            super.onLog(context, intent, message);
+            log(message);
         }
     };
 

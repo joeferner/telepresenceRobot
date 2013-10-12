@@ -8,33 +8,29 @@ import com.telepresenceRobot.android.Constants;
 
 public class RobotBroadcast {
     public static final String BROADCAST_NAME = "robotBroadcast";
-    private static final String TYPE_CONNECTED = "connected";
-    private static final String TYPE_DISCONNECTED = "disconnected";
-    private static final String TYPE_DATA = "data";
-    private static final String TYPE_SET_SPEED = "setSpeed";
 
     public static void sendConnected(Context source) {
         Intent intent = new Intent(BROADCAST_NAME);
-        intent.putExtra("type", TYPE_CONNECTED);
+        intent.putExtra("type", MessageType.CONNECTED.toString());
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
     public static void sendDisconnected(Context source) {
         Intent intent = new Intent(BROADCAST_NAME);
-        intent.putExtra("type", TYPE_DISCONNECTED);
+        intent.putExtra("type", MessageType.DISCONNECTED.toString());
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
     public static void sendData(Context source, byte[] buffer) {
         Intent intent = new Intent(BROADCAST_NAME);
-        intent.putExtra("type", TYPE_DATA);
+        intent.putExtra("type", MessageType.DATA.toString());
         intent.putExtra("buffer", buffer);
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
     public static void sendSetSpeed(Context source, Speed speed) {
         Intent intent = new Intent(BROADCAST_NAME);
-        intent.putExtra("type", TYPE_SET_SPEED);
+        intent.putExtra("type", MessageType.SET_SPEED.toString());
         intent.putExtra("leftSpeed", speed.getLeftSpeed());
         intent.putExtra("rightSpeed", speed.getRightSpeed());
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
@@ -43,20 +39,26 @@ public class RobotBroadcast {
     public static class Receiver extends android.content.BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String type = intent.getStringExtra("type");
-            if (type.equals(TYPE_CONNECTED)) {
-                onConnected(context, intent);
-            } else if (type.equals(TYPE_DISCONNECTED)) {
-                onDisconnected(context, intent);
-            } else if (type.equals(TYPE_DATA)) {
-                byte[] buffer = intent.getByteArrayExtra("buffer");
-                onData(context, intent, buffer);
-            } else if (type.equals(TYPE_SET_SPEED)) {
-                double leftSpeed = intent.getDoubleExtra("leftSpeed", 0.0);
-                double rightSpeed = intent.getDoubleExtra("rightSpeed", 0.0);
-                onSetSpeed(context, intent, new Speed(leftSpeed, rightSpeed));
-            } else {
-                Log.e(Constants.LOG, "Invalid status type: " + type);
+            MessageType type = MessageType.valueOf(intent.getStringExtra("type"));
+            switch (type) {
+                case CONNECTED:
+                    onConnected(context, intent);
+                    break;
+                case DISCONNECTED:
+                    onDisconnected(context, intent);
+                    break;
+                case DATA:
+                    byte[] buffer = intent.getByteArrayExtra("buffer");
+                    onData(context, intent, buffer);
+                    break;
+                case SET_SPEED:
+                    double leftSpeed = intent.getDoubleExtra("leftSpeed", 0.0);
+                    double rightSpeed = intent.getDoubleExtra("rightSpeed", 0.0);
+                    onSetSpeed(context, intent, new Speed(leftSpeed, rightSpeed));
+                    break;
+                default:
+                    Log.e(Constants.LOG, "Invalid status type: " + type);
+                    break;
             }
         }
 
@@ -75,5 +77,12 @@ public class RobotBroadcast {
         protected void onDisconnected(Context context, Intent intent) {
 
         }
+    }
+
+    private enum MessageType {
+        CONNECTED,
+        DISCONNECTED,
+        DATA,
+        SET_SPEED
     }
 }

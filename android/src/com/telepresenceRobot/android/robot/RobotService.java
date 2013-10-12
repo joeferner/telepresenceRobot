@@ -156,6 +156,10 @@ public class RobotService extends IntentService {
     }
 
     public void connect() {
+        if (connecting) {
+            return;
+        }
+        StatusBroadcast.sendLog(this, "Connecting to robot");
         connecting = true;
         uartInterface.setConfig(BAUD, DATA_BITS, STOP_BITS, PARITY, FLOW_CONTROL);
         try {
