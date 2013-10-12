@@ -213,7 +213,15 @@ public class MainActivity extends Activity {
         @Override
         protected void onData(Context context, Intent intent, byte[] buffer) {
             super.onData(context, intent, buffer);
-            log("Read: " + new String(buffer));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : buffer) {
+                if (b >= ' ' && b <= '~') {
+                    sb.append((char) b);
+                } else {
+                    sb.append(String.format("\\x%02x", b));
+                }
+            }
+            log("From Robot: " + sb.toString());
         }
 
         @Override
