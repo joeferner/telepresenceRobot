@@ -140,7 +140,8 @@ public class MainActivity extends Activity {
                 startActivityForResult(new Intent(this, SettingsActivity.class), 0);
                 return true;
             case R.id.exit:
-                System.exit(0);
+                ForegroundService.stopService(this);
+                finish();
                 return true;
             case R.id.robot_connect:
                 connectRobotMenuItem.setEnabled(false);

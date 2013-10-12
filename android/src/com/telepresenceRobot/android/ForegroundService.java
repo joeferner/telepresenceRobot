@@ -64,6 +64,12 @@ public class ForegroundService extends IntentService {
     }
 
     @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
     }
 
