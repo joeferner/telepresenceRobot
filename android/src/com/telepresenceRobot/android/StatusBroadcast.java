@@ -14,6 +14,7 @@ public class StatusBroadcast {
     private static final String TYPE_WEB_SOCKET_DISCONNECT = "webSocketDisconnect";
     private static final String TYPE_ROBOT_CONNECT = "robotConnect";
     private static final String TYPE_ROBOT_DISCONNECT = "robotDisconnect";
+    private static final String TYPE_FOREGROUND_SERVICE_STARTED = "foregroundServiceStarted";
 
     public static void sendException(Context source, Throwable e) {
         Intent intent = new Intent(BROADCAST_NAME);
@@ -59,6 +60,12 @@ public class StatusBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
+    public static void sendForegroundServiceStarted(Context source) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", TYPE_FOREGROUND_SERVICE_STARTED);
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
     public static class Receiver extends android.content.BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -79,9 +86,15 @@ public class StatusBroadcast {
                 onRobotConnect(context, intent);
             } else if (type.equals(TYPE_ROBOT_DISCONNECT)) {
                 onRobotDisconnect(context, intent);
+            } else if (type.equals(TYPE_FOREGROUND_SERVICE_STARTED)) {
+                onForegroundServiceStarted(context, intent);
             } else {
                 Log.e(Constants.LOG, "Invalid status type: " + type);
             }
+        }
+
+        protected void onForegroundServiceStarted(Context context, Intent intent) {
+
         }
 
         protected void onRobotDisconnect(Context context, Intent intent) {

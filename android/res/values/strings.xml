@@ -8,9 +8,9 @@
     <string name="disconnecting_web_socket">Disconnecting Web Socket</string>
 
     <string name="connect_robot">Connect Robot</string>
-    <string name="connecting_robot">Connect Robot</string>
+    <string name="connecting_robot">Connecting to Robot</string>
     <string name="disconnect_robot">Disconnecting Robot</string>
-    <string name="disconnecting_robot">Disconnecting Robot</string>
+    <string name="disconnecting_robot">Disconnecting to Robot</string>
 
     <string name="foreground_ticker">Telepresence Robot</string>
     <string name="foreground_content_title">Telepresence Robot</string>
@@ -18,4 +18,5 @@
     <string name="settings">Settings</string>
     <string name="pref_url">URL</string>
     <string name="settings_label">Telepresence Robot Settings</string>
+    <string name="exit">Exit</string>
 </resources>

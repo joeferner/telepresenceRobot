@@ -10,6 +10,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,10 +24,10 @@ public class MainActivity extends Activity {
     private Button back;
     private Button left;
     private Button right;
-    private Button connectWebSocket;
-    private Button connectRobot;
-    private boolean webSocketConnected;
-    private boolean robotConnected;
+    private ConnectState webSocketConnectState = ConnectState.DISCONNECTED;
+    private ConnectState robotConnectState = ConnectState.DISCONNECTED;
+    private MenuItem connectRobotMenuItem;
+    private MenuItem connectWebSocketMenuItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,6 @@ public class MainActivity extends Activity {
 
         log = (TextView) findViewById(R.id.log);
         log.setMovementMethod(new ScrollingMovementMethod());
-        connectWebSocket = (Button) findViewById(R.id.connectWebSocket);
-        connectRobot = (Button) findViewById(R.id.connectRobot);
         forward = (Button) findViewById(R.id.forward);
         back = (Button) findViewById(R.id.back);
         left = (Button) findViewById(R.id.left);
@@ -51,47 +50,22 @@ public class MainActivity extends Activity {
         back.setOnTouchListener(new MovementOnTouchListener(MovementDirection.BACK));
         left.setOnTouchListener(new MovementOnTouchListener(MovementDirection.LEFT));
         right.setOnTouchListener(new MovementOnTouchListener(MovementDirection.RIGHT));
-        connectWebSocket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectWebSocket.setEnabled(false);
-                if (webSocketConnected) {
-                    connectWebSocket.setText(getString(R.string.disconnecting_web_socket));
-                    StatusBroadcast.sendWebSocketDisconnect(MainActivity.this);
-                } else {
-                    webSocketConnect();
-                }
-            }
-        });
-        connectRobot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectRobot.setEnabled(false);
-                if (robotConnected) {
-                    connectRobot.setText(getString(R.string.disconnecting_robot));
-                    StatusBroadcast.sendRobotDisconnect(MainActivity.this);
-                } else {
-                    robotConnect();
-                }
-            }
-        });
 
         LocalBroadcastManager.getInstance(this).registerReceiver(robotBroadcastReceiver, new IntentFilter(RobotBroadcast.BROADCAST_NAME));
         LocalBroadcastManager.getInstance(this).registerReceiver(statusBroadcastReceiver, new IntentFilter(StatusBroadcast.BROADCAST_NAME));
-
         ForegroundService.startService(this);
-
-        webSocketConnect();
-        robotConnect();
     }
 
     private void robotConnect() {
-        connectRobot.setText(getString(R.string.connecting_robot));
+        robotConnectState = ConnectState.CONNECTING;
+        updateMenuItems();
+        log("Connecting to robot");
         StatusBroadcast.sendRobotConnect(this);
     }
 
     private void webSocketConnect() {
-        connectWebSocket.setText(getString(R.string.connecting_web_socket));
+        webSocketConnectState = ConnectState.CONNECTING;
+        updateMenuItems();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String address = sharedPref.getString(SettingsActivity.WEB_SOCKET_URL, null);
         log("Connecting to " + address);
@@ -102,14 +76,92 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        connectRobotMenuItem = menu.findItem(R.id.robot_connect);
+        connectWebSocketMenuItem = menu.findItem(R.id.web_service_connect);
+        updateMenuItems();
         return true;
+    }
+
+    private void updateMenuItems() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(Constants.LOG, "webSocketConnectState: " + webSocketConnectState);
+                if (connectWebSocketMenuItem != null) {
+                    switch (webSocketConnectState) {
+                        case CONNECTED:
+                            connectWebSocketMenuItem.setEnabled(true);
+                            connectWebSocketMenuItem.setTitle(getString(R.string.disconnect_web_socket));
+                            break;
+                        case CONNECTING:
+                            connectWebSocketMenuItem.setEnabled(false);
+                            connectWebSocketMenuItem.setTitle(getString(R.string.connecting_web_socket));
+                            break;
+                        case DISCONNECTED:
+                            connectWebSocketMenuItem.setEnabled(true);
+                            connectWebSocketMenuItem.setTitle(getString(R.string.connect_web_socket));
+                            break;
+                        case DISCONNECTING:
+                            connectWebSocketMenuItem.setEnabled(false);
+                            connectWebSocketMenuItem.setTitle(getString(R.string.disconnecting_web_socket));
+                            break;
+                    }
+                }
+                Log.i(Constants.LOG, "connectRobotMenuItem: " + robotConnectState);
+                if (connectRobotMenuItem != null) {
+                    switch (robotConnectState) {
+                        case CONNECTED:
+                            connectRobotMenuItem.setEnabled(true);
+                            connectRobotMenuItem.setTitle(getString(R.string.disconnect_robot));
+                            break;
+                        case CONNECTING:
+                            connectRobotMenuItem.setEnabled(false);
+                            connectRobotMenuItem.setTitle(getString(R.string.connecting_robot));
+                            break;
+                        case DISCONNECTED:
+                            connectRobotMenuItem.setEnabled(true);
+                            connectRobotMenuItem.setTitle(getString(R.string.connect_robot));
+                            break;
+                        case DISCONNECTING:
+                            connectRobotMenuItem.setEnabled(false);
+                            connectRobotMenuItem.setTitle(getString(R.string.disconnecting_robot));
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.settings) {
-            startActivityForResult(new Intent(this, SettingsActivity.class), 0);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
+                return true;
+            case R.id.exit:
+                System.exit(0);
+                return true;
+            case R.id.robot_connect:
+                connectRobotMenuItem.setEnabled(false);
+                if (robotConnectState == ConnectState.CONNECTED || robotConnectState == ConnectState.CONNECTING) {
+                    robotConnectState = ConnectState.DISCONNECTING;
+                    updateMenuItems();
+                    StatusBroadcast.sendRobotDisconnect(MainActivity.this);
+                } else {
+                    robotConnect();
+                }
+                return true;
+            case R.id.web_service_connect:
+                connectWebSocketMenuItem.setEnabled(false);
+                if (webSocketConnectState == ConnectState.CONNECTED || webSocketConnectState == ConnectState.CONNECTING) {
+                    webSocketConnectState = ConnectState.DISCONNECTING;
+                    updateMenuItems();
+                    StatusBroadcast.sendWebSocketDisconnect(MainActivity.this);
+                } else {
+                    webSocketConnect();
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -119,18 +171,16 @@ public class MainActivity extends Activity {
         @Override
         protected void onWebSocketOpened(Context context, Intent intent) {
             super.onWebSocketOpened(context, intent);
-            connectWebSocket.setEnabled(true);
-            webSocketConnected = true;
-            connectWebSocket.setText(getString(R.string.disconnect_web_socket));
+            webSocketConnectState = ConnectState.CONNECTED;
+            updateMenuItems();
             log("Web socket opened");
         }
 
         @Override
         protected void onWebSocketClosed(Context context, Intent intent) {
             super.onWebSocketClosed(context, intent);
-            connectWebSocket.setEnabled(true);
-            webSocketConnected = false;
-            connectWebSocket.setText(getString(R.string.connect_web_socket));
+            webSocketConnectState = ConnectState.DISCONNECTED;
+            updateMenuItems();
             log("Web socket disconnected");
         }
 
@@ -138,6 +188,13 @@ public class MainActivity extends Activity {
         protected void onException(Context context, Intent intent, Throwable e) {
             super.onException(context, intent, e);
             log(e.getMessage());
+        }
+
+        @Override
+        protected void onForegroundServiceStarted(Context context, Intent intent) {
+            super.onForegroundServiceStarted(context, intent);
+            robotConnect();
+            webSocketConnect();
         }
     };
 
@@ -158,22 +215,21 @@ public class MainActivity extends Activity {
         protected void onConnected(Context context, Intent intent) {
             super.onConnected(context, intent);
             log("robot connected");
-            connectRobot.setEnabled(true);
-            robotConnected = true;
-            connectRobot.setText(getString(R.string.disconnect_robot));
+            robotConnectState = ConnectState.CONNECTED;
+            updateMenuItems();
         }
 
         @Override
         protected void onDisconnected(Context context, Intent intent) {
             super.onDisconnected(context, intent);
             log("robot disconnected");
-            connectRobot.setEnabled(true);
-            robotConnected = false;
-            connectRobot.setText(getString(R.string.connect_robot));
+            robotConnectState = ConnectState.DISCONNECTED;
+            updateMenuItems();
         }
     };
 
     private void log(String line) {
+        Log.i(Constants.LOG, "log: " + line);
         logBuffer.append(line);
         logBuffer.append("\n");
         this.runOnUiThread(new Runnable() {
@@ -238,4 +294,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    private enum ConnectState {
+        CONNECTED,
+        CONNECTING,
+        DISCONNECTED,
+        DISCONNECTING
+    }
 }

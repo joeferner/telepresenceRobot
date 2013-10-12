@@ -3,8 +3,12 @@ package com.telepresenceRobot.android;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.*;
-import android.preference.PreferenceManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
@@ -29,6 +33,8 @@ public class ForegroundService extends IntentService {
         LocalBroadcastManager.getInstance(this).registerReceiver(statusBroadcastReceiver, new IntentFilter(StatusBroadcast.BROADCAST_NAME));
         LocalBroadcastManager.getInstance(this).registerReceiver(robotBroadcastReceiver, new IntentFilter(RobotBroadcast.BROADCAST_NAME));
 
+        StatusBroadcast.sendForegroundServiceStarted(this);
+
         return START_STICKY;
     }
 
@@ -41,6 +47,8 @@ public class ForegroundService extends IntentService {
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
 
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+
         Notification notification = new Notification.Builder(this)
                 .setTicker(getString(R.string.foreground_ticker))
                 .setWhen(System.currentTimeMillis())
@@ -48,7 +56,7 @@ public class ForegroundService extends IntentService {
                 .setContentTitle(getString(R.string.foreground_content_title))
                 .setContentText(getNotificationContentText())
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setLargeIcon(largeIcon)
                 .setContentIntent(pendingIntent)
                 .getNotification();
         notification.flags |= Notification.FLAG_NO_CLEAR;

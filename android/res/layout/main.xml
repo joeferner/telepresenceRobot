@@ -4,21 +4,6 @@
               android:layout_height="fill_parent"
               android:orientation="vertical"
         >
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_web_socket"
-                android:id="@+id/connectWebSocket"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_robot"
-                android:id="@+id/connectRobot"/>
-    </LinearLayout>
     <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
                  android:layout_width="fill_parent">
         <TableRow>
