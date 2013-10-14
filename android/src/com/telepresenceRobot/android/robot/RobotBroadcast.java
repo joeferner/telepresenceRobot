@@ -7,6 +7,7 @@ import android.util.Log;
 import com.telepresenceRobot.android.Constants;
 
 public class RobotBroadcast {
+    private static final String LOG_TAG = Constants.getLogTag(RobotService.class);
     public static final String BROADCAST_NAME = "robotBroadcast";
 
     public static void sendConnected(Context source) {
@@ -36,6 +37,12 @@ public class RobotBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
+    public static void sendResume(Context source) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", MessageType.RESUME.toString());
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
     public static class Receiver extends android.content.BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -47,6 +54,9 @@ public class RobotBroadcast {
                 case DISCONNECTED:
                     onDisconnected(context, intent);
                     break;
+                case RESUME:
+                    onResume(context, intent);
+                    break;
                 case DATA:
                     byte[] buffer = intent.getByteArrayExtra("buffer");
                     onData(context, intent, buffer);
@@ -57,7 +67,7 @@ public class RobotBroadcast {
                     onSetSpeed(context, intent, new Speed(leftSpeed, rightSpeed));
                     break;
                 default:
-                    Log.e(Constants.LOG, "Invalid status type: " + type);
+                    Log.e(LOG_TAG, "Invalid status type: " + type);
                     break;
             }
         }
@@ -77,12 +87,17 @@ public class RobotBroadcast {
         protected void onDisconnected(Context context, Intent intent) {
 
         }
+
+        protected void onResume(Context context, Intent intent) {
+
+        }
     }
 
     private enum MessageType {
         CONNECTED,
         DISCONNECTED,
         DATA,
+        RESUME,
         SET_SPEED
     }
 }

@@ -16,6 +16,7 @@ import com.telepresenceRobot.android.robot.RobotService;
 import com.telepresenceRobot.android.webSocket.WebSocketService;
 
 public class ForegroundService extends IntentService {
+    private static final String LOG_TAG = Constants.getLogTag(ForegroundService.class);
     private static final int FOREGROUND_ID = 1111;
     private boolean webSocketConnected;
     private boolean robotConnected;
@@ -26,7 +27,7 @@ public class ForegroundService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(Constants.LOG, "starting foreground service");
+        Log.i(LOG_TAG, "starting foreground service");
 
         updateNotification();
 
@@ -65,7 +66,10 @@ public class ForegroundService extends IntentService {
 
     @Override
     public void onDestroy() {
+        Log.d(LOG_TAG, "onDestroy");
         stopForeground(true);
+        RobotService.stopService(this);
+        WebSocketService.stopService(this);
         super.onDestroy();
     }
 
@@ -75,13 +79,13 @@ public class ForegroundService extends IntentService {
 
     public static void startService(Context context) {
         stopService(context);
-        Log.i(Constants.LOG, "startService");
+        Log.i(LOG_TAG, "startService");
         Intent serviceIntent = new Intent(context, ForegroundService.class);
         context.startService(serviceIntent);
     }
 
     public static void stopService(Context context) {
-        Log.i(Constants.LOG, "Stopping service");
+        Log.i(LOG_TAG, "Stopping service");
         Intent serviceIntent = new Intent(context, ForegroundService.class);
         context.stopService(serviceIntent);
     }

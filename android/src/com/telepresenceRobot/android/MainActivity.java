@@ -18,6 +18,7 @@ import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.Speed;
 
 public class MainActivity extends Activity {
+    private static final String LOG_TAG = Constants.getLogTag(MainActivity.class);
     private StringBuilder logBuffer = new StringBuilder();
     private TextView log;
     private Button forward;
@@ -71,6 +72,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        RobotBroadcast.sendResume(this);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
@@ -85,7 +92,7 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.i(Constants.LOG, "webSocketConnectState: " + webSocketConnectState);
+                Log.i(LOG_TAG, "webSocketConnectState: " + webSocketConnectState);
                 if (connectWebSocketMenuItem != null) {
                     switch (webSocketConnectState) {
                         case CONNECTED:
@@ -106,7 +113,7 @@ public class MainActivity extends Activity {
                             break;
                     }
                 }
-                Log.i(Constants.LOG, "connectRobotMenuItem: " + robotConnectState);
+                Log.i(LOG_TAG, "connectRobotMenuItem: " + robotConnectState);
                 if (connectRobotMenuItem != null) {
                     switch (robotConnectState) {
                         case CONNECTED:
@@ -140,6 +147,7 @@ public class MainActivity extends Activity {
             case R.id.exit:
                 ForegroundService.stopService(this);
                 finish();
+                System.exit(0);
                 return true;
             case R.id.robot_connect:
                 connectRobotMenuItem.setEnabled(false);
@@ -192,6 +200,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onForegroundServiceStarted(Context context, Intent intent) {
             super.onForegroundServiceStarted(context, intent);
+            RobotBroadcast.sendResume(MainActivity.this);
             robotConnect();
             webSocketConnect();
         }
@@ -242,7 +251,7 @@ public class MainActivity extends Activity {
     };
 
     private void log(String line) {
-        Log.i(Constants.LOG, "log: " + line);
+        Log.i(LOG_TAG, "log: " + line);
         logBuffer.append(line);
         logBuffer.append("\n");
         this.runOnUiThread(new Runnable() {

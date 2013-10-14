@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class WebSocketService extends IntentService {
+    private static final String LOG_TAG = Constants.getLogTag(WebSocketService.class);
     private static final String EXTRA_URL = "url";
     private static final long RECONNECT_INTERVAL = 1000;
     private Client client;
@@ -55,12 +56,12 @@ public class WebSocketService extends IntentService {
                 try {
                     send(json);
                 } catch (IOException e) {
-                    Log.e(Constants.LOG, "Failed to send broadcast", e);
+                    Log.e(LOG_TAG, "Failed to send broadcast", e);
                 }
                 Thread.sleep(1000);
             }
         } catch (Exception e) {
-            Log.e(Constants.LOG, "Failed in broadcast loop", e);
+            Log.e(LOG_TAG, "Failed in broadcast loop", e);
         } finally {
             broadcastLoopStarted = false;
         }
@@ -70,20 +71,20 @@ public class WebSocketService extends IntentService {
     public void onCreate() {
         destorying = false;
         super.onCreate();
-        Log.i(Constants.LOG, WebSocketService.class.getName() + " created");
+        Log.i(LOG_TAG, WebSocketService.class.getName() + " created");
     }
 
     @Override
     public void onDestroy() {
         destorying = true;
         disconnect();
-        Log.w(Constants.LOG, WebSocketService.class.getName() + " destroyed");
+        Log.w(LOG_TAG, WebSocketService.class.getName() + " destroyed");
         super.onDestroy();
     }
 
     private void disconnect() {
         if (socket != null) {
-            Log.i(Constants.LOG, "closing socket");
+            Log.i(LOG_TAG, "closing socket");
             socket.close();
             socket = null;
         }
@@ -91,7 +92,7 @@ public class WebSocketService extends IntentService {
 
     private void connect(long timeoutMS) throws IOException {
         disconnect();
-        Log.i(Constants.LOG, "connect " + timeoutMS + "ms");
+        Log.i(LOG_TAG, "connect " + timeoutMS + "ms");
 
         RequestBuilder request = client.newRequestBuilder()
                 .method(Request.METHOD.GET)
@@ -113,7 +114,7 @@ public class WebSocketService extends IntentService {
     private Function<String> onSocketOpen = new Function<String>() {
         @Override
         public void on(String t) {
-            Log.i(Constants.LOG, "open");
+            Log.i(LOG_TAG, "open");
             reconnectAttempt = 0;
             try {
                 JSONObject json = new JSONObject();
@@ -121,7 +122,7 @@ public class WebSocketService extends IntentService {
                 json.put("id", Long.toString(serverId));
                 send(json);
             } catch (Exception e) {
-                Log.e(Constants.LOG, "Error", e);
+                Log.e(LOG_TAG, "Error", e);
                 StatusBroadcast.sendException(WebSocketService.this, e);
             }
             StatusBroadcast.sendWebSocketConnectionOpened(WebSocketService.this);
@@ -130,22 +131,22 @@ public class WebSocketService extends IntentService {
 
     private void send(JSONObject json) throws IOException {
         if (socket == null) {
-            Log.e(Constants.LOG, "Socket was null for message: " + json);
+            Log.e(LOG_TAG, "Socket was null for message: " + json);
             return;
         }
         if (socket.status() != Socket.STATUS.OPEN && socket.status() != Socket.STATUS.INIT) {
-            Log.e(Constants.LOG, "Socket status was " + socket.status() + " expected open/init for message: " + json);
+            Log.e(LOG_TAG, "Socket status was " + socket.status() + " expected open/init for message: " + json);
             return;
         }
 
-        Log.d(Constants.LOG, "Sending: " + json.toString());
+        Log.d(LOG_TAG, "Sending: " + json.toString());
         socket.fire(json);
     }
 
     private Function<String> onSocketClose = new Function<String>() {
         @Override
         public void on(String o) {
-            Log.w(Constants.LOG, "close");
+            Log.w(LOG_TAG, "close");
             StatusBroadcast.sendWebSocketConnectionClosed(WebSocketService.this);
             if (socket.status() != Socket.STATUS.OPEN) {
                 tryReconnect();
@@ -156,17 +157,17 @@ public class WebSocketService extends IntentService {
     private Function<JSONObject> onSocketMessage = new Function<JSONObject>() {
         @Override
         public void on(final JSONObject t) {
-            Log.i(Constants.LOG, "onMessage " + t.toString());
+            Log.i(LOG_TAG, "onMessage " + t.toString());
             try {
                 String type = t.getString("type");
                 if (type.equals("setSpeedPolar")) {
                     Speed speed = SpeedPolarConversion.toSpeed(t.getDouble("angle"), t.getDouble("power"));
                     RobotBroadcast.sendSetSpeed(WebSocketService.this, speed);
                 } else {
-                    Log.e(Constants.LOG, "Invalid packet type: " + type);
+                    Log.e(LOG_TAG, "Invalid packet type: " + type);
                 }
             } catch (JSONException e) {
-                Log.e(Constants.LOG, "Error", e);
+                Log.e(LOG_TAG, "Error", e);
                 StatusBroadcast.sendException(WebSocketService.this, e);
             }
         }
@@ -175,7 +176,7 @@ public class WebSocketService extends IntentService {
     private Function<Throwable> onSocketError = new Function<Throwable>() {
         @Override
         public void on(Throwable t) {
-            Log.e(Constants.LOG, "Error", t);
+            Log.e(LOG_TAG, "Error", t);
             StatusBroadcast.sendException(WebSocketService.this, t);
             if (socket.status() != Socket.STATUS.OPEN) {
                 tryReconnect();
@@ -188,7 +189,7 @@ public class WebSocketService extends IntentService {
             return;
         }
 
-        Log.i(Constants.LOG, "tryReconnect");
+        Log.i(LOG_TAG, "tryReconnect");
         try {
             if (pendingReconnect) {
                 return;
@@ -201,7 +202,7 @@ public class WebSocketService extends IntentService {
                 nextReconnectAttemptDurationMS = getNextReconnectAttemptTime();
                 Date nextReconnectAttemptDate = new Date(new Date().getTime() + nextReconnectAttemptDurationMS);
                 String logMessage = "Web Socket waiting for reconnect (" + (nextReconnectAttemptDurationMS / 1000) + "s)";
-                Log.i(Constants.LOG, logMessage);
+                Log.i(LOG_TAG, logMessage);
                 StatusBroadcast.sendLog(WebSocketService.this, logMessage);
                 while (new Date().getTime() < nextReconnectAttemptDate.getTime()) {
                     Thread.sleep(100);
@@ -214,7 +215,7 @@ public class WebSocketService extends IntentService {
             connect(nextReconnectAttemptDurationMS);
         } catch (Exception e) {
             String logMessage = "Web Socket failed to connect to " + this.url;
-            Log.e(Constants.LOG, logMessage, e);
+            Log.e(LOG_TAG, logMessage, e);
             StatusBroadcast.sendLog(WebSocketService.this, logMessage);
             StatusBroadcast.sendException(this, e);
         }
@@ -226,14 +227,14 @@ public class WebSocketService extends IntentService {
 
     public static void startService(Context context, String url) {
         stopService(context);
-        Log.i(Constants.LOG, "startService (url: " + url + ")");
+        Log.i(LOG_TAG, "startService (url: " + url + ")");
         Intent serviceIntent = new Intent(context, WebSocketService.class);
         serviceIntent.putExtra(EXTRA_URL, url);
         context.startService(serviceIntent);
     }
 
     public static void stopService(Context context) {
-        Log.i(Constants.LOG, "Stopping service");
+        Log.i(LOG_TAG, "Stopping service");
         Intent serviceIntent = new Intent(context, WebSocketService.class);
         context.stopService(serviceIntent);
     }
@@ -250,10 +251,10 @@ public class WebSocketService extends IntentService {
         public JSONObject decode(Event event, String s) {
             if (event.equals(Event.MESSAGE)) {
                 try {
-                    Log.i(Constants.LOG, "JSONObject: " + s);
+                    Log.i(LOG_TAG, "JSONObject: " + s);
                     return new JSONObject(s);
                 } catch (JSONException e) {
-                    Log.e(Constants.LOG, "could not create JSON", e);
+                    Log.e(LOG_TAG, "could not create JSON", e);
                     StatusBroadcast.sendException(WebSocketService.this, e);
                 }
             }

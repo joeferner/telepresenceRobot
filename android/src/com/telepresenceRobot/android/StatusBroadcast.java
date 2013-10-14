@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class StatusBroadcast {
+    private static final String LOG_TAG = Constants.getLogTag(StatusBroadcast.class);
     public static final String BROADCAST_NAME = "exceptionBroadcast";
 
     public static void sendException(Context source, Throwable e) {
@@ -101,7 +102,7 @@ public class StatusBroadcast {
                     onLog(context, intent, message);
                     break;
                 default:
-                    Log.e(Constants.LOG, "Invalid status type: " + type);
+                    Log.e(LOG_TAG, "Invalid status type: " + type);
                     break;
             }
         }

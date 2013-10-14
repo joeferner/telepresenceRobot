@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class RobotService extends IntentService {
+    private static final String LOG_TAG = Constants.getLogTag(RobotService.class);
     private static final int BAUD = 9600;
     private static final byte DATA_BITS = 8;
     private static final byte STOP_BITS = 1;
@@ -42,11 +43,11 @@ public class RobotService extends IntentService {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(robotBroadcastReceiver);
         try {
             Thread.sleep(1000);
-            Log.i(Constants.LOG, "BEFORE destroyAccessory");
+            Log.i(LOG_TAG, "BEFORE destroyAccessory");
             this.uartInterface.destroyAccessory(true);
-            Log.i(Constants.LOG, "AFTER destroyAccessory");
+            Log.i(LOG_TAG, "AFTER destroyAccessory");
         } catch (Exception ex) {
-            Log.e(Constants.LOG, "Could not destroy accessory", ex);
+            Log.e(LOG_TAG, "Could not destroy accessory", ex);
             StatusBroadcast.sendException(this, ex);
         }
         RobotBroadcast.sendDisconnected(this);
@@ -61,12 +62,12 @@ public class RobotService extends IntentService {
 
             connect();
 
-            Log.i(Constants.LOG, "Starting robot loop");
+            Log.i(LOG_TAG, "Starting robot loop");
             while (!destorying) {
                 try {
                     loop();
                 } catch (Exception ex) {
-                    Log.e(Constants.LOG, "loop failed", ex);
+                    Log.e(LOG_TAG, "loop failed", ex);
                     StatusBroadcast.sendException(this, ex);
                 }
             }
@@ -74,7 +75,7 @@ public class RobotService extends IntentService {
             StatusBroadcast.sendException(this, ex);
             RobotBroadcast.sendDisconnected(this);
         } finally {
-            Log.i(Constants.LOG, "Stopped robot loop");
+            Log.i(LOG_TAG, "Stopped robot loop");
         }
     }
 
@@ -82,7 +83,7 @@ public class RobotService extends IntentService {
         synchronized (commandQueue) {
             if (commandQueue.size() > 0) {
                 String cmd = commandQueue.remove() + "\n";
-                Log.d("RobotLink", "Sending:" + cmd);
+                Log.d(LOG_TAG, "Sending:" + cmd);
                 uartInterface.sendData(cmd.length(), cmd.getBytes());
             }
         }
@@ -97,14 +98,14 @@ public class RobotService extends IntentService {
                     byte[] data = Arrays.copyOfRange(readBuffer, 0, actualNumberOfBytesRead);
                     RobotBroadcast.sendData(this, data);
                 } catch (Exception ex) {
-                    Log.e("RobotLink", "Calling eventHandler.onData", ex);
+                    Log.e(LOG_TAG, "Calling eventHandler.onData", ex);
                 }
-                Log.d("RobotLink", "bytes read " + actualNumberOfBytesRead + " " + new String(readBuffer, 0, actualNumberOfBytesRead));
+                Log.d(LOG_TAG, "bytes read " + actualNumberOfBytesRead + " " + new String(readBuffer, 0, actualNumberOfBytesRead));
             }
         } else if (readStatus == 0x01) {
 
         } else {
-            Log.w("RobotLink", "readData status was not 0x00 but was 0x" + ByteUtil.byteToHex(readStatus));
+            Log.w(LOG_TAG, "readData status was not 0x00 but was 0x" + ByteUtil.byteToHex(readStatus));
         }
 
         if (connecting) {
@@ -115,7 +116,7 @@ public class RobotService extends IntentService {
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
-            Log.e("RobotLink", "Failed to sleep", e);
+            Log.e(LOG_TAG, "Failed to sleep", e);
         }
     }
 
@@ -125,11 +126,13 @@ public class RobotService extends IntentService {
             super.onSetSpeed(context, intent, speed);
             setSpeed(speed.getLeftSpeed(), speed.getRightSpeed());
         }
-    };
 
-    public void resume() {
-        this.uartInterface.resumeAccessory();
-    }
+        @Override
+        protected void onResume(Context context, Intent intent) {
+            super.onResume(context, intent);
+            uartInterface.resumeAccessory();
+        }
+    };
 
     public void setSpeed(double speedLeft, double speedRight) {
         speedLeft = clamp(speedLeft, -1.0, 1.0);
@@ -161,24 +164,25 @@ public class RobotService extends IntentService {
         }
         StatusBroadcast.sendLog(this, "Connecting to robot");
         connecting = true;
+        uartInterface.resumeAccessory();
         uartInterface.setConfig(BAUD, DATA_BITS, STOP_BITS, PARITY, FLOW_CONTROL);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            Log.e("RobotLink", "Could not sleep", e);
+            Log.e(LOG_TAG, "Could not sleep", e);
         }
         enqueueCommand("connect");
     }
 
     public static void startService(Context context) {
         stopService(context);
-        Log.i(Constants.LOG, "Starting service");
+        Log.i(LOG_TAG, "Starting service");
         Intent serviceIntent = new Intent(context, RobotService.class);
         context.startService(serviceIntent);
     }
 
     public static void stopService(Context context) {
-        Log.i(Constants.LOG, "Stopping service");
+        Log.i(LOG_TAG, "Stopping service");
         Intent serviceIntent = new Intent(context, RobotService.class);
         context.stopService(serviceIntent);
     }

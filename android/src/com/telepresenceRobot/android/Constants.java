@@ -1,5 +1,9 @@
 package com.telepresenceRobot.android;
 
 public class Constants {
-    public static final String LOG = "telepresenceRobot";
+    private static final String LOG = "telepresenceRobot";
+
+    public static String getLogTag(Class clazz) {
+        return LOG + "-" + clazz.getName();
+    }
 }

@@ -8,6 +8,7 @@ import android.hardware.usb.UsbManager;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import com.telepresenceRobot.android.Constants;
+import com.telepresenceRobot.android.StatusBroadcast;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -20,8 +21,8 @@ import java.io.IOException;
  */
 public class FT31xUARTInterface extends Activity {
 
-    private static final String ACTION_USB_PERMISSION = "com.UARTTest.USB_PERMISSION";
-    private static final String LOG_TAG = Constants.LOG + "-FT31x";
+    private static final String ACTION_USB_PERMISSION = "com.telepresenceRobot.android.robot.USB_PERMISSION";
+    private static final String LOG_TAG = Constants.getLogTag(FT31xUARTInterface.class);
     private final Context context;
     public UsbManager usbManager;
     public UsbAccessory usbAccessory;
@@ -62,7 +63,6 @@ public class FT31xUARTInterface extends Activity {
 
         // 128 (make it 256, but looks like bytes should be enough)
         readBuffer = new byte[maxNumBytes];
-
 
         readIndex = 0;
         writeIndex = 0;
@@ -173,7 +173,9 @@ public class FT31xUARTInterface extends Activity {
     }
 
     public int resumeAccessory() {
+        Log.d(LOG_TAG, "resumeAccessory");
         if (inputStream != null && outputStream != null) {
+            Log.d(LOG_TAG, "already open");
             return 1;
         }
 
@@ -182,29 +184,39 @@ public class FT31xUARTInterface extends Activity {
             Log.i(LOG_TAG, "Accessory Attached");
         } else {
             // return 2 for accessory detached case
-            //Log.e(">>@@","resumeAccessory RETURN 2 (accessories == null)");
+            Log.e(LOG_TAG, "resumeAccessory RETURN 2 (accessories == null)");
             accessoryAttached = false;
             return 2;
         }
 
         UsbAccessory accessory = accessories[0];
         if (accessory != null) {
+            Log.d(LOG_TAG, "accessory: " + accessory);
+
             if (!accessory.toString().contains(ManufacturerString)) {
-                Log.e(LOG_TAG, "Manufacturer is not matched! Expected " + ManufacturerString + " found " + accessory);
-                return 1;
+                String msg = "Manufacturer is not matched! Expected " + ManufacturerString + " found " + accessory;
+                Log.e(LOG_TAG, msg);
+                StatusBroadcast.sendLog(this, msg);
+                //return 1;
             }
 
             if (!accessory.toString().contains(ModelString1) && !accessory.toString().contains(ModelString2)) {
-                Log.e(LOG_TAG, "Model is not matched! Expected " + ModelString1 + " and " + ModelString2 + " found " + accessory);
-                return 1;
+                String msg = "Model is not matched! Expected " + ModelString1 + " and " + ModelString2 + " found " + accessory;
+                Log.e(LOG_TAG, msg);
+                StatusBroadcast.sendLog(this, msg);
+                //return 1;
             }
 
             if (!accessory.toString().contains(VersionString)) {
-                Log.e(LOG_TAG, "Version is not matched! Expected " + VersionString + " found " + accessory);
-                return 1;
+                String msg = "Version is not matched! Expected " + VersionString + " found " + accessory;
+                Log.e(LOG_TAG, msg);
+                StatusBroadcast.sendLog(this, msg);
+                //return 1;
             }
 
-            Log.i(LOG_TAG, "Manufacturer, Model & Version are matched!");
+            String msg = "Manufacturer, Model & Version are matched! " + accessory;
+            Log.i(LOG_TAG, msg);
+            StatusBroadcast.sendLog(this, msg);
             accessoryAttached = true;
 
             if (usbManager.hasPermission(accessory)) {
@@ -256,8 +268,10 @@ public class FT31xUARTInterface extends Activity {
     }
 
     public void openAccessory(UsbAccessory accessory) {
+        Log.d(LOG_TAG, "openAccessory");
         fileDescriptor = usbManager.openAccessory(accessory);
         if (fileDescriptor != null) {
+            Log.d(LOG_TAG, "fileDescriptor: " + fileDescriptor);
             usbAccessory = accessory;
 
             FileDescriptor fd = fileDescriptor.getFileDescriptor();
@@ -266,6 +280,7 @@ public class FT31xUARTInterface extends Activity {
             outputStream = new FileOutputStream(fd);
 
             if (!readEnable) {
+                Log.d(LOG_TAG, "starting read thread");
                 readEnable = true;
                 readThread = new ReadThread(inputStream);
                 readThread.start();
@@ -326,6 +341,7 @@ public class FT31xUARTInterface extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.i(LOG_TAG, "usbReceiver " + action);
             switch (action) {
                 case ACTION_USB_PERMISSION:
                     synchronized (this) {
@@ -342,7 +358,7 @@ public class FT31xUARTInterface extends Activity {
                 case UsbManager.ACTION_USB_ACCESSORY_DETACHED:
                     saveDetachPreference();
                     destroyAccessory(true);
-                    //closeAccessory();
+                    closeAccessory();
                     break;
                 default:
                     Log.d(LOG_TAG, "received unknown action " + action);
@@ -360,6 +376,7 @@ public class FT31xUARTInterface extends Activity {
         }
 
         public void run() {
+            Log.i(LOG_TAG, "Read thread started");
             while (readEnable) {
                 while (totalBytes > (maxNumBytes - 1024)) {
                     safeSleep(50);
@@ -369,6 +386,7 @@ public class FT31xUARTInterface extends Activity {
                     if (inStream != null) {
                         int readCount = inStream.read(usbData, 0, 1024);
                         if (readCount > 0) {
+                            Log.d(LOG_TAG, "Read thread read " + readCount);
                             for (int count = 0; count < readCount; count++) {
                                 readBuffer[writeIndex] = usbData[count];
                                 writeIndex++;
@@ -387,6 +405,7 @@ public class FT31xUARTInterface extends Activity {
                     Log.e(LOG_TAG, "Could not read", e);
                 }
             }
+            Log.i(LOG_TAG, "Read thread stopped");
         }
     }
 }
