@@ -139,6 +139,13 @@ public class ForegroundService extends IntentService {
         }
 
         @Override
+        protected void onConnectFailed(Context context, Intent intent, Throwable e) {
+            super.onConnectFailed(context, intent, e);
+            robotConnected = false;
+            updateNotification();
+        }
+
+        @Override
         protected void onDisconnected(Context context, Intent intent) {
             super.onDisconnected(context, intent);
             robotConnected = false;

@@ -4,35 +4,58 @@
               android:layout_height="fill_parent"
               android:orientation="vertical"
         >
-    <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
-                 android:layout_width="fill_parent">
-        <TableRow>
-            <Button
-                    android:layout_width="100dip"
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal">
+        <TableLayout android:id="@+id/movementButtons" android:layout_height="wrap_content"
+                     android:layout_width="fill_parent">
+            <TableRow>
+                <Button
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:text="Forward"
+                        android:id="@+id/forward" android:layout_column="2"/>
+            </TableRow>
+            <TableRow>
+                <Button
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:text="Left"
+                        android:id="@+id/left" android:layout_column="1"/>
+                <Button
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:text="Right"
+                        android:id="@+id/right" android:layout_column="3"/>
+            </TableRow>
+            <TableRow>
+                <Button
+                        android:layout_width="100dip"
+                        android:layout_height="wrap_content"
+                        android:text="Back"
+                        android:id="@+id/back" android:layout_column="2"/>
+            </TableRow>
+        </TableLayout>
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                    android:id="@+id/battery_level"
+                    android:layout_width="300dip"
                     android:layout_height="wrap_content"
-                    android:text="Forward"
-                    android:id="@+id/forward" android:layout_column="2"/>
-        </TableRow>
-        <TableRow>
-            <Button
-                    android:layout_width="100dip"
-                    android:layout_height="wrap_content"
-                    android:text="Left"
-                    android:id="@+id/left" android:layout_column="1"/>
-            <Button
-                    android:layout_width="100dip"
-                    android:layout_height="wrap_content"
-                    android:text="Right"
-                    android:id="@+id/right" android:layout_column="3"/>
-        </TableRow>
-        <TableRow>
-            <Button
-                    android:layout_width="100dip"
-                    android:layout_height="wrap_content"
-                    android:text="Back"
-                    android:id="@+id/back" android:layout_column="2"/>
-        </TableRow>
-    </TableLayout>
+                    android:text="@string/default_battery_level"
+                    android:textSize="100dip"
+                    android:gravity="center"
+                    />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/battery_level"/>
+        </LinearLayout>
+    </LinearLayout>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="0dip"

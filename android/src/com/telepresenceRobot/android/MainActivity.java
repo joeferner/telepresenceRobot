@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     private ConnectState robotConnectState = ConnectState.DISCONNECTED;
     private MenuItem connectRobotMenuItem;
     private MenuItem connectWebSocketMenuItem;
+    private TextView batteryVoltage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MainActivity extends Activity {
         back = (Button) findViewById(R.id.back);
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
+        batteryVoltage = (TextView) findViewById(R.id.battery_level);
 
         forward.setOnTouchListener(new MovementOnTouchListener(MovementDirection.FORWARD));
         back.setOnTouchListener(new MovementOnTouchListener(MovementDirection.BACK));
@@ -222,15 +224,15 @@ public class MainActivity extends Activity {
         @Override
         protected void onData(Context context, Intent intent, byte[] buffer) {
             super.onData(context, intent, buffer);
-            StringBuilder sb = new StringBuilder();
-            for (byte b : buffer) {
-                if (b >= ' ' && b <= '~') {
-                    sb.append((char) b);
-                } else {
-                    sb.append(String.format("\\x%02x", b));
-                }
-            }
-            log("From Robot: " + sb.toString());
+            log("From Robot: " + new String(buffer).trim());
+        }
+
+        @Override
+        protected void onBatteryVoltage(Context context, Intent intent, int batteryVoltage) {
+            super.onBatteryVoltage(context, intent, batteryVoltage);
+            double percent = ((double) batteryVoltage) / 0xffff;
+            String str = ((int) Math.floor(percent * 100.0)) + "%";
+            MainActivity.this.batteryVoltage.setText(str);
         }
 
         @Override
@@ -238,6 +240,14 @@ public class MainActivity extends Activity {
             super.onConnected(context, intent);
             log("robot connected");
             robotConnectState = ConnectState.CONNECTED;
+            updateMenuItems();
+        }
+
+        @Override
+        protected void onConnectFailed(Context context, Intent intent, Throwable e) {
+            super.onConnectFailed(context, intent, e);
+            log("robot failed to connect: " + e.getMessage());
+            robotConnectState = ConnectState.DISCONNECTED;
             updateMenuItems();
         }
 

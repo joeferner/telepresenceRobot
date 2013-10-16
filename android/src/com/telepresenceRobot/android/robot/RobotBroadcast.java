@@ -43,6 +43,20 @@ public class RobotBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
+    public static void sendConnectFailed(Context source, Throwable e) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", MessageType.CONNECT_FAILED.toString());
+        intent.putExtra("error", e);
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
+    public static void sendBatteryVoltage(Context source, int batteryVoltage) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", MessageType.BATTERY_VOLTAGE.toString());
+        intent.putExtra("batteryVoltage", batteryVoltage);
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
     public static class Receiver extends android.content.BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -61,15 +75,31 @@ public class RobotBroadcast {
                     byte[] buffer = intent.getByteArrayExtra("buffer");
                     onData(context, intent, buffer);
                     break;
+                case BATTERY_VOLTAGE:
+                    int batteryVoltage = intent.getIntExtra("batteryVoltage", 0);
+                    onBatteryVoltage(context, intent, batteryVoltage);
+                    break;
                 case SET_SPEED:
                     double leftSpeed = intent.getDoubleExtra("leftSpeed", 0.0);
                     double rightSpeed = intent.getDoubleExtra("rightSpeed", 0.0);
                     onSetSpeed(context, intent, new Speed(leftSpeed, rightSpeed));
                     break;
+                case CONNECT_FAILED:
+                    Throwable e = (Throwable) intent.getSerializableExtra("error");
+                    onConnectFailed(context, intent, e);
+                    break;
                 default:
                     Log.e(LOG_TAG, "Invalid status type: " + type);
                     break;
             }
+        }
+
+        protected void onBatteryVoltage(Context context, Intent intent, int batteryVoltage) {
+
+        }
+
+        protected void onConnectFailed(Context context, Intent intent, Throwable e) {
+
         }
 
         protected void onSetSpeed(Context context, Intent intent, Speed speed) {
@@ -98,6 +128,7 @@ public class RobotBroadcast {
         DISCONNECTED,
         DATA,
         RESUME,
-        SET_SPEED
+        CONNECT_FAILED,
+        BATTERY_VOLTAGE, SET_SPEED
     }
 }

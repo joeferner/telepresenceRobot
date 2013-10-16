@@ -13,9 +13,12 @@ import com.telepresenceRobot.android.util.ByteUtil;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RobotService extends IntentService {
     private static final String LOG_TAG = Constants.getLogTag(RobotService.class);
+    private static final Pattern BATTERY_VOLTAGE = Pattern.compile("^\\?batteryVoltage: ([0-9a-fA-F]+)$");
     private static final int BAUD = 9600;
     private static final byte DATA_BITS = 8;
     private static final byte STOP_BITS = 1;
@@ -25,6 +28,8 @@ public class RobotService extends IntentService {
     private final Queue<String> commandQueue = new LinkedList<String>();
     private boolean connecting;
     private boolean destorying;
+    private Object currentLineLock = new Object();
+    private StringBuilder currentLine = new StringBuilder();
 
     public RobotService() {
         super("robotService");
@@ -44,7 +49,7 @@ public class RobotService extends IntentService {
         try {
             Thread.sleep(1000);
             Log.i(LOG_TAG, "BEFORE destroyAccessory");
-            this.uartInterface.destroyAccessory(true);
+            this.uartInterface.destroyAccessory();
             Log.i(LOG_TAG, "AFTER destroyAccessory");
         } catch (Exception ex) {
             Log.e(LOG_TAG, "Could not destroy accessory", ex);
@@ -58,7 +63,7 @@ public class RobotService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         destorying = false;
         try {
-            uartInterface = new FT31xUARTInterface(this, null);
+            uartInterface = new FT31xUARTInterface(this);
 
             connect();
 
@@ -84,40 +89,65 @@ public class RobotService extends IntentService {
             if (commandQueue.size() > 0) {
                 String cmd = commandQueue.remove() + "\n";
                 Log.d(LOG_TAG, "Sending:" + cmd);
-                uartInterface.sendData(cmd.length(), cmd.getBytes());
+                uartInterface.send(cmd.getBytes());
             }
         }
 
         byte[] readBuffer = new byte[4096];
-        int[] actualNumberOfBytesReadArray = new int[1];
-        byte readStatus = uartInterface.readData(readBuffer.length, readBuffer, actualNumberOfBytesReadArray);
-        if (readStatus == 0x00) {
-            int actualNumberOfBytesRead = actualNumberOfBytesReadArray[0];
-            if (actualNumberOfBytesRead > 0) {
-                try {
-                    byte[] data = Arrays.copyOfRange(readBuffer, 0, actualNumberOfBytesRead);
-                    RobotBroadcast.sendData(this, data);
-                } catch (Exception ex) {
-                    Log.e(LOG_TAG, "Calling eventHandler.onData", ex);
-                }
-                Log.d(LOG_TAG, "bytes read " + actualNumberOfBytesRead + " " + new String(readBuffer, 0, actualNumberOfBytesRead));
+        int bytesReads = uartInterface.read(readBuffer);
+        if (bytesReads > 0) {
+            if (connecting) {
+                RobotBroadcast.sendConnected(this);
+                connecting = false;
             }
-        } else if (readStatus == 0x01) {
 
+            try {
+                byte[] data = Arrays.copyOfRange(readBuffer, 0, bytesReads);
+                processData(data);
+            } catch (Exception ex) {
+                Log.e(LOG_TAG, "Calling eventHandler.onData", ex);
+            }
+            Log.d(LOG_TAG, "bytes read " + bytesReads + " " + new String(readBuffer, 0, bytesReads));
         } else {
-            Log.w(LOG_TAG, "readData status was not 0x00 but was 0x" + ByteUtil.byteToHex(readStatus));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Log.e(LOG_TAG, "Failed to sleep", e);
+            }
+        }
+    }
+
+    private void processData(byte[] data) {
+        synchronized (currentLineLock) {
+            for (byte b : data) {
+                if (b == '\r') {
+                    continue;
+                }
+
+                if (b == '\n') {
+                    processLine(currentLine.toString().trim());
+                    currentLine = new StringBuilder();
+                    continue;
+                }
+
+                if (b >= ' ' && b <= '~') {
+                    currentLine.append((char) b);
+                } else {
+                    currentLine.append(String.format("\\x%02x", b));
+                }
+            }
+        }
+    }
+
+    private void processLine(String line) {
+        Matcher m = BATTERY_VOLTAGE.matcher(line);
+        if (m.matches()) {
+            int voltage = Integer.parseInt(m.group(1), 16);
+            RobotBroadcast.sendBatteryVoltage(this, voltage);
+            return;
         }
 
-        if (connecting) {
-            RobotBroadcast.sendConnected(this);
-            connecting = false;
-        }
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Log.e(LOG_TAG, "Failed to sleep", e);
-        }
+        RobotBroadcast.sendData(this, line.getBytes());
     }
 
     private RobotBroadcast.Receiver robotBroadcastReceiver = new RobotBroadcast.Receiver() {
@@ -130,7 +160,7 @@ public class RobotService extends IntentService {
         @Override
         protected void onResume(Context context, Intent intent) {
             super.onResume(context, intent);
-            uartInterface.resumeAccessory();
+            connect();
         }
     };
 
@@ -159,19 +189,21 @@ public class RobotService extends IntentService {
     }
 
     public void connect() {
-        if (connecting) {
-            return;
-        }
-        StatusBroadcast.sendLog(this, "Connecting to robot");
-        connecting = true;
-        uartInterface.resumeAccessory();
-        uartInterface.setConfig(BAUD, DATA_BITS, STOP_BITS, PARITY, FLOW_CONTROL);
         try {
+            if (connecting) {
+                return;
+            }
+            StatusBroadcast.sendLog(this, "Connecting to robot");
+            connecting = true;
+            uartInterface.resumeAccessory();
+            uartInterface.setConfig(BAUD, DATA_BITS, STOP_BITS, PARITY, FLOW_CONTROL);
             Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Log.e(LOG_TAG, "Could not sleep", e);
+            enqueueCommand("connect");
+        } catch (Exception e) {
+            connecting = false;
+            Log.e(LOG_TAG, "Failed to connect", e);
+            RobotBroadcast.sendConnectFailed(this, e);
         }
-        enqueueCommand("connect");
     }
 
     public static void startService(Context context) {

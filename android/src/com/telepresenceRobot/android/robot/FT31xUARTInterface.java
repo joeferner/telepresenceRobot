@@ -2,7 +2,10 @@ package com.telepresenceRobot.android.robot;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
 import android.os.ParcelFileDescriptor;
@@ -16,56 +19,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-/**
- * ***************************FT311 GPIO interface class*****************************************
- */
 public class FT31xUARTInterface extends Activity {
-
     private static final String ACTION_USB_PERMISSION = "com.telepresenceRobot.android.robot.USB_PERMISSION";
     private static final String LOG_TAG = Constants.getLogTag(FT31xUARTInterface.class);
     private final Context context;
-    public UsbManager usbManager;
-    public UsbAccessory usbAccessory;
-    public PendingIntent permissionIntent;
-    public ParcelFileDescriptor fileDescriptor = null;
-    public FileInputStream inputStream = null;
-    public FileOutputStream outputStream = null;
-    public boolean permissionRequestPending = false;
-    public ReadThread readThread;
+    private UsbManager usbManager;
+    private PendingIntent permissionIntent;
+    private ParcelFileDescriptor fileDescriptor = null;
+    private FileInputStream inputStream = null;
+    private FileOutputStream outputStream = null;
+    private boolean permissionRequestPending = false;
 
-    private byte[] usbData;
-    private byte[] writeUsbData;
-    private byte[] readBuffer; /*circular buffer*/
-    private int totalBytes;
-    private int writeIndex;
-    private int readIndex;
-    private byte status;
-    final int maxNumBytes = 65536;
+    private final RingBuffer ringBuffer = new RingBuffer();
+    private boolean readEnable = false;
 
-    public boolean readEnable = false;
-    public boolean accessoryAttached = false;
+    private static final String ManufacturerString = "mManufacturer=FTDI";
+    private static final String ModelString1 = "mModel=FTDIUARTDemo";
+    private static final String ModelString2 = "mModel=Android Accessory FT312D";
+    private static final String VersionString = "mVersion=1.0";
+    private ReadThread readThread;
 
-    public static String ManufacturerString = "mManufacturer=FTDI";
-    public static String ModelString1 = "mModel=FTDIUARTDemo";
-    public static String ModelString2 = "mModel=Android Accessory FT312D";
-    public static String VersionString = "mVersion=1.0";
-
-    public SharedPreferences sharePrefSettings;
-
-    public FT31xUARTInterface(Context context, SharedPreferences sharePrefSettings) {
+    public FT31xUARTInterface(Context context) {
         super();
         this.context = context;
-        this.sharePrefSettings = sharePrefSettings;
-
-        // shall we start a thread here or what
-        usbData = new byte[1024];
-        writeUsbData = new byte[256];
-
-        // 128 (make it 256, but looks like bytes should be enough)
-        readBuffer = new byte[maxNumBytes];
-
-        readIndex = 0;
-        writeIndex = 0;
 
         /***********************USB handling******************************************/
         usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
@@ -78,115 +54,65 @@ public class FT31xUARTInterface extends Activity {
         outputStream = null;
     }
 
-    public void setConfig(int baud, byte dataBits, byte stopBits,
-                          byte parity, byte flowControl) {
+    public void setConfig(int baud, byte dataBits, byte stopBits, byte parity, byte flowControl) throws IOException {
+        byte[] data = new byte[8];
+
+        if (outputStream == null) {
+            throw new IOException("Device not open");
+        }
 
         // prepare the baud rate buffer
-        writeUsbData[0] = (byte) baud;
-        writeUsbData[1] = (byte) (baud >> 8);
-        writeUsbData[2] = (byte) (baud >> 16);
-        writeUsbData[3] = (byte) (baud >> 24);
+        data[0] = (byte) baud;
+        data[1] = (byte) (baud >> 8);
+        data[2] = (byte) (baud >> 16);
+        data[3] = (byte) (baud >> 24);
 
         // data bits
-        writeUsbData[4] = dataBits;
+        data[4] = dataBits;
 
         // stop bits
-        writeUsbData[5] = stopBits;
+        data[5] = stopBits;
 
         // parity
-        writeUsbData[6] = parity;
+        data[6] = parity;
 
         // flow control
-        writeUsbData[7] = flowControl;
+        data[7] = flowControl;
 
         //send the UART configuration packet
-        sendPacketToUsb(8);
+        outputStream.write(data, 0, 8);
     }
 
-    public byte sendData(int numBytes, byte[] buffer) {
-        status = 0x00; // success by default
-
-        // if num bytes are more than maximum limit
-        if (numBytes < 1) {
-            // return the status with the error in the command
-            return status;
-        }
-
-        // check for maximum limit
-        if (numBytes > 256) {
-            numBytes = 256;
-        }
-
-        // prepare the packet to be sent
-        System.arraycopy(buffer, 0, writeUsbData, 0, numBytes);
-
-        if (numBytes != 64) {
-            sendPacketToUsb(numBytes);
-        } else {
-            byte temp = writeUsbData[63];
-            sendPacketToUsb(63);
-            writeUsbData[0] = temp;
-            sendPacketToUsb(1);
-        }
-
-        return status;
+    public void send(byte[] buffer) throws IOException {
+        send(buffer, 0, buffer.length);
     }
 
-    public byte readData(int numBytes, byte[] buffer, int[] actualNumBytes) {
-        status = 0x00; // success by default
-
-        // should be at least one byte to read
-        if ((numBytes < 1) || (totalBytes == 0)) {
-            actualNumBytes[0] = 0;
-            status = 0x01;
-            return status;
-        }
-
-        // check for max limit
-        if (numBytes > totalBytes)
-            numBytes = totalBytes;
-
-        // update the number of bytes available
-        totalBytes -= numBytes;
-
-        actualNumBytes[0] = numBytes;
-
-        // copy to the user buffer
-        for (int count = 0; count < numBytes; count++) {
-            buffer[count] = readBuffer[readIndex];
-            readIndex++;
-            // shouldn't read more than what is there in the buffer,
-            // so no need to check the overflow
-            readIndex %= maxNumBytes;
-        }
-        return status;
-    }
-
-    private void sendPacketToUsb(int numBytes) {
-        try {
-            if (outputStream != null) {
-                outputStream.write(writeUsbData, 0, numBytes);
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Could not write packet", e);
+    private void send(byte[] buffer, int start, int length) throws IOException {
+        for (int i = start; i < start + length; i += 32) {
+            int count = Math.min(32, length - (i - start));
+            outputStream.write(buffer, i, count);
+            outputStream.flush();
+            safeSleep(1);
         }
     }
 
-    public int resumeAccessory() {
+    public int read(byte[] buffer) throws IOException {
+        return ringBuffer.read(buffer, 0, buffer.length);
+    }
+
+    public void resumeAccessory() throws Exception {
         Log.d(LOG_TAG, "resumeAccessory");
         if (inputStream != null && outputStream != null) {
             Log.d(LOG_TAG, "already open");
-            return 1;
+            return;
         }
 
         UsbAccessory[] accessories = usbManager.getAccessoryList();
         if (accessories != null) {
             Log.i(LOG_TAG, "Accessory Attached");
         } else {
-            // return 2 for accessory detached case
-            Log.e(LOG_TAG, "resumeAccessory RETURN 2 (accessories == null)");
-            accessoryAttached = false;
-            return 2;
+            Log.e(LOG_TAG, "resumeAccessory (accessories == null)");
+            throw new Exception("No accessories found");
         }
 
         UsbAccessory accessory = accessories[0];
@@ -197,27 +123,26 @@ public class FT31xUARTInterface extends Activity {
                 String msg = "Manufacturer is not matched! Expected " + ManufacturerString + " found " + accessory;
                 Log.e(LOG_TAG, msg);
                 StatusBroadcast.sendLog(this, msg);
-                //return 1;
+                // TODO change this to use read data
             }
 
             if (!accessory.toString().contains(ModelString1) && !accessory.toString().contains(ModelString2)) {
                 String msg = "Model is not matched! Expected " + ModelString1 + " and " + ModelString2 + " found " + accessory;
                 Log.e(LOG_TAG, msg);
                 StatusBroadcast.sendLog(this, msg);
-                //return 1;
+                // TODO change this to use read data
             }
 
             if (!accessory.toString().contains(VersionString)) {
                 String msg = "Version is not matched! Expected " + VersionString + " found " + accessory;
                 Log.e(LOG_TAG, msg);
                 StatusBroadcast.sendLog(this, msg);
-                //return 1;
+                // TODO change this to use read data
             }
 
             String msg = "Manufacturer, Model & Version are matched! " + accessory;
             Log.i(LOG_TAG, msg);
             StatusBroadcast.sendLog(this, msg);
-            accessoryAttached = true;
 
             if (usbManager.hasPermission(accessory)) {
                 openAccessory(accessory);
@@ -231,32 +156,23 @@ public class FT31xUARTInterface extends Activity {
                 }
             }
         }
-
-        return 0;
     }
 
-    public void destroyAccessory(boolean configured) {
-        Log.i(LOG_TAG, "destroyAccessory " + configured);
-        if (configured) {
-            readEnable = false;  // set false condition for handler_thread to exit waiting data loop
-            writeUsbData[0] = 0;  // send dummy data for inStream.read going
-            sendPacketToUsb(1);
-        } else {
-            setConfig(9600, (byte) 1, (byte) 8, (byte) 0, (byte) 0);  // send default setting data for config
+    public void destroyAccessory() throws IOException, InterruptedException {
+        Log.i(LOG_TAG, "destroyAccessory");
+        readEnable = false;
+        try {
+            byte[] data = new byte[1];
+            data[0] = 0;
+            outputStream.write(data, 0, 1);
+
+            readThread.join(1000);
+        } finally {
             safeSleep(10);
+            closeAccessory();
 
-            readEnable = false;  // set false condition for handler_thread to exit waiting data loop
-            writeUsbData[0] = 0;  // send dummy data for inStream.read going
-            sendPacketToUsb(1);
-            if (accessoryAttached) {
-                saveDefaultPreference();
-            }
+            context.unregisterReceiver(usbReceiver);
         }
-
-        safeSleep(10);
-        closeAccessory();
-
-        context.unregisterReceiver(usbReceiver);
     }
 
     private void safeSleep(int duration) {
@@ -272,7 +188,6 @@ public class FT31xUARTInterface extends Activity {
         fileDescriptor = usbManager.openAccessory(accessory);
         if (fileDescriptor != null) {
             Log.d(LOG_TAG, "fileDescriptor: " + fileDescriptor);
-            usbAccessory = accessory;
 
             FileDescriptor fd = fileDescriptor.getFileDescriptor();
 
@@ -318,25 +233,6 @@ public class FT31xUARTInterface extends Activity {
         }
     }
 
-    protected void saveDetachPreference() {
-        if (sharePrefSettings != null) {
-            sharePrefSettings.edit()
-                    .putString("configed", "FALSE")
-                    .commit();
-        }
-    }
-
-    protected void saveDefaultPreference() {
-        if (sharePrefSettings != null) {
-            sharePrefSettings.edit().putString("configed", "TRUE").commit();
-            sharePrefSettings.edit().putInt("baudRate", 9600).commit();
-            sharePrefSettings.edit().putInt("stopBit", 1).commit();
-            sharePrefSettings.edit().putInt("dataBit", 8).commit();
-            sharePrefSettings.edit().putInt("parity", 0).commit();
-            sharePrefSettings.edit().putInt("flowControl", 0).commit();
-        }
-    }
-
     private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -356,8 +252,11 @@ public class FT31xUARTInterface extends Activity {
                     }
                     break;
                 case UsbManager.ACTION_USB_ACCESSORY_DETACHED:
-                    saveDetachPreference();
-                    destroyAccessory(true);
+                    try {
+                        destroyAccessory();
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Could not destroy accessory", e);
+                    }
                     closeAccessory();
                     break;
                 default:
@@ -376,9 +275,11 @@ public class FT31xUARTInterface extends Activity {
         }
 
         public void run() {
+            byte[] usbData = new byte[1024];
+
             Log.i(LOG_TAG, "Read thread started");
             while (readEnable) {
-                while (totalBytes > (maxNumBytes - 1024)) {
+                while (ringBuffer.size() - ringBuffer.length() < 1024) {
                     safeSleep(50);
                 }
 
@@ -387,18 +288,7 @@ public class FT31xUARTInterface extends Activity {
                         int readCount = inStream.read(usbData, 0, 1024);
                         if (readCount > 0) {
                             Log.d(LOG_TAG, "Read thread read " + readCount);
-                            for (int count = 0; count < readCount; count++) {
-                                readBuffer[writeIndex] = usbData[count];
-                                writeIndex++;
-                                writeIndex %= maxNumBytes;
-                            }
-
-                            if (writeIndex >= readIndex)
-                                totalBytes = writeIndex - readIndex;
-                            else
-                                totalBytes = (maxNumBytes - readIndex) + writeIndex;
-
-//					    		Log.e(">>@@","totalBytes:"+totalBytes);
+                            ringBuffer.write(usbData, 0, readCount);
                         }
                     }
                 } catch (IOException e) {
@@ -406,6 +296,76 @@ public class FT31xUARTInterface extends Activity {
                 }
             }
             Log.i(LOG_TAG, "Read thread stopped");
+        }
+    }
+
+    private class RingBuffer {
+        private static final int MAX_NUM_BYTES = 65536;
+        private final byte[] buffer;
+        private int length;
+        private int nextGet;
+        private int nextPut;
+
+        public RingBuffer() {
+            buffer = new byte[MAX_NUM_BYTES];
+        }
+
+        public void write(byte[] data, int start, int length) throws IOException {
+            for (int i = start; i < start + length; i++) {
+                write(data[i]);
+            }
+        }
+
+        private void write(byte b) throws IOException {
+            if (isFull()) {
+                throw new IOException("Buffer overflow");
+            }
+
+            length++;
+            buffer[nextPut] = b;
+            nextPut++;
+            if (nextPut >= buffer.length) {
+                nextPut = 0;
+            }
+        }
+
+        public int read(byte[] buffer, int start, int length) throws IOException {
+            int readCount = 0;
+            for (int i = start; i < start + length && !isEmpty(); i++) {
+                buffer[i] = read();
+                readCount++;
+            }
+            return readCount;
+        }
+
+        public byte read() throws IOException {
+            if (isEmpty()) {
+                throw new IOException("Buffer underflow");
+            }
+
+            length--;
+            byte b = buffer[nextGet];
+            nextGet++;
+            if (nextGet >= buffer.length) {
+                nextGet = 0;
+            }
+            return b;
+        }
+
+        public boolean isEmpty() {
+            return length() == 0;
+        }
+
+        public boolean isFull() {
+            return length() == size();
+        }
+
+        public int size() {
+            return buffer.length;
+        }
+
+        public int length() {
+            return length;
         }
     }
 }
