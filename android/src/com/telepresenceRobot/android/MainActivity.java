@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
         batteryVoltage = (TextView) findViewById(R.id.battery_level);
+        batteryVoltage.setText("???");
 
         forward.setOnTouchListener(new MovementOnTouchListener(MovementDirection.FORWARD));
         back.setOnTouchListener(new MovementOnTouchListener(MovementDirection.BACK));
@@ -129,10 +130,12 @@ public class MainActivity extends Activity {
                         case DISCONNECTED:
                             connectRobotMenuItem.setEnabled(true);
                             connectRobotMenuItem.setTitle(getString(R.string.connect_robot));
+                            batteryVoltage.setText("???");
                             break;
                         case DISCONNECTING:
                             connectRobotMenuItem.setEnabled(false);
                             connectRobotMenuItem.setTitle(getString(R.string.disconnecting_robot));
+                            batteryVoltage.setText("???");
                             break;
                     }
                 }

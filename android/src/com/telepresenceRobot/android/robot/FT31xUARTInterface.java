@@ -58,7 +58,7 @@ public class FT31xUARTInterface extends Activity {
         byte[] data = new byte[8];
 
         if (outputStream == null) {
-            throw new IOException("Device not open");
+            throw new IOException("Could not set config device not open");
         }
 
         // prepare the baud rate buffer
@@ -183,23 +183,24 @@ public class FT31xUARTInterface extends Activity {
         }
     }
 
-    public void openAccessory(UsbAccessory accessory) {
+    public void openAccessory(UsbAccessory accessory) throws IOException {
         Log.d(LOG_TAG, "openAccessory");
         fileDescriptor = usbManager.openAccessory(accessory);
-        if (fileDescriptor != null) {
-            Log.d(LOG_TAG, "fileDescriptor: " + fileDescriptor);
+        if (fileDescriptor == null) {
+            throw new IOException("Could not open accessory");
+        }
+        Log.d(LOG_TAG, "fileDescriptor: " + fileDescriptor);
 
-            FileDescriptor fd = fileDescriptor.getFileDescriptor();
+        FileDescriptor fd = fileDescriptor.getFileDescriptor();
 
-            inputStream = new FileInputStream(fd);
-            outputStream = new FileOutputStream(fd);
+        inputStream = new FileInputStream(fd);
+        outputStream = new FileOutputStream(fd);
 
-            if (!readEnable) {
-                Log.d(LOG_TAG, "starting read thread");
-                readEnable = true;
-                readThread = new ReadThread(inputStream);
-                readThread.start();
-            }
+        if (!readEnable) {
+            Log.d(LOG_TAG, "starting read thread");
+            readEnable = true;
+            readThread = new ReadThread(inputStream);
+            readThread.start();
         }
     }
 
@@ -244,7 +245,12 @@ public class FT31xUARTInterface extends Activity {
                         UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
                         if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                             Log.i(LOG_TAG, "Allow USB Permission");
-                            openAccessory(accessory);
+                            try {
+                                openAccessory(accessory);
+                            } catch (IOException e) {
+                                Log.e(LOG_TAG, "could not open accessory", e);
+                                StatusBroadcast.sendLog(FT31xUARTInterface.this, "could not open accessory: " + e.getMessage());
+                            }
                         } else {
                             Log.e(LOG_TAG, "permission denied for accessory " + accessory);
                         }
