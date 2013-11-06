@@ -225,6 +225,12 @@ public class MainActivity extends Activity {
         }
 
         @Override
+        protected void onSetTilt(Context context, Intent intent, double tilt) {
+            super.onSetTilt(context, intent, tilt);
+            log("Setting tilt " + tilt);
+        }
+
+        @Override
         protected void onData(Context context, Intent intent, byte[] buffer) {
             super.onData(context, intent, buffer);
             log("From Robot: " + new String(buffer).trim());

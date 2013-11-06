@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.telepresenceRobot.android.Constants;
+import com.telepresenceRobot.android.webSocket.WebSocketService;
 
 public class RobotBroadcast {
     private static final String LOG_TAG = Constants.getLogTag(RobotService.class);
@@ -34,6 +35,13 @@ public class RobotBroadcast {
         intent.putExtra("type", MessageType.SET_SPEED.toString());
         intent.putExtra("leftSpeed", speed.getLeftSpeed());
         intent.putExtra("rightSpeed", speed.getRightSpeed());
+        LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
+    }
+
+    public static void sendSetTile(WebSocketService source, double tilt) {
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra("type", MessageType.SET_TILT.toString());
+        intent.putExtra("tile", tilt);
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
@@ -84,6 +92,10 @@ public class RobotBroadcast {
                     double rightSpeed = intent.getDoubleExtra("rightSpeed", 0.0);
                     onSetSpeed(context, intent, new Speed(leftSpeed, rightSpeed));
                     break;
+                case SET_TILT:
+                    double tilt = intent.getDoubleExtra("tilt", 0.5);
+                    onSetTilt(context, intent, tilt);
+                    break;
                 case CONNECT_FAILED:
                     Throwable e = (Throwable) intent.getSerializableExtra("error");
                     onConnectFailed(context, intent, e);
@@ -92,6 +104,10 @@ public class RobotBroadcast {
                     Log.e(LOG_TAG, "Invalid status type: " + type);
                     break;
             }
+        }
+
+        protected void onSetTilt(Context context, Intent intent, double tilt) {
+
         }
 
         protected void onBatteryVoltage(Context context, Intent intent, int batteryVoltage) {
@@ -129,6 +145,8 @@ public class RobotBroadcast {
         DATA,
         RESUME,
         CONNECT_FAILED,
-        BATTERY_VOLTAGE, SET_SPEED
+        BATTERY_VOLTAGE,
+        SET_SPEED,
+        SET_TILT
     }
 }

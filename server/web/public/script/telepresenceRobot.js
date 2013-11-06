@@ -2,7 +2,6 @@ $(function() {
   "use strict";
 
   var status = $('#status');
-  var statusLed = $('#statusLed');
   var joystick = $('#joystick');
   var joystickSize = 200;
   var joystickStickSize = 10;
@@ -23,10 +22,10 @@ $(function() {
     status.html($('<p>', { text: 'Atmosphere connected using ' + response.transport }));
     transport = response.transport;
 
-    subSocket.push(JSON.stringify({
+    push({
       type: 'setId',
       id: id
-    }));
+    });
   };
 
   request.onTransportFailure = function(errorMsg, request) {
@@ -39,16 +38,7 @@ $(function() {
 
   request.onMessage = function(response) {
     var data = JSON.parse(response.responseBody);
-    if (data.type == 'statusLed') {
-      var newState = data.newState;
-      if (newState) {
-        statusLed.attr('checked', 'checked');
-      } else {
-        statusLed.removeAttr('checked');
-      }
-    } else {
-      console.log(data);
-    }
+    console.log(data);
   };
 
   request.onClose = function(response) {
@@ -62,14 +52,6 @@ $(function() {
 
   var subSocket = socket.subscribe(request);
 
-  statusLed.click(function() {
-    var statusLedState = statusLed.is(':checked');
-    subSocket.push(JSON.stringify({
-      type: 'statusLed',
-      newState: statusLedState
-    }));
-  });
-
   var joystickResetPositionTimer = null;
   var joystickReportTimer = null;
   var joystickLimitRadius = joystickSize / 2 - 10;
@@ -82,6 +64,26 @@ $(function() {
     this.style.cursor = 'crosshair';
   };
   joystickStick.drag(onJoystickMove, onJoystickMoveStart, onJoystickMoveEnd)
+
+  $("#tilt").slider({
+    orientation: "vertical",
+    range: "min",
+    min: 0,
+    max: 100,
+    value: 50,
+    slide: function( event, ui ) {
+      onTiltChange(ui.value);
+    }
+  });
+  onTiltChange($("#tilt").slider("value"));
+
+  function onTiltChange(val) {
+    $("#tilt-amount").html(val);
+    push({
+      type: 'setTilt',
+      tilt: val / 100.0
+    });
+  }
 
   function onJoystickMove(dx, dy) {
     var newX = this.startPos.x + dx;
@@ -158,11 +160,16 @@ $(function() {
     // negative angle is anything left of center
     // positive angle is anything right of center
     var angle = Math.atan2(pos.x, pos.y);
-    subSocket.push(JSON.stringify({
+    push({
       type: 'setSpeedPolar',
       power: power,
       angle: angle
-    }));
+    });
     joystickLastFireEvent = Date.now();
+  }
+
+  function push(json) {
+    console.log('pushing', json);
+    subSocket.push(JSON.stringify(json));
   }
 });

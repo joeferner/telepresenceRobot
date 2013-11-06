@@ -10,6 +10,7 @@ import com.telepresenceRobot.android.Constants;
 import com.telepresenceRobot.android.StatusBroadcast;
 import com.telepresenceRobot.android.util.ByteUtil;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -85,34 +86,37 @@ public class RobotService extends IntentService {
     }
 
     private void loop() throws Exception {
+        loopSend();
+        loopRead();
+    }
+
+    private void loopRead() throws IOException, InterruptedException {
+        byte[] readBuffer = new byte[4096];
+        int bytesReads = uartInterface.read(readBuffer, 0, 4096, 100);
+        if (bytesReads <= 0) {
+            return;
+        }
+
+        if (connecting) {
+            RobotBroadcast.sendConnected(this);
+            connecting = false;
+        }
+
+        try {
+            byte[] data = Arrays.copyOfRange(readBuffer, 0, bytesReads);
+            processData(data);
+        } catch (Exception ex) {
+            Log.e(LOG_TAG, "Calling eventHandler.onData", ex);
+        }
+        Log.d(LOG_TAG, "bytes read " + bytesReads + " " + new String(readBuffer, 0, bytesReads));
+    }
+
+    private void loopSend() throws IOException {
         synchronized (commandQueue) {
             if (commandQueue.size() > 0) {
                 String cmd = commandQueue.remove() + "\n";
                 Log.d(LOG_TAG, "Sending:" + cmd);
                 uartInterface.send(cmd.getBytes());
-            }
-        }
-
-        byte[] readBuffer = new byte[4096];
-        int bytesReads = uartInterface.read(readBuffer);
-        if (bytesReads > 0) {
-            if (connecting) {
-                RobotBroadcast.sendConnected(this);
-                connecting = false;
-            }
-
-            try {
-                byte[] data = Arrays.copyOfRange(readBuffer, 0, bytesReads);
-                processData(data);
-            } catch (Exception ex) {
-                Log.e(LOG_TAG, "Calling eventHandler.onData", ex);
-            }
-            Log.d(LOG_TAG, "bytes read " + bytesReads + " " + new String(readBuffer, 0, bytesReads));
-        } else {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Log.e(LOG_TAG, "Failed to sleep", e);
             }
         }
     }
@@ -158,6 +162,12 @@ public class RobotService extends IntentService {
         }
 
         @Override
+        protected void onSetTilt(Context context, Intent intent, double tilt) {
+            super.onSetTilt(context, intent, tilt);
+            setTilt(tilt);
+        }
+
+        @Override
         protected void onResume(Context context, Intent intent) {
             super.onResume(context, intent);
             connect();
@@ -172,6 +182,13 @@ public class RobotService extends IntentService {
         byte speedRightByte = (byte) (speedRight * (255 / 2));
 
         enqueueSetCommand(RobotRegister.SPEED, ByteUtil.byteToHex(speedLeftByte) + ByteUtil.byteToHex(speedRightByte));
+    }
+
+    public void setTilt(double tilt) {
+        tilt = clamp(tilt, 0, 1.0);
+        byte tiltByte = (byte) (tilt * 255);
+
+        enqueueSetCommand(RobotRegister.TILT, ByteUtil.byteToHex(tiltByte));
     }
 
     private double clamp(double val, double min, double max) {
@@ -220,6 +237,7 @@ public class RobotService extends IntentService {
     }
 
     private enum RobotRegister {
-        SPEED
+        SPEED,
+        TILT
     }
 }

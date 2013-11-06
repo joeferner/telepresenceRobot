@@ -163,6 +163,8 @@ public class WebSocketService extends IntentService {
                 if (type.equals("setSpeedPolar")) {
                     Speed speed = SpeedPolarConversion.toSpeed(t.getDouble("angle"), t.getDouble("power"));
                     RobotBroadcast.sendSetSpeed(WebSocketService.this, speed);
+                } else if (type.equals("setTilt")) {
+                    RobotBroadcast.sendSetTile(WebSocketService.this, t.getDouble("tilt"));
                 } else {
                     Log.e(LOG_TAG, "Invalid packet type: " + type);
                 }

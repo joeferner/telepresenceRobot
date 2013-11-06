@@ -3,18 +3,29 @@
 <head>
   <meta charset="utf-8">
   <title>Telepresence Robot Control</title>
-  <script type="text/javascript" src="script/jquery-1.9.0.js"></script>
+  <script type="text/javascript" src="script/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="script/jquery-ui-1.10.3.custom.js"></script>
   <script type="text/javascript" src="script/jquery.atmosphere.js"></script>
   <script type="text/javascript" src="script/telepresenceRobot.js"></script>
   <script type="text/javascript" src="script/raphael-2.1.0.js"></script>
+  <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.3.custom.css">
   <link rel="stylesheet" href="css/telepresenceRobot.css">
 </head>
 <body>
 <div>
   <span id="status">Connecting...</span>
   <div id="controls">
-    <input type="checkbox" id="statusLed"> Status LED
-    <div id="joystick"></div>
+    <table>
+      <tr>
+        <td>
+          <div id="joystick"></div>
+        </td>
+        <td>
+          <div id="tilt"></div>
+          <div id="tilt-amount"></div>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
 

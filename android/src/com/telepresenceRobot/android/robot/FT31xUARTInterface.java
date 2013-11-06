@@ -96,8 +96,8 @@ public class FT31xUARTInterface extends Activity {
         }
     }
 
-    public int read(byte[] buffer) throws IOException {
-        return ringBuffer.read(buffer, 0, buffer.length);
+    public int read(byte[] buffer, int start, int length, int timeout) throws IOException, InterruptedException {
+        return ringBuffer.blockingRead(buffer, start, length, timeout);
     }
 
     public void resumeAccessory() throws Exception {
@@ -199,7 +199,7 @@ public class FT31xUARTInterface extends Activity {
         if (!readEnable) {
             Log.d(LOG_TAG, "starting read thread");
             readEnable = true;
-            readThread = new ReadThread(inputStream);
+            readThread = new ReadThread();
             readThread.start();
         }
     }
@@ -273,10 +273,7 @@ public class FT31xUARTInterface extends Activity {
     };
 
     private class ReadThread extends Thread {
-        FileInputStream inStream;
-
-        ReadThread(FileInputStream stream) {
-            inStream = stream;
+        ReadThread() {
             this.setPriority(Thread.MAX_PRIORITY);
         }
 
@@ -284,20 +281,19 @@ public class FT31xUARTInterface extends Activity {
             byte[] usbData = new byte[1024];
 
             Log.i(LOG_TAG, "Read thread started");
-            while (readEnable) {
-                while (ringBuffer.size() - ringBuffer.length() < 1024) {
-                    safeSleep(50);
-                }
-
+            while (readEnable && inputStream != null) {
                 try {
-                    if (inStream != null) {
-                        int readCount = inStream.read(usbData, 0, 1024);
-                        if (readCount > 0) {
-                            Log.d(LOG_TAG, "Read thread read " + readCount);
-                            ringBuffer.write(usbData, 0, readCount);
+                    int readCount = inputStream.read(usbData, 0, usbData.length);
+                    if (readCount > 0) {
+                        while (!ringBuffer.blockingWrite(usbData, 0, readCount, 100)) {
+                            if (!readEnable || inputStream == null) {
+                                return;
+                            }
                         }
+                    } else {
+                        safeSleep(10);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Log.e(LOG_TAG, "Could not read", e);
                 }
             }
@@ -305,7 +301,7 @@ public class FT31xUARTInterface extends Activity {
         }
     }
 
-    private class RingBuffer {
+    private static class RingBuffer {
         private static final int MAX_NUM_BYTES = 65536;
         private final byte[] buffer;
         private int length;
@@ -316,13 +312,24 @@ public class FT31xUARTInterface extends Activity {
             buffer = new byte[MAX_NUM_BYTES];
         }
 
-        public void write(byte[] data, int start, int length) throws IOException {
+        public synchronized boolean blockingWrite(byte[] data, int start, int length, int timeout) throws IOException, InterruptedException {
+            if (availableSpace() < length) {
+                wait(timeout);
+                if (availableSpace() < length) {
+                    return false;
+                }
+            }
+            write(data, start, length);
+            return true;
+        }
+
+        public synchronized void write(byte[] data, int start, int length) throws IOException {
             for (int i = start; i < start + length; i++) {
                 write(data[i]);
             }
         }
 
-        private void write(byte b) throws IOException {
+        private synchronized void write(byte b) throws IOException {
             if (isFull()) {
                 throw new IOException("Buffer overflow");
             }
@@ -333,9 +340,17 @@ public class FT31xUARTInterface extends Activity {
             if (nextPut >= buffer.length) {
                 nextPut = 0;
             }
+            notifyAll();
         }
 
-        public int read(byte[] buffer, int start, int length) throws IOException {
+        public synchronized int blockingRead(byte[] buffer, int start, int length, int timeout) throws IOException, InterruptedException {
+            if (length() <= 0) {
+                wait(timeout);
+            }
+            return read(buffer, start, length);
+        }
+
+        public synchronized int read(byte[] buffer, int start, int length) throws IOException {
             int readCount = 0;
             for (int i = start; i < start + length && !isEmpty(); i++) {
                 buffer[i] = read();
@@ -344,7 +359,7 @@ public class FT31xUARTInterface extends Activity {
             return readCount;
         }
 
-        public byte read() throws IOException {
+        public synchronized byte read() throws IOException {
             if (isEmpty()) {
                 throw new IOException("Buffer underflow");
             }
@@ -355,6 +370,7 @@ public class FT31xUARTInterface extends Activity {
             if (nextGet >= buffer.length) {
                 nextGet = 0;
             }
+            notifyAll();
             return b;
         }
 
@@ -364,6 +380,10 @@ public class FT31xUARTInterface extends Activity {
 
         public boolean isFull() {
             return length() == size();
+        }
+
+        public int availableSpace() {
+            return size() - length();
         }
 
         public int size() {

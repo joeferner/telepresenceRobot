@@ -1,0 +1,13 @@
+
+#joystick {
+  width: 200px;
+  height: 200px;
+}
+
+#tilt {
+  height: 150px;
+}
+
+#tilt-amount {
+  margin-top: 10px;
+}
