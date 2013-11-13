@@ -27,6 +27,8 @@ ring_buffer input_ring_buffer;
 RobotRegisters robot_registers;
 uint32_t last_update_speed = 0;
 uint32_t last_update_battery_voltage = 0;
+uint32_t servo_tilt_end_time = 0;
+uint8_t servo_tilt_on = TRUE;
 
 void disable_jtag();
 void loop();
@@ -57,10 +59,11 @@ int main(void) {
   init_robot_registers();
   motor_config();
   time_config();
-  usb_config();
+  //usb_config();
   battery_voltage_config();
   print_info("END Init\n");
 
+  servo_tilt_end_time = time_ms();
   servo_tilt_set(0x00);
   motor_enable(TRUE);
   while (1) {
@@ -72,6 +75,14 @@ int main(void) {
 void loop() {
   update_speed();
   update_battery_voltage();
+  update_servo_tilt();
+}
+
+void update_servo_tilt() {
+  if(servo_tilt_on && time_ms() > servo_tilt_end_time) {
+    servo_tilt_stop();
+    servo_tilt_on = FALSE;
+  }
 }
 
 void update_battery_voltage() {
@@ -183,6 +194,8 @@ void process_set_command(char* line) {
       print("\n");
     } else if (!strcmp(p, "tilt")) {
       uint8_t tilt = parse_hex8(val);
+      servo_tilt_on = TRUE;
+      servo_tilt_end_time = time_ms() + 3000;
       servo_tilt_set(tilt);
       print_success("OK ");
       print_u8(tilt, 16);

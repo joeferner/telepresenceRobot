@@ -161,6 +161,10 @@ void servo_tilt_set(uint8_t val) {
   TIM_SetCompare2(TIM2, t);
 }
 
+void servo_tilt_stop() {
+  TIM_SetCompare2(TIM2, 0);
+}
+
 uint32_t speed_to_pwm_compare(int8_t speed) {
   uint32_t absSpeed = abs(speed);
   return absSpeed * (PWM_PERIOD / 128);
