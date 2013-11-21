@@ -1,8 +1,6 @@
-package com.telepresenceRobot.android.webSocket;
+package com.telepresenceRobot.android.robot;
 
-import com.telepresenceRobot.android.robot.Speed;
-
-public class SpeedPolarConversion {
+public class PolarToSpeedConverter {
     // adjust to change how much wiggle room there is n the joystick when going straight
     // forward,back, or spinning
     private static final double DEAD_ZONE = Math.PI / 16;

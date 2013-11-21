@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import com.telepresenceRobot.android.Constants;
 import com.telepresenceRobot.android.StatusBroadcast;
+import com.telepresenceRobot.android.robot.PolarToSpeedConverter;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.Speed;
 import org.atmosphere.wasync.*;
@@ -161,7 +162,7 @@ public class WebSocketService extends IntentService {
             try {
                 String type = t.getString("type");
                 if (type.equals("setSpeedPolar")) {
-                    Speed speed = SpeedPolarConversion.toSpeed(t.getDouble("angle"), t.getDouble("power"));
+                    Speed speed = PolarToSpeedConverter.toSpeed(t.getDouble("angle"), t.getDouble("power"));
                     RobotBroadcast.sendSetSpeed(WebSocketService.this, speed);
                 } else if (type.equals("setTilt")) {
                     RobotBroadcast.sendSetTile(WebSocketService.this, t.getDouble("tilt"));
