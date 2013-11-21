@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.telepresenceRobot.android.Constants;
-import com.telepresenceRobot.android.webSocket.WebSocketService;
 
 public class RobotBroadcast {
     private static final String LOG_TAG = Constants.getLogTag(RobotService.class);
@@ -38,7 +37,7 @@ public class RobotBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
-    public static void sendSetTile(WebSocketService source, double tilt) {
+    public static void sendSetTile(Context source, double tilt) {
         Intent intent = new Intent(BROADCAST_NAME);
         intent.putExtra("type", MessageType.SET_TILT.toString());
         intent.putExtra("tilt", tilt);

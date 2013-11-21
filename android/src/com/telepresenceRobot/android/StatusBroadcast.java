@@ -34,10 +34,11 @@ public class StatusBroadcast {
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
-    public static void sendWebSocketConnect(Context source, String address) {
+    public static void sendWebSocketConnect(Context source, String hostname, int port) {
         Intent intent = new Intent(BROADCAST_NAME);
         intent.putExtra("type", MessageType.WEB_SOCKET_CONNECT.toString());
-        intent.putExtra("url", address);
+        intent.putExtra(TelepresenceServerClientService.EXTRA_HOSTNAME, hostname);
+        intent.putExtra(TelepresenceServerClientService.EXTRA_PORT, port);
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 
@@ -82,8 +83,9 @@ public class StatusBroadcast {
                     onWebSocketClosed(context, intent);
                     break;
                 case WEB_SOCKET_CONNECT:
-                    String address = intent.getStringExtra("url");
-                    onWebSocketConnect(context, intent, address);
+                    String hostname = intent.getStringExtra(TelepresenceServerClientService.EXTRA_HOSTNAME);
+                    int port = intent.getIntExtra(TelepresenceServerClientService.EXTRA_PORT, TelepresenceServerClientService.DEFAULT_PORT);
+                    onWebSocketConnect(context, intent, hostname, port);
                     break;
                 case WEB_SOCKET_DISCONNECT:
                     onWebSocketDisconnect(context, intent);
@@ -127,7 +129,7 @@ public class StatusBroadcast {
 
         }
 
-        protected void onWebSocketConnect(Context context, Intent intent, String address) {
+        protected void onWebSocketConnect(Context context, Intent intent, String hostname, int port) {
 
         }
 

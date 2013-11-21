@@ -33,7 +33,7 @@
         </activity>
 
         <service
-                android:name="com.telepresenceRobot.android.webSocket.WebSocketService"
+                android:name="com.telepresenceRobot.android.TelepresenceServerClientService"
                 android:exported="false"/>
         <service
                 android:name="com.telepresenceRobot.android.robot.RobotService"

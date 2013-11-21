@@ -17,9 +17,12 @@ import android.widget.TextView;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.Speed;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class MainActivity extends Activity {
     private static final String LOG_TAG = Constants.getLogTag(MainActivity.class);
-    private StringBuilder logBuffer = new StringBuilder();
+    private final Queue<String> logBuffer = new LinkedList<String>();
     private TextView log;
     private Button forward;
     private Button back;
@@ -70,8 +73,15 @@ public class MainActivity extends Activity {
         webSocketConnectState = ConnectState.CONNECTING;
         updateMenuItems();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String address = sharedPref.getString(SettingsActivity.WEB_SOCKET_URL, null);
-        StatusBroadcast.sendWebSocketConnect(this, address);
+        String address = sharedPref.getString(SettingsActivity.SERVER_HOSTNAME, null);
+        String portStr = sharedPref.getString(SettingsActivity.SERVER_PORT, "" + TelepresenceServerClientService.DEFAULT_PORT);
+        int port;
+        try {
+            port = Integer.parseInt(portStr);
+        } catch (Exception ex) {
+            port = TelepresenceServerClientService.DEFAULT_PORT;
+        }
+        StatusBroadcast.sendWebSocketConnect(this, address, port);
     }
 
     @Override
@@ -271,15 +281,26 @@ public class MainActivity extends Activity {
 
     private void log(String line) {
         Log.i(LOG_TAG, "log: " + line);
-        logBuffer.append(line);
-        logBuffer.append("\n");
+        synchronized (logBuffer) {
+            logBuffer.add(line);
+            while (logBuffer.size() > 200) {
+                logBuffer.remove();
+            }
+        }
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (log == null || log.getLayout() == null) {
                     return;
                 }
-                log.setText(logBuffer.toString());
+                synchronized (logBuffer) {
+                    StringBuilder sb = new StringBuilder();
+                    for (String s : logBuffer) {
+                        sb.append(s);
+                        sb.append('\n');
+                    }
+                    log.setText(sb.toString());
+                }
                 int scrollAmount = log.getLayout().getLineTop(log.getLineCount()) - log.getHeight();
                 log.scrollTo(0, scrollAmount);
             }

@@ -13,7 +13,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.RobotService;
-import com.telepresenceRobot.android.webSocket.WebSocketService;
 
 public class ForegroundService extends IntentService {
     private static final String LOG_TAG = Constants.getLogTag(ForegroundService.class);
@@ -69,7 +68,7 @@ public class ForegroundService extends IntentService {
         Log.d(LOG_TAG, "onDestroy");
         stopForeground(true);
         RobotService.stopService(this);
-        WebSocketService.stopService(this);
+        TelepresenceServerClientService.stopService(this);
         super.onDestroy();
     }
 
@@ -106,13 +105,13 @@ public class ForegroundService extends IntentService {
         @Override
         protected void onWebSocketDisconnect(Context context, Intent intent) {
             super.onWebSocketDisconnect(context, intent);
-            WebSocketService.stopService(ForegroundService.this);
+            TelepresenceServerClientService.stopService(ForegroundService.this);
         }
 
         @Override
-        protected void onWebSocketConnect(Context context, Intent intent, String address) {
-            super.onWebSocketConnect(context, intent, address);
-            WebSocketService.startService(ForegroundService.this, address);
+        protected void onWebSocketConnect(Context context, Intent intent, String hostname, int port) {
+            super.onWebSocketConnect(context, intent, hostname, port);
+            TelepresenceServerClientService.startService(ForegroundService.this, hostname, port);
         }
 
         @Override
