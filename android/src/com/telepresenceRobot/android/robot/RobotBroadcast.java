@@ -41,7 +41,7 @@ public class RobotBroadcast {
     public static void sendSetTile(WebSocketService source, double tilt) {
         Intent intent = new Intent(BROADCAST_NAME);
         intent.putExtra("type", MessageType.SET_TILT.toString());
-        intent.putExtra("tile", tilt);
+        intent.putExtra("tilt", tilt);
         LocalBroadcastManager.getInstance(source).sendBroadcast(intent);
     }
 

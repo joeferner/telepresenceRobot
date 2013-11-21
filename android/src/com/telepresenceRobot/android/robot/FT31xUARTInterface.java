@@ -272,6 +272,10 @@ public class FT31xUARTInterface extends Activity {
         }
     };
 
+    public boolean isConnected() {
+        return outputStream != null;
+    }
+
     private class ReadThread extends Thread {
         ReadThread() {
             this.setPriority(Thread.MAX_PRIORITY);

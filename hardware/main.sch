@@ -92,7 +92,7 @@ Text Label 1150 7000 0    60   ~ 0
 MOTOR-L-DIR
 Text Label 8250 2000 0    60   ~ 0
 MOTOR-EN
-Text Label 8250 2100 0    60   ~ 0
+Text Label 8250 2200 0    60   ~ 0
 MOTOR-R-DIR
 $Sheet
 S 1950 6500 950  700 
@@ -105,11 +105,11 @@ F4 "MOTOR-R-DIR" I L 1950 6800 60
 F5 "MOTOR-L-PWM" I L 1950 6900 60 
 F6 "MOTOR-L-DIR" I L 1950 7000 60 
 $EndSheet
-Text Label 8250 2200 0    60   ~ 0
+Text Label 8250 2100 0    60   ~ 0
 MOTOR-L-DIR
-Text Label 7050 1100 0    60   ~ 0
-MOTOR-L-PWM
 Text Label 7050 1200 0    60   ~ 0
+MOTOR-L-PWM
+Text Label 7050 1100 0    60   ~ 0
 MOTOR-R-PWM
 Text Label 7050 1300 0    60   ~ 0
 AUX-SPI-SS
@@ -1286,9 +1286,9 @@ Text Label 8600 900  0    60   ~ 0
 ANDROID-TX
 Text Label 8600 800  0    60   ~ 0
 ANDROID-RX
-Text Label 9100 5000 0    60   ~ 0
-MOTOR-L-PWM
 Text Label 9100 5100 0    60   ~ 0
+MOTOR-L-PWM
+Text Label 9100 5000 0    60   ~ 0
 MOTOR-R-PWM
 Wire Wire Line
 	9900 5100 9100 5100

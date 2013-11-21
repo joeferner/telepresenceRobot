@@ -115,8 +115,10 @@ public class RobotService extends IntentService {
         synchronized (commandQueue) {
             if (commandQueue.size() > 0) {
                 String cmd = commandQueue.remove() + "\n";
-                Log.d(LOG_TAG, "Sending:" + cmd);
-                uartInterface.send(cmd.getBytes());
+                if (uartInterface.isConnected()) {
+                    Log.d(LOG_TAG, "Sending:" + cmd);
+                    uartInterface.send(cmd.getBytes());
+                }
             }
         }
     }

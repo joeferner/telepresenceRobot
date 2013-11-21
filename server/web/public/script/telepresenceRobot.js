@@ -136,6 +136,8 @@ $(function() {
       joystickResetPositionTimer = null;
       fireJoystickEvent();
       setTimeout(fireJoystickEvent, 100);
+      setTimeout(fireJoystickEvent, 200);
+      setTimeout(fireJoystickEvent, 500);
       return;
     }
 

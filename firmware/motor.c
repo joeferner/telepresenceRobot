@@ -130,9 +130,9 @@ void motor_enable(int enable) {
 void motor_set_speed(int8_t speedLeft, int8_t speedRight) {
   if (speedLeft != lastSpeedLeft) {
     if (speedLeft > 0) {
-      GPIO_SetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
-    } else {
       GPIO_ResetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
+    } else {
+      GPIO_SetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
     }
     TIM_SetCompare3(TIM2, speed_to_pwm_compare(speedLeft));
     lastSpeedLeft = speedLeft;

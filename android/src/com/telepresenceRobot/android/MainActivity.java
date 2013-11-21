@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onException(Context context, Intent intent, Throwable e) {
             super.onException(context, intent, e);
-            log(e.getMessage());
+            log("Error: " + e.getMessage());
         }
 
         @Override
