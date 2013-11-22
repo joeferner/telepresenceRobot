@@ -1,6 +1,7 @@
 $(function() {
   "use strict";
 
+  var debug = false;
   var status = $('#status');
   var joystick = $('#joystick');
   var joystickSize = 200;
@@ -38,7 +39,9 @@ $(function() {
 
   request.onMessage = function(response) {
     var data = JSON.parse(response.responseBody);
-    console.log(data);
+    if (debug) {
+      console.log(data);
+    }
   };
 
   request.onClose = function(response) {
@@ -71,7 +74,7 @@ $(function() {
     min: 0,
     max: 100,
     value: 50,
-    slide: function( event, ui ) {
+    slide: function(event, ui) {
       onTiltChange(ui.value);
     }
   });
@@ -171,7 +174,9 @@ $(function() {
   }
 
   function push(json) {
-    console.log('pushing', json);
+    if (debug) {
+      console.log('pushing', json);
+    }
     subSocket.push(JSON.stringify(json));
   }
 });
