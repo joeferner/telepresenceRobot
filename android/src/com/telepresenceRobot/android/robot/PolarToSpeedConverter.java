@@ -33,8 +33,8 @@ public class PolarToSpeedConverter {
             }
         }
 
-        leftSpeed = leftSpeed * Math.max(0, (power - 0.2f)) * 1.25;
-        rightSpeed = rightSpeed * Math.max(0, (power - 0.2f)) * 1.25;
+        leftSpeed = leftSpeed * Math.max(0, power) * 0.75;
+        rightSpeed = rightSpeed * Math.max(0, power) * 0.75;
 
         return new Speed(leftSpeed, rightSpeed);
     }

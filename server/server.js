@@ -1,5 +1,6 @@
 "use strict";
 
+var debug = false;
 var optimist = require('optimist');
 var webSocketServer = require('websocket').server;
 var http = require('http');
@@ -79,7 +80,9 @@ function broadcast(data, excludeId) {
       continue;
     }
     client = webSocketClients[clientId];
-    console.log('broadcasting webSocketClients[' + clientId + ']:', data);
+    if(debug) {
+      console.log('broadcasting webSocketClients[' + clientId + ']:', data);
+    }
     client.sendUTF(JSON.stringify(data) + "\n");
   }
 
@@ -88,8 +91,14 @@ function broadcast(data, excludeId) {
       continue;
     }
     client = robotClients[clientId];
-    console.log('broadcasting robotClients[' + clientId + ']:', data);
-    client.write(JSON.stringify(data) + "\n");
+    if(debug) {
+      console.log('broadcasting robotClients[' + clientId + ']:', data);
+    }
+    try {
+      client.write(JSON.stringify(data) + "\n");
+    } catch(e) {
+      console.error("could not broadcast to " + clientId, e);
+    }
   }
 }
 
