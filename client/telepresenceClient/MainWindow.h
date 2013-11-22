@@ -31,6 +31,7 @@ private:
   int joystickTravel;
   int joystickCenter;
   QTime lastSendTime;
+  bool mouseDown;
 
 private slots:
   void updatePos();

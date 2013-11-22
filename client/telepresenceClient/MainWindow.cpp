@@ -46,20 +46,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() == QEvent::MouseMove) {
     QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-    if(mouseEvent->buttons() == Qt::LeftButton) {
+    if(mouseEvent->buttons() == Qt::LeftButton && mouseDown) {
       QPoint pos = ui->joystick->mapFromParent(mouseEvent->pos());
-      if(pos.x() < 0){
-        pos.setX(0);
-      }
-      if(pos.y() < 0){
-        pos.setY(0);
-      }
-      if(pos.x() > ui->joystick->width()){
-        pos.setX(ui->joystick->width());
-      }
-      if(pos.y() > ui->joystick->height()){
-        pos.setY(ui->joystick->height());
-      }
       pos.setX(pos.x() - joystickCenter);
       pos.setY(joystickCenter - pos.y());
 
@@ -72,6 +60,13 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
       statusBar()->showMessage(QString("Mouse move (%1,%2)").arg(mouseSpeed).arg(mouseAngle));
       updateJoystick();
     }
+  } else if (event->type() == QEvent::MouseButtonPress) {
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    if(mouseEvent->buttons() == Qt::LeftButton && ui->joystick->underMouse()) {
+      mouseDown = true;
+    }
+  } else if (event->type() == QEvent::MouseButtonRelease) {
+    mouseDown = false;
   }
   return false;
 }
