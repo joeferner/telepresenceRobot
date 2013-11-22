@@ -95,7 +95,7 @@ void MainWindow::updateJoystick() {
 
   if(lastSendTime.msecsTo(QTime::currentTime()) > 100) {
     if(socket->waitForConnected()) {
-      socket->write(QString("{ \"type\": \"setSpeedPolar\", \"power\": %1, \"angle\": %2 }\n").arg(mouseSpeed).arg(mouseAngle).toLocal8Bit());
+      socket->write(QString("{ \"type\": \"setSpeedPolar\", \"power\": %1, \"angle\": %2 }\n").arg(mouseSpeed / 2.0).arg(mouseAngle).toLocal8Bit());
       lastSendTime = QTime::currentTime();
     }
   }
