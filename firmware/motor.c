@@ -6,10 +6,10 @@
 
 #define PWM_PERIOD 0x2000
 
-int8_t lastSpeedLeft = 0xff;
-int8_t lastSpeedRight = 0xff;
+int16_t lastSpeedLeft = 0xff;
+int16_t lastSpeedRight = 0xff;
 
-uint32_t speed_to_pwm_compare(int8_t speed);
+uint32_t speed_to_pwm_compare(int16_t speed);
 
 void motor_config() {
   GPIO_InitTypeDef GPIO_Config;
@@ -127,14 +127,14 @@ void motor_enable(int enable) {
   }
 }
 
-void motor_set_speed(int8_t speedLeft, int8_t speedRight) {
+void motor_set_speed(int16_t speedLeft, int16_t speedRight) {
   if (speedLeft != lastSpeedLeft) {
     if (speedLeft > 0) {
       GPIO_ResetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
     } else {
       GPIO_SetBits(MOTOR_LEFT_DIR, MOTOR_LEFT_DIR_PIN);
     }
-    TIM_SetCompare3(TIM2, speed_to_pwm_compare(speedLeft));
+    TIM_SetCompare4(TIM2, speed_to_pwm_compare(speedLeft));
     lastSpeedLeft = speedLeft;
   }
 
@@ -144,7 +144,7 @@ void motor_set_speed(int8_t speedLeft, int8_t speedRight) {
     } else {
       GPIO_ResetBits(MOTOR_RIGHT_DIR, MOTOR_RIGHT_DIR_PIN);
     }
-    TIM_SetCompare4(TIM2, speed_to_pwm_compare(speedRight));
+    TIM_SetCompare3(TIM2, speed_to_pwm_compare(speedRight));
     lastSpeedRight = speedRight;
   }
 }
@@ -165,7 +165,7 @@ void servo_tilt_stop() {
   TIM_SetCompare2(TIM2, 0);
 }
 
-uint32_t speed_to_pwm_compare(int8_t speed) {
+uint32_t speed_to_pwm_compare(int16_t speed) {
   uint32_t absSpeed = abs(speed);
   return absSpeed * (PWM_PERIOD / 128);
 }

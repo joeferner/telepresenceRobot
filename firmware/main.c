@@ -14,10 +14,10 @@
 #include <stm32f10x_gpio.h>
 
 typedef struct {
-  volatile int8_t speedLeft;
-  volatile int8_t speedRight;
-  volatile int8_t targetSpeedLeft;
-  volatile int8_t targetSpeedRight;
+  volatile int16_t speedLeft;
+  volatile int16_t speedRight;
+  volatile int16_t targetSpeedLeft;
+  volatile int16_t targetSpeedRight;
   volatile uint32_t targetSpeedLastUpdated;
 } RobotRegisters;
 
@@ -39,9 +39,10 @@ void process_set_command(char* line);
 void process_get_command(char* line);
 void process_connect_command(char* line);
 int8_t parse_speed(const char* str);
-void set_speed(int8_t speedLeft, int8_t speedRight);
+void set_speed(int16_t speedLeft, int16_t speedRight);
 void update_speed();
 void update_battery_voltage();
+void update_servo_tilt();
 
 int main(void) {
   // Configure the NVIC Preemption Priority Bits
@@ -64,7 +65,7 @@ int main(void) {
   print_info("END Init\n");
 
   servo_tilt_end_time = time_ms();
-  servo_tilt_set(0x00);
+  servo_tilt_set(0x60);
   motor_enable(TRUE);
   while (1) {
     loop();
@@ -189,8 +190,9 @@ void process_set_command(char* line) {
       int8_t speedRight = parse_speed(val + 2);
       set_speed(speedLeft, speedRight);
       print_success("OK ");
-      print_u8(speedLeft, 16);
-      print_u8(speedRight, 16);
+      print_8(speedLeft, 10);
+      print(", ");
+      print_8(speedRight, 10);
       print("\n");
     } else if (!strcmp(p, "tilt")) {
       uint8_t tilt = parse_hex8(val);
@@ -229,7 +231,7 @@ void process_get_command(char* line) {
   }
 }
 
-void set_speed(int8_t targetSpeedLeft, int8_t targetSpeedRight) {
+void set_speed(int16_t targetSpeedLeft, int16_t targetSpeedRight) {
   robot_registers.targetSpeedLeft = targetSpeedLeft;
   robot_registers.targetSpeedRight = targetSpeedRight;
   robot_registers.targetSpeedLastUpdated = time_ms();

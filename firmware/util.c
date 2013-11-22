@@ -5,6 +5,7 @@
 #include <math.h>
 
 extern void usb_write(const uint8_t* data, uint16_t len);
+char* itoa(int32_t value, char* result, int base);
 
 int starts_with(const char* str, const char* strTest) {
   return strncmp(strTest, str, strlen(strTest)) == 0;
@@ -78,6 +79,16 @@ void print_u8(uint8_t val, uint8_t base) {
   }
 }
 
+void print_8(int8_t val, uint8_t base) {
+  char str[10];
+  if (base == 10) {
+    itoa(val, str, 10);
+    print(str);
+  } else {
+    print_error("NOT IMPLEMENTED");
+  }
+}
+
 int is_whitespace(char ch) {
   switch (ch) {
     case '\n':
@@ -94,4 +105,33 @@ void trim_right(char* str) {
   while (is_whitespace(*p)) {
     *p-- = '\0';
   }
+}
+
+char* itoa(int32_t value, char* result, int base) {
+  // check that the base if valid
+  if (base < 2 || base > 36) {
+    *result = '\0';
+    return result;
+  }
+
+  char* ptr = result, *ptr1 = result, tmp_char;
+  int tmp_value;
+
+  do {
+    tmp_value = value;
+    value /= base;
+    *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+  } while (value);
+
+  // Apply negative sign
+  if (tmp_value < 0) {
+    *ptr++ = '-';
+  }
+  *ptr-- = '\0';
+  while (ptr1 < ptr) {
+    tmp_char = *ptr;
+    *ptr-- = *ptr1;
+    *ptr1++ = tmp_char;
+  }
+  return result;
 }

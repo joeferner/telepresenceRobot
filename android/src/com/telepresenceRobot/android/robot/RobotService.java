@@ -202,6 +202,7 @@ public class RobotService extends IntentService {
     }
 
     private void enqueueCommand(String cmd) {
+        Log.i(LOG_TAG, "enqueueCommand: " + cmd);
         synchronized (commandQueue) {
             commandQueue.add(cmd);
         }

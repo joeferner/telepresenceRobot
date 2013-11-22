@@ -26,6 +26,7 @@ uint32_t parse_hex32(const char* str);
 #define print_success(str) print("+" str)
 void print(const char* str);
 void print_u8(uint8_t val, uint8_t base);
+void print_8(int8_t val, uint8_t base);
 void print_u32(uint32_t val, uint8_t base);
 
 int is_whitespace(char ch);
