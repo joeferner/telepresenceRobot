@@ -48,8 +48,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
     if(mouseEvent->buttons() == Qt::LeftButton && mouseDown) {
       QPoint pos = ui->joystick->mapFromParent(mouseEvent->pos());
-      pos.setX(pos.x() - joystickCenter);
-      pos.setY(joystickCenter - pos.y());
+      pos.setX((pos.x() + ui->joystick->x()) - joystickCenter);
+      pos.setY(joystickCenter - (pos.y() + ui->joystick->y()));
 
       mouseSpeed = sqrt(pos.x() * pos.x() + pos.y() * pos.y()) / joystickTravel;
       if(mouseSpeed > 1.0) {
@@ -76,11 +76,15 @@ void MainWindow::updateJoystick() {
   QPen mousePen = QPen(QBrush(Qt::black), 1);
   QBrush backgroundBrush = QBrush(Qt::white);
   QPen outsidePen = QPen(QBrush(Qt::black), 1);
+  QPen crosshairsPen = QPen(QBrush(Qt::gray), 1);
 
   scene->clear();
 
   int margin = joystickCenter - joystickTravel;
   scene->addEllipse(margin, margin, ui->joystick->width() - margin * 2, ui->joystick->height() - margin * 2, outsidePen, backgroundBrush);
+
+  scene->addLine(joystickCenter, 0, joystickCenter, ui->joystick->height(), crosshairsPen);
+  scene->addLine(0, joystickCenter, ui->joystick->width(), joystickCenter, crosshairsPen);
 
   double s = mouseSpeed * joystickTravel;
   int mouseX = (s * sin(mouseAngle)) + (ui->joystick->width() / 2);
