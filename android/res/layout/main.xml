@@ -56,6 +56,10 @@
                 android:text="@string/battery_level"/>
         </LinearLayout>
     </LinearLayout>
+    <CheckBox android:id="@+id/enable_logging"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="Enable Logging"/>
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="0dip"

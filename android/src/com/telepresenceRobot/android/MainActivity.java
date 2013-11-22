@@ -13,6 +13,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.*;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.telepresenceRobot.android.robot.RobotBroadcast;
 import com.telepresenceRobot.android.robot.Speed;
@@ -33,6 +35,7 @@ public class MainActivity extends Activity {
     private MenuItem connectRobotMenuItem;
     private MenuItem connectWebSocketMenuItem;
     private TextView batteryVoltage;
+    private CheckBox enableLogging;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class MainActivity extends Activity {
         StrictMode.setThreadPolicy(policy);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         setContentView(R.layout.main);
 
@@ -50,6 +54,9 @@ public class MainActivity extends Activity {
         back = (Button) findViewById(R.id.back);
         left = (Button) findViewById(R.id.left);
         right = (Button) findViewById(R.id.right);
+        enableLogging = (CheckBox) findViewById(R.id.enable_logging);
+        enableLogging.setChecked(sharedPref.getBoolean(SettingsActivity.ENABLE_LOGGING, true));
+        enableLogging.setOnCheckedChangeListener(new EnableLoggingCheckedChangedListener());
         batteryVoltage = (TextView) findViewById(R.id.battery_level);
         batteryVoltage.setText("???");
 
@@ -281,10 +288,16 @@ public class MainActivity extends Activity {
 
     private void log(String line) {
         Log.i(LOG_TAG, "log: " + line);
+
         synchronized (logBuffer) {
-            logBuffer.add(line);
-            while (logBuffer.size() > 200) {
-                logBuffer.remove();
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            if (sharedPref.getBoolean(SettingsActivity.ENABLE_LOGGING, true)) {
+                logBuffer.add(line);
+                while (logBuffer.size() > 200) {
+                    logBuffer.remove();
+                }
+            } else {
+                logBuffer.clear();
             }
         }
         this.runOnUiThread(new Runnable() {
@@ -312,6 +325,14 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(robotBroadcastReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(statusBroadcastReceiver);
         super.onDestroy();
+    }
+
+    private class EnableLoggingCheckedChangedListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+            sharedPref.edit().putBoolean(SettingsActivity.ENABLE_LOGGING, isChecked).commit();
+        }
     }
 
     private class MovementOnTouchListener implements View.OnTouchListener {

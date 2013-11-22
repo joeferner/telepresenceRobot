@@ -8,6 +8,7 @@ import android.preference.PreferenceActivity;
 public class SettingsActivity extends PreferenceActivity {
     public static final String SERVER_HOSTNAME = "pref_hostname";
     public static final String SERVER_PORT = "pref_port";
+    public static final String ENABLE_LOGGING = "pref_enable_logging";
     private EditTextPreference serverHostname;
     private EditTextPreference serverPort;
 
