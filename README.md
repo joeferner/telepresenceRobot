@@ -5,6 +5,8 @@ After seeing a commercial for a Telepresence robot on TV, I knew I wanted to pla
 
 I used an Android Nexus 7 tablet for the video conferencing. A custom PCB with an STM32 ARM processor and an FTDI USB chip to connect the Android tablet with the motors.
 
+[Schematic](https://github.com/joeferner/telepresenceRobot/blob/master/hardware/main.pdf?raw=true)
+
 Video
 -----
 
